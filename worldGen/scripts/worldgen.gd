@@ -1,11 +1,18 @@
 extends Node
 
+var hasWorldNode : bool = false
+var loaded : bool = false
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	var isTestEnv : Node2D = get_tree().root.get_node_or_null("TestGen")
+	if isTestEnv:
+		if not hasWorldNode:
+			var newWorldNode : Node2D = Node2D.new()
+			newWorldNode.name = "World"
+			isTestEnv.add_child(newWorldNode)
+			hasWorldNode = true
+		if not loaded:
+			pass
