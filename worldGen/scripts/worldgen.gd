@@ -10,7 +10,7 @@ func _process(delta: float) -> void:
 	var isTestEnv : Node2D = get_tree().root.get_node_or_null("TestGen")
 	if isTestEnv:
 		if not hasWorldNode:
-			var newWorldNode : Node2D = Node2D.new()
+			var newWorldNode : TileMap = TileMap.new()
 			newWorldNode.name = "World"
 			isTestEnv.add_child(newWorldNode)
 			hasWorldNode = true
