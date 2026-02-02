@@ -11,7 +11,6 @@ size = Vector2(44, 26)
 [node name="RigidBody2D" type="RigidBody2D" parent="." unique_id=2107572189]
 position = Vector2(-3, 15)
 script = ExtResource("1_ud44g")
-speed = 5000.0
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D" unique_id=152738793]
@@ -22,3 +21,8 @@ shape = SubResource("RectangleShape2D_ykx3s")
 position = Vector2(46.75, 174.25)
 scale = Vector2(2.5078125, 2.6640623)
 texture = ExtResource("2_mh3es")
+
+[node name="Timer" type="Timer" parent="RigidBody2D" unique_id=1954214439]
+wait_time = 3.0
+
+[connection signal="timeout" from="RigidBody2D/Timer" to="RigidBody2D" method="_on_timer_timeout"]
