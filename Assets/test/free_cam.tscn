@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cup7lf4by1l26"]
+
+[ext_resource type="Script" uid="uid://c4uitrmmfoera" path="res://worldGen/scripts/free_cam.gd" id="1_unuc6"]
+
+[node name="FreeCam" type="Camera2D" unique_id=1595400124]
+script = ExtResource("1_unuc6")
