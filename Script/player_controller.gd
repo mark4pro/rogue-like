@@ -21,7 +21,6 @@ func _physics_process(delta: float) -> void:
 		sprint_timer.stop()
 		cooldown_timer.start()
 	
-	
 	var dir : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 	
 	linear_velocity = dir * speed * delta;
@@ -30,8 +29,3 @@ func _physics_process(delta: float) -> void:
 func _on_timer_timeout() -> void:
 	speed = walk_speed
 	cooldown_timer.start()
-
-
-func _on_cooldown_timeout() -> void:
-	pass
-	

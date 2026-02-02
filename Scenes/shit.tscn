@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://cf1n80t5jkcw3"]
+[gd_scene format=3 uid="uid://b2r487f6fn0ic"]
 
 [ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_ubntj"]
 [ext_resource type="Texture2D" uid="uid://d00xftj3xa51o" path="res://Assets/imgs/Bob.png" id="2_6bv1j"]
@@ -24,9 +24,10 @@ scale = Vector2(2.5078125, 2.6640623)
 texture = ExtResource("2_6bv1j")
 
 [node name="Timer" type="Timer" parent="RigidBody2D" unique_id=1954214439]
+one_shot = true
 
 [node name="cooldown" type="Timer" parent="RigidBody2D" unique_id=2063074609]
 wait_time = 2.0
+one_shot = true
 
 [connection signal="timeout" from="RigidBody2D/Timer" to="RigidBody2D" method="_on_timer_timeout"]
-[connection signal="timeout" from="RigidBody2D/cooldown" to="RigidBody2D" method="_on_cooldown_timeout"]

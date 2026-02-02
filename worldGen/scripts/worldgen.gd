@@ -1,6 +1,6 @@
 extends Node
 
-var chunkSize : Vector2 = Vector2(10, 10)
+var chunkSize : Vector2i = Vector2i(10, 10)
 var thisSeed : int = -1 # -1 use random seed
 
 var hasWorldNode : bool = false
@@ -26,6 +26,23 @@ enum Biome {
 
 var biomeMap = [] # biome_map[chunk_y][chunk_x]
 var world = [] # world[y][x] = TileType
+
+func initArrays() -> void:
+	biomeMap.clear()
+	for y in chunkSize.y:
+		biomeMap.append([])
+		for x in chunkSize.x:
+			biomeMap[y].append(Biome.FOREST)
+	
+	var world_w = chunkSize.x * 10
+	var world_h = chunkSize.y * 10
+
+	world.clear()
+	for y in world_h:
+		world.append([])
+		for x in world_w:
+			world[y].append(TileType.EMPTY)
+
 
 func genBiome() -> void:
 	for cy in chunkSize.x:
@@ -72,5 +89,6 @@ func _process(delta: float) -> void:
 			isTestEnv.add_child(newWorldNode)
 			hasWorldNode = true
 		if not loaded:
+			initArrays()
 			genBiome()
 			loaded = true
