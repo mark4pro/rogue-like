@@ -14,6 +14,7 @@ enum TileType {
 	FLOOR,
 	WALL,
 	GRASS,
+	PLANT,
 	TREE,
 	WATER
 }
@@ -28,6 +29,8 @@ enum Biome {
 var biomeMap = [] # biome_map[chunk_y][chunk_x]
 var world = [] # world[y][x] = TileType
 var layers = {}
+
+var isTestEnv : Node2D = null
 
 func genLayers(parent: Node2D) -> Dictionary:
 	var newLayers = {}
@@ -45,7 +48,6 @@ func genLayers(parent: Node2D) -> Dictionary:
 	newLayers.props = props
 
 	return newLayers
-
 
 func initArrays() -> void:
 	biomeMap.clear()
@@ -94,7 +96,9 @@ func genForest() -> void:
 					world[wy][wx] = TileType.GRASS
 					
 					var n = noise.get_noise_2d(wx, wy)
-					if n > 0.35:
+					if (n > 0.28 and n < 0.3):
+						world[wy][wx] = TileType.PLANT
+					if (n > 0.5):
 						world[wy][wx] = TileType.TREE
 
 func mixGen() -> void:
@@ -122,31 +126,45 @@ func mapGen() -> void:
 				TileType.GRASS:
 					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
 					
+				TileType.PLANT:
+					ground.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
+				
 				TileType.TREE:
-					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-					props.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
+					#props.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
+					pass
 
+func regen() -> void:
+	var seed : int = randi()
+	seed(seed)
+	if not thisSeed == -1: seed = thisSeed
+	noise.seed = seed
+	noise.frequency = randf_range(0.03, 0.5)#0.03
+	if isTestEnv:
+		if isTestEnv: isTestEnv.get_node("World").free()
+		hasWorldNode = false
+		loaded = false
 
 func _ready() -> void:
 	var seed : int = randi()
 	seed(seed)
 	if not thisSeed == -1: seed = thisSeed
 	noise.seed = seed
-	noise.frequency = 0.03
+	noise.frequency = randf_range(0.03, 0.5)
 
 func _process(delta: float) -> void:
-	var isTestEnv : Node2D = get_tree().root.get_node_or_null("TestGen")
+	isTestEnv = get_tree().root.get_node_or_null("TestGen")
 	if isTestEnv:
+		if Input.is_action_just_pressed("regen_map"):
+			regen()
 		if not hasWorldNode:
 			var newWorldNode : Node2D = Node2D.new()
-			newWorldNode.name = "World"
 			isTestEnv.add_child(newWorldNode)
+			newWorldNode.name = "World"
 			layers = genLayers(newWorldNode)
 			hasWorldNode = true
 		if not loaded:
 			initArrays()
 			genBiome()
 			genForest()
-			print(world[0][0])
 			mapGen()
 			loaded = true

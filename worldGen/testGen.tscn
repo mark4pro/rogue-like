@@ -4,5 +4,5 @@
 
 [node name="TestGen" type="Node2D" unique_id=641839013]
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=637883175]
+[node name="FreeCam" type="Camera2D" parent="." unique_id=637883175]
 script = ExtResource("1_ip3sa")
