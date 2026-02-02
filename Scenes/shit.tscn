@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://b2r487f6fn0ic"]
+[gd_scene format=3 uid="uid://cf1n80t5jkcw3"]
 
 [ext_resource type="Script" uid="uid://bfgy714al867q" path="res://rigid_body_2d.gd" id="1_ud44g"]
 [ext_resource type="Texture2D" uid="uid://d00xftj3xa51o" path="res://Assets/imgs/Bob.png" id="2_mh3es"]
