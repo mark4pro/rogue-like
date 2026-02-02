@@ -1,3 +1,8 @@
 [gd_scene format=3 uid="uid://b2rr2nbnnax0r"]
 
+[ext_resource type="Script" uid="uid://c4uitrmmfoera" path="res://worldGen/scripts/free_cam.gd" id="1_ip3sa"]
+
 [node name="TestGen" type="Node2D" unique_id=641839013]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=637883175]
+script = ExtResource("1_ip3sa")

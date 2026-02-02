@@ -1,0 +1,28 @@
+[gd_resource type="TileSet" format=3 uid="uid://b42gidbr1gvoe"]
+
+[ext_resource type="Texture2D" uid="uid://dcrs0a1jjajgn" path="res://Assets/imgs/worldTS/tile_set.png" id="1_vdlcm"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_fw4o0"]
+texture = ExtResource("1_vdlcm")
+texture_region_size = Vector2i(32, 32)
+0:0/next_alternative_id = 4
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+
+[resource]
+tile_size = Vector2i(32, 32)
+sources/0 = SubResource("TileSetAtlasSource_fw4o0")
