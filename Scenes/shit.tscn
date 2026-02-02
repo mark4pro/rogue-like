@@ -27,7 +27,7 @@ texture = ExtResource("2_6bv1j")
 one_shot = true
 
 [node name="cooldown" type="Timer" parent="RigidBody2D" unique_id=2063074609]
-wait_time = 2.0
+wait_time = 0.2
 one_shot = true
 
 [connection signal="timeout" from="RigidBody2D/Timer" to="RigidBody2D" method="_on_timer_timeout"]
