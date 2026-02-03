@@ -37,7 +37,10 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("roll") and not roll and can_roll:
 		roll = true
 		can_roll = false
-		
+	
+	if dir == Vector2.ZERO:
+		$Sprite2D.stop()
+	
 	if roll:
 		$Sprite2D.stop()
 		$Sprite2D.rotation += 7 * delta

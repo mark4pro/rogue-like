@@ -1,11 +1,15 @@
 extends Node
 
+@onready var playerRes : PackedScene = preload("res://Assets/prefabs/player.tscn")
+
 var chunkSize : Vector2i = Vector2i(10, 10)
 var tileSize : int = 32
 var thisSeed : int = -1 # -1 use random seed
 
 var hasWorldNode : bool = false
 var loaded : bool = false
+
+var player : RigidBody2D = null
 
 var noise = FastNoiseLite.new()
 
@@ -136,7 +140,7 @@ func mapGen() -> void:
 					var newTree : Sprite2D = treeScene.instantiate()
 					worldNode.add_child(newTree)
 					newTree.rotation_degrees = randf_range(0, 360)
-					newTree.offset = Vector2(randf_range(-32, 32), randf_range(-32, 32))
+					newTree.offset = Vector2(randf_range(-16, 16), randf_range(-16, 16))
 					newTree.position = ground.map_to_local(Vector2i(x, y))
 					#props.set_cell(Vector2i(x, y), 0, Vector2i(4, 2))
 
@@ -159,10 +163,24 @@ func _ready() -> void:
 	noise.frequency = randf_range(0.03, 0.5)
 
 func _process(delta: float) -> void:
+	var chkPlayer = get_tree().get_nodes_in_group("Player")
+	if not chkPlayer.is_empty():
+		player = chkPlayer[0]
+		player.get_node("Camera2D").enabled = true
+	else: player = null
 	isTestEnv = get_tree().root.get_node_or_null("TestGen")
 	if isTestEnv:
+		#Enable/Disable free cam
+		if not chkPlayer.is_empty():
+			isTestEnv.get_node("FreeCam").enabled = false
+		else:
+			isTestEnv.get_node("FreeCam").enabled = true
+		
+		#regen map
 		if Input.is_action_just_pressed("regen_map"):
 			regen()
+		
+		#Create world node
 		if not hasWorldNode:
 			var newWorldNode : Node2D = Node2D.new()
 			isTestEnv.add_child(newWorldNode)
@@ -170,9 +188,20 @@ func _process(delta: float) -> void:
 			newWorldNode.name = "World"
 			layers = genLayers(newWorldNode)
 			hasWorldNode = true
+		
+		#Generate map
 		if not loaded:
 			initArrays()
 			genBiome()
 			genForest()
 			mapGen()
 			loaded = true
+	
+	#Engine only
+	if OS.has_feature("editor"):
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not player:
+			var newPlayer : RigidBody2D = playerRes.instantiate()
+			newPlayer.position = get_viewport().get_mouse_position()
+			worldNode.add_child(newPlayer)
+		if Input.is_action_just_pressed("free_cam") and not player == null:
+			player.queue_free()

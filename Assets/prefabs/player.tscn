@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
-size = Vector2(104, 26)
+size = Vector2(23.75, 10)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fj04p"]
 atlas = ExtResource("2_fj04p")
@@ -83,12 +83,11 @@ script = ExtResource("1_fj04p")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099576623]
-position = Vector2(-3, 26)
+position = Vector2(-1, 6)
 shape = SubResource("RectangleShape2D_ykx3s")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1474160666]
 texture_filter = 1
-scale = Vector2(5, 5)
 sprite_frames = SubResource("SpriteFrames_i87ed")
 animation = &"walk"
 
@@ -104,6 +103,7 @@ wait_time = 2.0
 one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=557111740]
+zoom = Vector2(7, 7)
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
