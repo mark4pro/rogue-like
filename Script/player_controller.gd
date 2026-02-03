@@ -1,11 +1,12 @@
 extends RigidBody2D
 
-
+@onready var health_bar = $CanvasLayer/TextureProgressBar
 @onready var roll_cooldown = $roll_cooldown
 @onready var sprint_timer = $Timer
 @onready var cooldown_timer = $cooldown
 var roll : bool = false
-
+var health = 100
+var max_health = 100
 var can_roll : bool = true
 
 @export var sprint_speed : float = 15000
@@ -14,7 +15,13 @@ var can_roll : bool = true
 var speed : float = walk_speed
 
 func _ready() -> void:
-	pass
+	health_bar.max_value = max_health
+	health_bar.value = health
+	
+func take_damage(amount):
+	health -= amount
+	health = clamp(health, 0, max_health)
+	health_bar.value = health
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("sprint") and cooldown_timer.time_left == 0:
