@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://bjts4lj4357yt"]
+
+[ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_fj04p"]
+[ext_resource type="Texture2D" uid="uid://d00xftj3xa51o" path="res://Assets/imgs/Bob.png" id="2_g621r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
+size = Vector2(44, 26)
+
+[node name="Player" type="RigidBody2D" unique_id=2014763879]
+gravity_scale = 0.0
+script = ExtResource("1_fj04p")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099576623]
+shape = SubResource("RectangleShape2D_ykx3s")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=776825511]
+scale = Vector2(2.5078125, 2.6640623)
+texture = ExtResource("2_g621r")
+
+[node name="Timer" type="Timer" parent="." unique_id=785397555]
+one_shot = true
+
+[node name="cooldown" type="Timer" parent="." unique_id=112591730]
+wait_time = 0.2
+one_shot = true
+
+[node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]

@@ -1,36 +1,8 @@
 [gd_scene format=3 uid="uid://b2r487f6fn0ic"]
 
-[ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_ubntj"]
-[ext_resource type="Texture2D" uid="uid://d00xftj3xa51o" path="res://Assets/imgs/Bob.png" id="2_6bv1j"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
-size = Vector2(44, 26)
+[ext_resource type="PackedScene" uid="uid://bjts4lj4357yt" path="res://Assets/prefabs/player.tscn" id="1_4ox28"]
 
 [node name="shit" type="Node2D" unique_id=349187987]
 
-[node name="RigidBody2D" type="RigidBody2D" parent="." unique_id=2107572189]
+[node name="Player" parent="." unique_id=2014763879 instance=ExtResource("1_4ox28")]
 position = Vector2(267, 100)
-gravity_scale = 0.0
-script = ExtResource("1_ubntj")
-metadata/_edit_group_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D" unique_id=152738793]
-shape = SubResource("RectangleShape2D_ykx3s")
-
-[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D" unique_id=1012547431]
-scale = Vector2(2.5078125, 2.6640623)
-texture = ExtResource("2_6bv1j")
-
-[node name="Timer" type="Timer" parent="RigidBody2D" unique_id=1954214439]
-one_shot = true
-
-[node name="cooldown" type="Timer" parent="RigidBody2D" unique_id=2063074609]
-wait_time = 0.2
-one_shot = true
-
-[node name="roll_cooldown" type="Timer" parent="RigidBody2D" unique_id=1390013881]
-wait_time = 2.0
-one_shot = true
-
-[connection signal="timeout" from="RigidBody2D/Timer" to="RigidBody2D" method="_on_timer_timeout"]
-[connection signal="timeout" from="RigidBody2D/roll_cooldown" to="RigidBody2D" method="_on_roll_cooldown_timeout"]
