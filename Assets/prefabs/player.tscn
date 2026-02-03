@@ -4,43 +4,78 @@
 [ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
-size = Vector2(44, 26)
+size = Vector2(104, 26)
 
-[sub_resource type="Animation" id="Animation_fj04p"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:hframes")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [9]
-}
+[sub_resource type="AtlasTexture" id="AtlasTexture_fj04p"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(0, 0, 54, 42)
 
-[sub_resource type="Animation" id="Animation_g621r"]
-resource_name = "walking"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:hframes")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [1]
-}
+[sub_resource type="AtlasTexture" id="AtlasTexture_g621r"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(54, 0, 54, 42)
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_gmoaq"]
-_data = {
-&"RESET": SubResource("Animation_fj04p"),
-&"walking": SubResource("Animation_g621r")
-}
+[sub_resource type="AtlasTexture" id="AtlasTexture_gmoaq"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(108, 0, 54, 42)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w0l5f"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(162, 0, 54, 42)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mbpd7"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(216, 0, 54, 42)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4312i"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(270, 0, 54, 42)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ev7rh"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(324, 0, 54, 42)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wwh7s"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(378, 0, 54, 42)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8tub1"]
+atlas = ExtResource("2_fj04p")
+region = Rect2(432, 0, 54, 42)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i87ed"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fj04p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g621r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gmoaq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w0l5f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mbpd7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4312i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ev7rh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wwh7s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8tub1")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 5.0
+}]
 
 [node name="Player" type="RigidBody2D" unique_id=2014763879]
 gravity_scale = 0.0
@@ -48,14 +83,14 @@ script = ExtResource("1_fj04p")
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099576623]
+position = Vector2(-3, 26)
 shape = SubResource("RectangleShape2D_ykx3s")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=776825511]
+[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1474160666]
 texture_filter = 1
-scale = Vector2(2.5078125, 2.6640623)
-texture = ExtResource("2_fj04p")
-hframes = 9
-frame = 1
+scale = Vector2(5, 5)
+sprite_frames = SubResource("SpriteFrames_i87ed")
+animation = &"walk"
 
 [node name="Timer" type="Timer" parent="." unique_id=785397555]
 one_shot = true
@@ -67,9 +102,6 @@ one_shot = true
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
 wait_time = 2.0
 one_shot = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1737602896]
-libraries/ = SubResource("AnimationLibrary_gmoaq")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
