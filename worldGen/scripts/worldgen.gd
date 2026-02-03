@@ -176,7 +176,7 @@ func _process(delta: float) -> void:
 			freeCam.make_current()
 		
 		#regen map
-		if Input.is_action_just_pressed("regen_map"):
+		if Input.is_action_just_pressed("regen_map") and not player:
 			regen()
 		
 		#Create world node
