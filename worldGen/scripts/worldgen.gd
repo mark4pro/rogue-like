@@ -130,8 +130,8 @@ func mapGen() -> void:
 					ground.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
 				
 				TileType.TREE:
-					#props.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
-					pass
+					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+					props.set_cell(Vector2i(x, y), 0, Vector2i(4, 2))
 
 func regen() -> void:
 	var seed : int = randi()
