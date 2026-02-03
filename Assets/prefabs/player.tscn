@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_fj04p"]
 [ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
+[ext_resource type="Texture2D" uid="uid://bcetjsof4a06x" path="res://Assets/imgs/heart.png" id="3_g621r"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
 size = Vector2(23.75, 10)
@@ -104,6 +105,13 @@ one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=557111740]
 zoom = Vector2(7, 7)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=963694637]
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer" unique_id=1503107830]
+offset_right = 128.0
+offset_bottom = 128.0
+texture_progress = ExtResource("3_g621r")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
