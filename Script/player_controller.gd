@@ -11,8 +11,10 @@ var can_roll : bool = true
 
 @export var sprint_speed : float = 15000
 @export var walk_speed : float = 7000
+@export var roll_speed : float = 7
 
 var speed : float = walk_speed
+var rspeed : float = roll_speed
 
 func _ready() -> void:
 	health_bar.max_value = max_health
@@ -50,7 +52,7 @@ func _physics_process(delta: float) -> void:
 	
 	if roll:
 		$Sprite2D.stop()
-		$Sprite2D.rotation += 7 * delta
+		$Sprite2D.rotation += rspeed * delta
 		
 	$Sprite2D.rotation_degrees = int($Sprite2D.rotation_degrees) % 360
 	
@@ -61,8 +63,10 @@ func _physics_process(delta: float) -> void:
 	
 	if linear_velocity.x < 0:
 		$Sprite2D.flip_h = true
+		rspeed = -roll_speed
 	elif linear_velocity.x > 0:
 		$Sprite2D.flip_h = false
+		rspeed = roll_speed
 
 func _on_timer_timeout() -> void:
 	speed = walk_speed
