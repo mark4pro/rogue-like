@@ -77,7 +77,7 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="RigidBody2D" unique_id=2014763879]
+[node name="Player" type="RigidBody2D" unique_id=2014763879 groups=["Player"]]
 gravity_scale = 0.0
 script = ExtResource("1_fj04p")
 metadata/_edit_group_ = true
