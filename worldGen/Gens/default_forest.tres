@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="ForestGenerator" format=3 uid="uid://dult6se6tytej"]
+
+[ext_resource type="Script" uid="uid://b3shr1jor7cpu" path="res://worldGen/scripts/generators/forest.gd" id="1_nnmsr"]
+
+[resource]
+script = ExtResource("1_nnmsr")
+metadata/_custom_type_script = "uid://b3shr1jor7cpu"

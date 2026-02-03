@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="BiomeGenerator" format=3 uid="uid://b54n65tq6m6ki"]
+
+[ext_resource type="Script" uid="uid://kawcidclgko2" path="res://worldGen/scripts/generators/biome.gd" id="1_cetdh"]
+
+[resource]
+script = ExtResource("1_cetdh")
+metadata/_custom_type_script = "uid://kawcidclgko2"
