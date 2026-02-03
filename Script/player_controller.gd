@@ -28,7 +28,6 @@ func _physics_process(delta: float) -> void:
 	var dir : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 	
 	linear_velocity = dir * speed * delta;
-	
 	if Input.is_action_just_pressed("roll") and not roll and can_roll:
 		roll = true
 		can_roll = false

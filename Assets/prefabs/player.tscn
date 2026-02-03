@@ -1,10 +1,46 @@
 [gd_scene format=3 uid="uid://bjts4lj4357yt"]
 
 [ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_fj04p"]
-[ext_resource type="Texture2D" uid="uid://d00xftj3xa51o" path="res://Assets/imgs/Bob.png" id="2_g621r"]
+[ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
 size = Vector2(44, 26)
+
+[sub_resource type="Animation" id="Animation_fj04p"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [9]
+}
+
+[sub_resource type="Animation" id="Animation_g621r"]
+resource_name = "walking"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_gmoaq"]
+_data = {
+&"RESET": SubResource("Animation_fj04p"),
+&"walking": SubResource("Animation_g621r")
+}
 
 [node name="Player" type="RigidBody2D" unique_id=2014763879]
 gravity_scale = 0.0
@@ -15,8 +51,11 @@ metadata/_edit_group_ = true
 shape = SubResource("RectangleShape2D_ykx3s")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=776825511]
+texture_filter = 1
 scale = Vector2(2.5078125, 2.6640623)
-texture = ExtResource("2_g621r")
+texture = ExtResource("2_fj04p")
+hframes = 9
+frame = 1
 
 [node name="Timer" type="Timer" parent="." unique_id=785397555]
 one_shot = true
@@ -28,6 +67,9 @@ one_shot = true
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
 wait_time = 2.0
 one_shot = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1737602896]
+libraries/ = SubResource("AnimationLibrary_gmoaq")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
