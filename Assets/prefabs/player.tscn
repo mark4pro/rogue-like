@@ -104,7 +104,6 @@ wait_time = 2.0
 one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=557111740]
-enabled = false
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
