@@ -34,7 +34,6 @@ func _physics_process(delta: float) -> void:
 	if linear_velocity != Vector2.ZERO and not roll:
 		$Sprite2D.play("walk")
 	
-	
 	if Input.is_action_just_pressed("roll") and not roll and can_roll:
 		roll = true
 		can_roll = false

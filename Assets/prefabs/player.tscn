@@ -86,7 +86,6 @@ metadata/_edit_group_ = true
 position = Vector2(-3, 26)
 shape = SubResource("RectangleShape2D_ykx3s")
 
-
 [node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1474160666]
 texture_filter = 1
 scale = Vector2(5, 5)
@@ -103,9 +102,6 @@ one_shot = true
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
 wait_time = 2.0
 one_shot = true
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=557111740]
-enabled = false
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=557111740]
 enabled = false
