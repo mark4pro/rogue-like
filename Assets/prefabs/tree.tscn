@@ -9,7 +9,7 @@ shader_parameter/debug = false
 shader_parameter/border_scale = 2.0
 shader_parameter/shadow_offset = Vector2(-15, -15)
 shader_parameter/color = Color(0, 0, 0, 0.30588236)
-shader_parameter/blur_amount = 2.0110000955225
+shader_parameter/blur_amount = 0.0
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = false
 

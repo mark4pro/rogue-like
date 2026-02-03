@@ -140,8 +140,7 @@ func mapGen() -> void:
 					var newTree : Sprite2D = treeScene.instantiate()
 					worldNode.add_child(newTree)
 					newTree.rotation_degrees = randf_range(0, 360)
-					newTree.offset = Vector2(randf_range(-16, 16), randf_range(-16, 16))
-					newTree.position = ground.map_to_local(Vector2i(x, y))
+					newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
 					#props.set_cell(Vector2i(x, y), 0, Vector2i(4, 2))
 
 func regen() -> void:
