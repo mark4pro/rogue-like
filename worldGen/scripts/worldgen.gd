@@ -36,6 +36,7 @@ var layers = {}
 
 var worldNode : Node2D = null
 var isTestEnv : Node2D = null
+var freeCam : Camera2D = null
 
 func genLayers(parent: Node2D) -> Dictionary:
 	var newLayers = {}
@@ -141,7 +142,6 @@ func mapGen() -> void:
 					worldNode.add_child(newTree)
 					newTree.rotation_degrees = randf_range(0, 360)
 					newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
-					#props.set_cell(Vector2i(x, y), 0, Vector2i(4, 2))
 
 func regen() -> void:
 	var seed : int = randi()
@@ -165,15 +165,15 @@ func _process(delta: float) -> void:
 	var chkPlayer = get_tree().get_nodes_in_group("Player")
 	if not chkPlayer.is_empty():
 		player = chkPlayer[0]
-		player.get_node("Camera2D").enabled = true
+		player.get_node("Camera2D").make_current()
 	else: player = null
 	isTestEnv = get_tree().root.get_node_or_null("TestGen")
 	if isTestEnv:
+		freeCam = isTestEnv.get_node("FreeCam")
+		
 		#Enable/Disable free cam
-		if not chkPlayer.is_empty():
-			isTestEnv.get_node("FreeCam").enabled = false
-		else:
-			isTestEnv.get_node("FreeCam").enabled = true
+		if chkPlayer.is_empty():
+			freeCam.make_current()
 		
 		#regen map
 		if Input.is_action_just_pressed("regen_map"):
@@ -200,7 +200,7 @@ func _process(delta: float) -> void:
 	if OS.has_feature("editor"):
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not player:
 			var newPlayer : RigidBody2D = playerRes.instantiate()
-			newPlayer.position = get_viewport().get_mouse_position()
+			newPlayer.position = freeCam.get_global_mouse_position()
 			worldNode.add_child(newPlayer)
 		if Input.is_action_just_pressed("free_cam") and not player == null:
 			player.queue_free()
