@@ -30,6 +30,7 @@ var biomeMap = [] # biome_map[chunk_y][chunk_x]
 var world = [] # world[y][x] = TileType
 var layers = {}
 
+var worldNode : Node2D = null
 var isTestEnv : Node2D = null
 
 func genLayers(parent: Node2D) -> Dictionary:
@@ -131,7 +132,13 @@ func mapGen() -> void:
 				
 				TileType.TREE:
 					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-					props.set_cell(Vector2i(x, y), 0, Vector2i(4, 2))
+					var treeScene = load("res://Assets/prefabs/tree.tscn")
+					var newTree : Sprite2D = treeScene.instantiate()
+					worldNode.add_child(newTree)
+					newTree.rotation_degrees = randf_range(0, 360)
+					newTree.offset = Vector2(randf_range(-5, 5), randf_range(-5, 5))
+					newTree.position = ground.map_to_local(Vector2i(x, y))
+					#props.set_cell(Vector2i(x, y), 0, Vector2i(4, 2))
 
 func regen() -> void:
 	var seed : int = randi()
@@ -159,6 +166,7 @@ func _process(delta: float) -> void:
 		if not hasWorldNode:
 			var newWorldNode : Node2D = Node2D.new()
 			isTestEnv.add_child(newWorldNode)
+			worldNode = newWorldNode
 			newWorldNode.name = "World"
 			layers = genLayers(newWorldNode)
 			hasWorldNode = true

@@ -1,6 +1,19 @@
 [gd_scene format=3 uid="uid://biahn66yel13i"]
 
 [ext_resource type="Texture2D" uid="uid://d2t568c1wlucd" path="res://Assets/imgs/Tree_1.png" id="1_2xu35"]
+[ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="1_8f7x0"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jroq8"]
+shader = ExtResource("1_8f7x0")
+shader_parameter/debug = false
+shader_parameter/border_scale = 2.0
+shader_parameter/shadow_offset = Vector2(-15, -15)
+shader_parameter/color = Color(0, 0, 0, 0.30588236)
+shader_parameter/blur_amount = 2.0110000955225
+shader_parameter/shadow_scale = 1.5
+shader_parameter/disable_rotating = false
 
 [node name="Tree" type="Sprite2D" unique_id=1628725339]
+modulate = Color(1, 1, 1, 0.9411765)
+material = SubResource("ShaderMaterial_jroq8")
 texture = ExtResource("1_2xu35")

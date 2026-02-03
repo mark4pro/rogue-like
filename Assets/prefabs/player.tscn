@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bjts4lj4357yt"]
 
 [ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_fj04p"]
-[ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
+
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
 size = Vector2(104, 26)
@@ -86,11 +86,14 @@ metadata/_edit_group_ = true
 position = Vector2(-3, 26)
 shape = SubResource("RectangleShape2D_ykx3s")
 
+
 [node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1474160666]
 texture_filter = 1
 scale = Vector2(5, 5)
 sprite_frames = SubResource("SpriteFrames_i87ed")
 animation = &"walk"
+
+
 
 [node name="Timer" type="Timer" parent="." unique_id=785397555]
 one_shot = true
