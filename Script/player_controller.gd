@@ -24,7 +24,11 @@ func _physics_process(delta: float) -> void:
 	var dir : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 	
 	linear_velocity = dir * speed * delta;
-
+	
+	if linear_velocity.x < 0:
+		$Sprite2D.flip_h = true
+	elif linear_velocity.x > 0:
+		$Sprite2D.flip_h = false
 
 func _on_timer_timeout() -> void:
 	speed = walk_speed
