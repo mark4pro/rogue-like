@@ -25,13 +25,12 @@ func _physics_process(delta: float) -> void:
 	
 	linear_velocity = dir * speed * delta;
 	
-	
 	if Input.is_action_just_pressed("roll") and not roll:
 		roll = true
 	if roll:
 		$Sprite2D.rotation += 7 * delta
-	
-	if $Sprite2D.rotation%PI/2 == 1:
+	$Sprite2D.rotation_degrees = int($Sprite2D.rotation_degrees) % 360
+	if $Sprite2D.rotation_degrees == 0 and roll:
 		$Sprite2D.rotation = 0
 		roll = false 
 	
