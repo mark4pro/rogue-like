@@ -28,4 +28,9 @@ one_shot = true
 wait_time = 0.2
 one_shot = true
 
+[node name="roll_cooldown" type="Timer" parent="RigidBody2D" unique_id=1390013881]
+wait_time = 2.0
+one_shot = true
+
 [connection signal="timeout" from="RigidBody2D/Timer" to="RigidBody2D" method="_on_timer_timeout"]
+[connection signal="timeout" from="RigidBody2D/roll_cooldown" to="RigidBody2D" method="_on_roll_cooldown_timeout"]
