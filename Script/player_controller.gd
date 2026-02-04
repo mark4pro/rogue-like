@@ -109,8 +109,12 @@ func _process(delta: float) -> void:
 	#Flip sprite and rotation based on movement direction
 	if linear_velocity.x < 0:
 		$Sprite2D.flip_h = true
+		grass_particles.visible = true
+		more_grass_particles.visible = false
 	elif linear_velocity.x > 0:
 		$Sprite2D.flip_h = false
+		more_grass_particles.visible = true
+		grass_particles.visible = false
 	
 	#Flip sprite and rotation based on roll direction
 	if is_rolling:
