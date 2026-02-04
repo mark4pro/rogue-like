@@ -100,6 +100,8 @@ func _process(delta: float) -> void:
 		rspeed = roll_speed
 	
 	#Finish roll and start cool down
+	#Had to change this since _process updates before _physics_process thus if rotation = 0
+	#	and triggering this at the wrong time.
 	if ($Sprite2D.rotation_degrees >= 360 or $Sprite2D.rotation_degrees <= -360) and is_rolling:
 		$Sprite2D.rotation = 0
 		roll_cooldown.start()
