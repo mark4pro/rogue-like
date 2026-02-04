@@ -6,13 +6,13 @@ extends RigidBody2D
 @onready var roll_cooldown = $roll_cooldown
 
 @export_category("Stats")
-@export var max_health = 100
-@export var health = max_health
-@export var max_stamina = 100
-@export var stamina = max_stamina
-@export var stamina_regen = 5
-@export var stamina_exhausted_regen = 15
-@export var stamina_drain = 25
+@export var max_health : float = 100
+@export var health : float = max_health
+@export var max_stamina : float = 100
+@export var stamina : float = max_stamina
+@export var stamina_regen : float = 5
+@export var stamina_exhausted_regen : float = 15
+@export var stamina_drain : float = 25
 
 @export_category("Movement")
 @export var sprint_speed : float = 15
