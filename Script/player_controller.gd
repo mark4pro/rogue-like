@@ -37,10 +37,6 @@ var speed : float = walk_speed
 var rspeed : float = roll_speed
 var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
-
-func _ready() -> void:
-	health_bar.max_value = max_health
-	health_bar.value = health
 	
 func take_damage(amount: float):
 	if not is_rolling:
