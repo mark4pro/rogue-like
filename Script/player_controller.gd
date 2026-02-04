@@ -53,9 +53,9 @@ func _process(delta: float) -> void:
 	regen_stamina = not can_sprint and stamina < max_stamina
 	
 	#Activate sprint
-	if Input.is_action_just_pressed("sprint") and can_sprint:
+	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
 		speed = sprint_speed
-	if Input.is_action_just_released("sprint"):
+	if Input.is_action_just_released("sprint") or not is_moving:
 		speed = walk_speed
 	
 	#Drain stamina if sprinting
