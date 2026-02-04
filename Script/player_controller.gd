@@ -5,6 +5,9 @@ extends RigidBody2D
 @onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
 @onready var roll_cooldown : Timer = $roll_cooldown
 
+@onready var grass_particles : GPUParticles2D = $grass
+
+
 @export_category("Stats")
 @export var max_health : float = 100
 @export var health : float = max_health
@@ -51,6 +54,9 @@ func _process(delta: float) -> void:
 	is_sprinting = speed == sprint_speed
 	can_sprint = not regen_stamina and stamina > 0
 	regen_stamina = not can_sprint and stamina < max_stamina
+	
+	if is_moving:
+		grass_particles.restart()
 	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
@@ -149,3 +155,9 @@ func _physics_process(delta: float) -> void:
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
+
+
+
+
+func _on_grass_finished() -> void:
+	pass # Replace with function body.
