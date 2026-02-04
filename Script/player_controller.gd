@@ -56,7 +56,9 @@ func _process(delta: float) -> void:
 	regen_stamina = not can_sprint and stamina < max_stamina
 	
 	if is_moving:
-		grass_particles.restart()
+		grass_particles.emitting = true
+	else:
+		grass_particles.emitting = false
 	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
@@ -155,9 +157,3 @@ func _physics_process(delta: float) -> void:
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
-
-
-
-
-func _on_grass_finished() -> void:
-	pass # Replace with function body.

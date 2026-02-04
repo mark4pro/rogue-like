@@ -158,9 +158,7 @@ position = Vector2(8, 9)
 emitting = false
 amount = 4
 lifetime = 0.05
-one_shot = true
 speed_scale = 0.5
 process_material = SubResource("ParticleProcessMaterial_gmoaq")
 
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
-[connection signal="finished" from="grass" to="." method="_on_grass_finished"]
