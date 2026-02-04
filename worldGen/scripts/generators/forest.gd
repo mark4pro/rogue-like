@@ -1,21 +1,24 @@
 extends WorldGenerator
 class_name ForestGenerator
 
+@export var frequency : Vector2 = Vector2(0.03, 0.5)
+
+var chunkTiles : int = 10
 var noise = FastNoiseLite.new()
 
 func gen() -> void:
 	noise.seed = Worldgen.seed
-	noise.frequency = randf_range(0.03, 0.5)
+	noise.frequency = randf_range(frequency.x, frequency.y)
 	
 	for cy in range(Worldgen.chunkSize.y):
 		for cx in range(Worldgen.chunkSize.x):
 			if Worldgen.biomeMap[cy][cx] != Worldgen.Biome.FOREST:
 				continue
 				
-			for y in range(10):
-				for x in range(10):
-					var wx = cx * 10 + x
-					var wy = cy * 10 + y
+			for y in range(chunkTiles):
+				for x in range(chunkTiles):
+					var wx = cx * chunkTiles + x
+					var wy = cy * chunkTiles + y
 					
 					Worldgen.world[wy][wx] = Worldgen.TileType.GRASS
 					

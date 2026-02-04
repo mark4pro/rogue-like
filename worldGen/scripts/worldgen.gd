@@ -62,6 +62,12 @@ func genLayers(parent: Node2D) -> Dictionary:
 	parent.add_child(trees)
 	newLayers.trees = trees
 	
+	var walls : TileMapLayer = TileMapLayer.new()
+	walls.name = "Walls"
+	walls.z_index = 3
+	parent.add_child(walls)
+	newLayers.walls = walls
+	
 	return newLayers
 
 func initArrays() -> void:
@@ -93,18 +99,22 @@ func mixGen() -> void:
 func mapGen() -> void:
 	var ground : TileMapLayer = layers.ground
 	var props : TileMapLayer = layers.props
-	var trees : Node2D = layers.trees 
+	var trees : Node2D = layers.trees
+	var walls : TileMapLayer = layers.walls 
 	
 	var tileSet = load("res://Assets/tilesets/forest_test.tres")
 	
 	ground.tile_set = tileSet
 	props.tile_set = tileSet
+	walls.tile_set = tileSet
 	
 	ground.tile_set.tile_size = Vector2i(tileSize, tileSize)
 	props.tile_set.tile_size = Vector2i(tileSize, tileSize)
+	walls.tile_set.tile_size = Vector2i(tileSize, tileSize)
 	
 	ground.clear()
 	props.clear()
+	walls.clear()
 	
 	for y in range(world.size()):
 		for x in range(world[y].size()):
@@ -123,6 +133,12 @@ func mapGen() -> void:
 					newTree.name = "Tree1"
 					newTree.rotation_degrees = randf_range(0, 360)
 					newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
+				
+				TileType.FLOOR:
+					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 2))
+				
+				TileType.WALL:
+					walls.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))
 
 func regen() -> void:
 	seed = randi()

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CaveGenerator" format=3 uid="uid://du115ylxkrsr7"]
+
+[ext_resource type="Script" uid="uid://ylknh5ck4pw" path="res://worldGen/scripts/generators/cave.gd" id="1_xwykf"]
+
+[resource]
+script = ExtResource("1_xwykf")
+iterations = 3
+frequency = Vector2(0.03, 0.1)
+metadata/_custom_type_script = "uid://ylknh5ck4pw"
