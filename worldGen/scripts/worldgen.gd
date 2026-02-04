@@ -2,13 +2,13 @@ extends Node
 
 @onready var playerRes : PackedScene = preload("res://Assets/prefabs/player.tscn")
 @onready var treeRes : PackedScene = preload("res://Assets/prefabs/tree.tscn")
-
 @onready var worldData : World = preload("res://worldGen/Worlds/default.tres").duplicate(true)
 
-var chunkSize : Vector2i = Vector2i(10, 10)
-var tileSize : int = 32
-
 @export var thisSeed : int = -1 # -1 use random seed
+@export var chunkSize : Vector2i = Vector2i(10, 10)
+@export var chunkTiles : int = 30
+@export var tileSize : int = 32
+
 var seed : int = randi()
 
 var hasWorldNode : bool = false
@@ -77,8 +77,8 @@ func initArrays() -> void:
 		for x in range(chunkSize.x):
 			biomeMap[y].append(Biome.FOREST)
 
-	var world_w = chunkSize.x * 10
-	var world_h = chunkSize.y * 10
+	var world_w = chunkSize.x * chunkTiles
+	var world_h = chunkSize.y * chunkTiles
 
 	world.clear()
 	for y in range(world_h):

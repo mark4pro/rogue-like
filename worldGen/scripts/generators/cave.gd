@@ -4,7 +4,6 @@ class_name CaveGenerator
 @export var iterations : int = 6
 @export var frequency : Vector2 = Vector2(0.03, 0.5)
 
-var chunkTiles : int = 10
 var noise = FastNoiseLite.new()
 
 func gen() -> void:
@@ -17,10 +16,10 @@ func gen() -> void:
 				continue
 
 			# --- initial random fill ---
-			for y in range(chunkTiles):
-				for x in range(chunkTiles):
-					var wx = cx * chunkTiles + x
-					var wy = cy * chunkTiles + y
+			for y in range(Worldgen.chunkTiles):
+				for x in range(Worldgen.chunkTiles):
+					var wx = cx * Worldgen.chunkTiles + x
+					var wy = cy * Worldgen.chunkTiles + y
 
 					if randf() < 0.45:
 						Worldgen.world[wy][wx] = Worldgen.TileType.WALL
@@ -35,16 +34,16 @@ func smooth_cave_chunk(cx: int, cy: int) -> void:
 	var temp := []
 
 	# copy chunk into temp
-	for y in range(chunkTiles):
+	for y in range(Worldgen.chunkTiles):
 		temp.append([])
-		for x in range(chunkTiles):
-			var wx = cx * chunkTiles + x
-			var wy = cy * chunkTiles + y
+		for x in range(Worldgen.chunkTiles):
+			var wx = cx * Worldgen.chunkTiles + x
+			var wy = cy * Worldgen.chunkTiles + y
 			temp[y].append(Worldgen.world[wy][wx])
 
 	# apply rules
-	for y in range(chunkTiles):
-		for x in range(chunkTiles):
+	for y in range(Worldgen.chunkTiles):
+		for x in range(Worldgen.chunkTiles):
 			var wall_count := 0
 
 			for ny in range(-1, 2):
@@ -55,13 +54,13 @@ func smooth_cave_chunk(cx: int, cy: int) -> void:
 					var px = x + nx
 					var py = y + ny
 
-					if px < 0 or py < 0 or px >= chunkTiles or py >= chunkTiles:
+					if px < 0 or py < 0 or px >= Worldgen.chunkTiles or py >= Worldgen.chunkTiles:
 						wall_count += 1
 					elif temp[py][px] == Worldgen.TileType.WALL:
 						wall_count += 1
 
-			var wx = cx * chunkTiles + x
-			var wy = cy * chunkTiles + y
+			var wx = cx * Worldgen.chunkTiles + x
+			var wy = cy * Worldgen.chunkTiles + y
 
 			if wall_count > 4:
 				Worldgen.world[wy][wx] = Worldgen.TileType.WALL

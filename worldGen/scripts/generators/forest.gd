@@ -3,7 +3,6 @@ class_name ForestGenerator
 
 @export var frequency : Vector2 = Vector2(0.03, 0.5)
 
-var chunkTiles : int = 10
 var noise = FastNoiseLite.new()
 
 func gen() -> void:
@@ -15,10 +14,10 @@ func gen() -> void:
 			if Worldgen.biomeMap[cy][cx] != Worldgen.Biome.FOREST:
 				continue
 				
-			for y in range(chunkTiles):
-				for x in range(chunkTiles):
-					var wx = cx * chunkTiles + x
-					var wy = cy * chunkTiles + y
+			for y in range(Worldgen.chunkTiles):
+				for x in range(Worldgen.chunkTiles):
+					var wx = cx * Worldgen.chunkTiles + x
+					var wy = cy * Worldgen.chunkTiles + y
 					
 					Worldgen.world[wy][wx] = Worldgen.TileType.GRASS
 					
