@@ -148,10 +148,11 @@ theme_override_styles/background = SubResource("StyleBoxFlat_w0l5f")
 theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
-[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=118503801]
+[node name="Shadow" type="Sprite2D" parent="." unique_id=118503801]
+modulate = Color(1, 1, 1, 0.5058824)
 show_behind_parent = true
-position = Vector2(1, 11)
-scale = Vector2(0.64062506, 0.054687507)
+position = Vector2(0, 10.895)
+scale = Vector2(0.961, 0.095)
 texture = ExtResource("4_gmoaq")
 
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
