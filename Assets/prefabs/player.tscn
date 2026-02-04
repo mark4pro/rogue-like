@@ -150,7 +150,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
 [node name="Shadow" type="Sprite2D" parent="." unique_id=118503801]
-modulate = Color(1, 1, 1, 0.5058824)
+modulate = Color(1, 1, 1, 0.6784314)
 show_behind_parent = true
 position = Vector2(0, 10.895)
 scale = Vector2(0.746, 0.095)
