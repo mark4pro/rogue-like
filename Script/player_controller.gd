@@ -41,7 +41,6 @@ var roll_dir : Vector2 = Vector2.ZERO
 func take_damage(amount: float):
 	if not is_rolling:
 		health -= amount
-	print(str(health))
 
 func _process(delta: float) -> void:
 	#Clamp health
