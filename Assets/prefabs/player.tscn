@@ -152,7 +152,7 @@ value = 100.0
 modulate = Color(1, 1, 1, 0.5058824)
 show_behind_parent = true
 position = Vector2(0, 10.895)
-scale = Vector2(0.961, 0.095)
+scale = Vector2(0.746, 0.095)
 texture = ExtResource("4_gmoaq")
 
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
