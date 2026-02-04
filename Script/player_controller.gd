@@ -6,7 +6,7 @@ extends RigidBody2D
 @onready var roll_cooldown : Timer = $roll_cooldown
 
 @onready var grass_particles : GPUParticles2D = $grass
-
+@onready var more_grass_particles : GPUParticles2D = $grass2
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -57,8 +57,10 @@ func _process(delta: float) -> void:
 	
 	if is_moving:
 		grass_particles.emitting = true
+		more_grass_particles.emitting = true
 	else:
 		grass_particles.emitting = false
+		more_grass_particles.emitting = false
 	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:

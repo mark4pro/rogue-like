@@ -161,4 +161,12 @@ lifetime = 0.05
 speed_scale = 0.5
 process_material = SubResource("ParticleProcessMaterial_gmoaq")
 
+[node name="grass2" type="GPUParticles2D" parent="." unique_id=1876608386]
+position = Vector2(-10, 9)
+emitting = false
+amount = 4
+lifetime = 0.05
+speed_scale = 0.5
+process_material = SubResource("ParticleProcessMaterial_gmoaq")
+
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
