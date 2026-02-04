@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_fj04p"]
 [ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
 [ext_resource type="Texture2D" uid="uid://bcetjsof4a06x" path="res://Assets/imgs/heart.png" id="3_g621r"]
+[ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/shadow.png" id="4_gmoaq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
 size = Vector2(23.75, 10)
@@ -96,7 +97,6 @@ lock_rotation = true
 script = ExtResource("1_fj04p")
 stamina_norm_color = Color(0.4117647, 0.6901961, 0, 1)
 stamina_exh_color = Color(0.31672, 0.37, 0.2368, 1)
-metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099576623]
 position = Vector2(-1, 6)
@@ -147,5 +147,11 @@ grow_vertical = 0
 theme_override_styles/background = SubResource("StyleBoxFlat_w0l5f")
 theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=118503801]
+show_behind_parent = true
+position = Vector2(1, 11)
+scale = Vector2(0.64062506, 0.054687507)
+texture = ExtResource("4_gmoaq")
 
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
