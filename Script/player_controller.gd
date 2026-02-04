@@ -15,9 +15,10 @@ extends RigidBody2D
 @export var stamina_drain = 25
 
 @export_category("Movement")
-@export var sprint_speed : float = 15000
-@export var walk_speed : float = 7000
-@export var roll_speed : float = 7
+@export var sprint_speed : float = 15
+@export var walk_speed : float = 7
+@export var roll_speed : float = 10
+@export var roll_rot_speed : float = 7
 
 @export_category("UI")
 @export var stamina_norm_color : Color
@@ -32,16 +33,19 @@ var is_sprinting : bool = false
 
 var dir : Vector2 = Vector2.ZERO
 var speed : float = walk_speed
+
 var rspeed : float = roll_speed
+var roll_target : Vector2 = Vector2.ZERO
+var roll_dir : Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	health_bar.max_value = max_health
 	health_bar.value = health
 	
 func take_damage(amount):
-	health -= amount
-	health = clamp(health, 0, max_health)
-	health_bar.value = health
+	if not is_rolling:
+		health -= amount
+		health = clamp(health, 0, max_health)
 
 func _process(delta: float) -> void:
 	#Movement check
@@ -88,16 +92,26 @@ func _process(delta: float) -> void:
 	
 	#Activate roll
 	if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
+		roll_target = $Camera2D.get_global_mouse_position()
+		roll_dir = roll_target - position
+		roll_dir = roll_dir.normalized()
 		is_rolling = true
 		can_roll = false
 	
-	#Flip sprint and rotation based on direction
+	#Flip sprite and rotation based on movement direction
 	if linear_velocity.x < 0:
 		$Sprite2D.flip_h = true
-		rspeed = -roll_speed
 	elif linear_velocity.x > 0:
 		$Sprite2D.flip_h = false
-		rspeed = roll_speed
+	
+	#Flip sprite and rotation based on roll direction
+	if is_rolling:
+		if roll_dir.x < 0:
+			$Sprite2D.flip_h = true
+			rspeed = -roll_rot_speed
+		elif roll_dir.x > 0:
+			$Sprite2D.flip_h = false
+			rspeed = roll_rot_speed
 	
 	#Finish roll and start cool down
 	#Had to change this since _process updates before _physics_process thus if rotation = 0
@@ -108,6 +122,7 @@ func _process(delta: float) -> void:
 		is_rolling = false 
 	
 	#Update the UI here
+	health_bar.value = (health / max_health) * 100
 	stamina_bar.value = (stamina / max_stamina) * 100
 	if can_sprint:
 		stamina_bar.get_theme_stylebox("fill").bg_color = stamina_norm_color
@@ -123,12 +138,12 @@ func _physics_process(delta: float) -> void:
 		dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 	else:
 		dir = Vector2.ZERO #Don't move when rolling
-	linear_velocity = dir * speed * delta;
+	linear_velocity = dir * speed * 1000 * delta;
 	
 	#Roll logic
 	if is_rolling:
-		print("test")
 		$Sprite2D.rotation += rspeed * delta
+		apply_impulse(roll_dir * roll_speed * 1000 * delta)
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
