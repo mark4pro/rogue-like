@@ -1,9 +1,9 @@
 extends RigidBody2D
 
-@onready var health_bar = $UI/HealthBar
-@onready var stamina_bar = $UI/StaminaBar
-@onready var roll_cooldown_bar = $UI/RollCooldownBar
-@onready var roll_cooldown = $roll_cooldown
+@onready var health_bar : TextureRect = $UI/HealthBar
+@onready var stamina_bar : ProgressBar = $UI/StaminaBar
+@onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
+@onready var roll_cooldown : Timer = $roll_cooldown
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -123,7 +123,8 @@ func _process(delta: float) -> void:
 		queue_free() #change this later
 	
 	#Update the UI here
-	health_bar.value = (health / max_health) * 100
+	var maxHBSize : float = health_bar.texture.get_width() * 5
+	health_bar.size.x = (health / max_health) * maxHBSize
 	stamina_bar.value = (stamina / max_stamina) * 100
 	if can_sprint:
 		stamina_bar.get_theme_stylebox("fill").bg_color = stamina_norm_color
