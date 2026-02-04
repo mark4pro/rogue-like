@@ -92,6 +92,7 @@ bg_color = Color(0.13, 0.071499996, 0.12512502, 0)
 bg_color = Color(0.7901416, 0.51239294, 0.5351781, 1)
 
 [node name="Player" type="RigidBody2D" unique_id=2014763879 groups=["Player"]]
+z_index = 3
 gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_fj04p")

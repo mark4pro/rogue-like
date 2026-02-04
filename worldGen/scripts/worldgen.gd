@@ -58,7 +58,7 @@ func genLayers(parent: Node2D) -> Dictionary:
 	
 	var trees : Node2D = Node2D.new()
 	trees.name = "Trees"
-	trees.z_index = 2
+	trees.z_index = 4
 	parent.add_child(trees)
 	newLayers.trees = trees
 	
