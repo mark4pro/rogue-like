@@ -78,9 +78,17 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g621r"]
+bg_color = Color(0.029605996, 0.11629819, 3.008172e-08, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gmoaq"]
+bg_color = Color(0.41269875, 0.68949276, 3.85046e-07, 1)
+
 [node name="Player" type="RigidBody2D" unique_id=2014763879 groups=["Player"]]
 gravity_scale = 0.0
 script = ExtResource("1_fj04p")
+stamina_norm_color = Color(0.4117647, 0.6901961, 0, 1)
+stamina_exh_color = Color(0.31672, 0.37, 0.2368, 1)
 metadata/_edit_group_ = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099576623]
@@ -92,13 +100,6 @@ texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_i87ed")
 animation = &"walk"
 
-[node name="Timer" type="Timer" parent="." unique_id=785397555]
-one_shot = true
-
-[node name="cooldown" type="Timer" parent="." unique_id=112591730]
-wait_time = 0.2
-one_shot = true
-
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
 wait_time = 2.0
 one_shot = true
@@ -106,12 +107,22 @@ one_shot = true
 [node name="Camera2D" type="Camera2D" parent="." unique_id=557111740]
 zoom = Vector2(7, 7)
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=963694637]
+[node name="UI" type="CanvasLayer" parent="." unique_id=963694637]
 
-[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer" unique_id=1503107830]
+[node name="HealthBar" type="TextureProgressBar" parent="UI" unique_id=1503107830]
 offset_right = 128.0
 offset_bottom = 128.0
 texture_progress = ExtResource("3_g621r")
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[node name="StaminaBar" type="ProgressBar" parent="UI" unique_id=513536406]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -50.0
+offset_right = 400.0
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_g621r")
+theme_override_styles/fill = SubResource("StyleBoxFlat_gmoaq")
+value = 100.0
+
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]

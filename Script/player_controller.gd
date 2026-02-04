@@ -1,18 +1,35 @@
 extends RigidBody2D
 
-@onready var health_bar = $CanvasLayer/TextureProgressBar
+@onready var health_bar = $UI/HealthBar
+@onready var stamina_bar = $UI/StaminaBar
 @onready var roll_cooldown = $roll_cooldown
-@onready var sprint_timer = $Timer
-@onready var cooldown_timer = $cooldown
-var roll : bool = false
-var health = 100
-var max_health = 100
-var can_roll : bool = true
 
+@export_category("Stats")
+@export var max_health = 100
+@export var health = max_health
+@export var max_stamina = 100
+@export var stamina = max_stamina
+@export var stamina_regen = 5
+@export var stamina_exhausted_regen = 15
+@export var stamina_drain = 25
+
+@export_category("Movement")
 @export var sprint_speed : float = 15000
 @export var walk_speed : float = 7000
 @export var roll_speed : float = 7
 
+@export_category("UI")
+@export var stamina_norm_color : Color
+@export var stamina_exh_color : Color
+
+var regen_stamina : bool = false
+var can_sprint : bool = true
+var is_rolling : bool = false
+var can_roll : bool = true
+var is_moving : bool = false
+var is_sprinting : bool = false
+
+var dir : Vector2 = Vector2.ZERO
 var speed : float = walk_speed
 var rspeed : float = roll_speed
 
@@ -25,54 +42,89 @@ func take_damage(amount):
 	health = clamp(health, 0, max_health)
 	health_bar.value = health
 
-func _physics_process(delta: float) -> void:
-	if Input.is_action_just_pressed("sprint") and cooldown_timer.time_left == 0:
+func _process(delta: float) -> void:
+	#Movement check
+	is_moving = not dir == Vector2.ZERO
+	is_sprinting = speed == sprint_speed
+	can_sprint = not regen_stamina and stamina > 0
+	regen_stamina = not can_sprint and stamina < max_stamina
+	
+	#Activate sprint
+	if Input.is_action_just_pressed("sprint") and can_sprint:
 		speed = sprint_speed
-		$Sprite2D.speed_scale = 3
-		sprint_timer.start()
 	if Input.is_action_just_released("sprint"):
 		speed = walk_speed
+	
+	#Drain stamina if sprinting
+	if is_moving and is_sprinting and can_sprint:
+		stamina -= stamina_drain * delta
+	
+	#Regen stamina if stamina isn't full (doesn't stop strinting)
+	if not is_sprinting and can_sprint and stamina < max_stamina:
+		stamina += stamina_regen * delta
+	
+	#Regen stamina if fully drained (stops strinting)
+	if regen_stamina:
+		stamina += stamina_exhausted_regen * delta
+	
+	#Set speed back to walk speed
+	if not can_sprint:
+		speed = walk_speed
+	
+	#Set animation speed
+	if is_sprinting:
+		$Sprite2D.speed_scale = 3
+	else:
 		$Sprite2D.speed_scale = 1
-		sprint_timer.stop()
-		cooldown_timer.start()
 	
-	var dir : Vector2 = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
-	
-	linear_velocity = dir * speed * delta;
-	
-	if linear_velocity != Vector2.ZERO and not roll:
+	#Walk animation state
+	if not dir == Vector2.ZERO:
 		$Sprite2D.play("walk")
+	else:
+		$Sprite2D.stop()
+	if is_rolling:
+		$Sprite2D.stop()
 	
-	if Input.is_action_just_pressed("roll") and not roll and can_roll:
-		roll = true
+	#Activate roll
+	if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
+		is_rolling = true
 		can_roll = false
 	
-	if dir == Vector2.ZERO:
-		$Sprite2D.stop()
-	
-	if roll:
-		$Sprite2D.stop()
-		$Sprite2D.rotation += rspeed * delta
-		
-	$Sprite2D.rotation_degrees = int($Sprite2D.rotation_degrees) % 360
-	
-	if $Sprite2D.rotation_degrees == 0 and roll:
-		$Sprite2D.rotation = 0
-		roll_cooldown.start()
-		roll = false 
-	
+	#Flip sprint and rotation based on direction
 	if linear_velocity.x < 0:
 		$Sprite2D.flip_h = true
 		rspeed = -roll_speed
 	elif linear_velocity.x > 0:
 		$Sprite2D.flip_h = false
 		rspeed = roll_speed
+	
+	#Finish roll and start cool down
+	if $Sprite2D.rotation == 0 and is_rolling:
+		$Sprite2D.rotation = 0
+		roll_cooldown.start()
+		is_rolling = false 
+	
+	#Roll over rotation so it stays between 0 and 359
+	$Sprite2D.rotation_degrees = int($Sprite2D.rotation_degrees) % 360
+	
+	#Update the UI here
+	stamina_bar.value = (stamina / max_stamina) * 100
+	if can_sprint:
+		stamina_bar.get_theme_stylebox("fill").bg_color = stamina_norm_color
+	else:
+		stamina_bar.get_theme_stylebox("fill").bg_color = stamina_exh_color
 
-func _on_timer_timeout() -> void:
-	speed = walk_speed
-	$Sprite2D.speed_scale = 1
-	cooldown_timer.start()
-
+func _physics_process(delta: float) -> void:
+	#Move player
+	if not is_rolling:
+		dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
+	else:
+		dir = Vector2.ZERO #Don't move when rolling
+	linear_velocity = dir * speed * delta;
+	
+	#Roll logic
+	if is_rolling:
+		$Sprite2D.rotation += rspeed * delta
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
