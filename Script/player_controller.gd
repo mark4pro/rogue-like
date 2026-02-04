@@ -2,6 +2,7 @@ extends RigidBody2D
 
 @onready var health_bar = $UI/HealthBar
 @onready var stamina_bar = $UI/StaminaBar
+@onready var roll_cooldown_bar = $UI/RollCooldownBar
 @onready var roll_cooldown = $roll_cooldown
 
 @export_category("Stats")
@@ -99,13 +100,10 @@ func _process(delta: float) -> void:
 		rspeed = roll_speed
 	
 	#Finish roll and start cool down
-	if $Sprite2D.rotation == 0 and is_rolling:
+	if ($Sprite2D.rotation_degrees >= 360 or $Sprite2D.rotation_degrees <= -360) and is_rolling:
 		$Sprite2D.rotation = 0
 		roll_cooldown.start()
 		is_rolling = false 
-	
-	#Roll over rotation so it stays between 0 and 359
-	$Sprite2D.rotation_degrees = int($Sprite2D.rotation_degrees) % 360
 	
 	#Update the UI here
 	stamina_bar.value = (stamina / max_stamina) * 100
@@ -113,6 +111,9 @@ func _process(delta: float) -> void:
 		stamina_bar.get_theme_stylebox("fill").bg_color = stamina_norm_color
 	else:
 		stamina_bar.get_theme_stylebox("fill").bg_color = stamina_exh_color
+	
+	roll_cooldown_bar.value = (1 - (roll_cooldown.time_left / roll_cooldown.wait_time)) * 100
+	roll_cooldown_bar.visible = roll_cooldown.time_left > 0
 
 func _physics_process(delta: float) -> void:
 	#Move player
@@ -124,6 +125,7 @@ func _physics_process(delta: float) -> void:
 	
 	#Roll logic
 	if is_rolling:
+		print("test")
 		$Sprite2D.rotation += rspeed * delta
 
 func _on_roll_cooldown_timeout() -> void:

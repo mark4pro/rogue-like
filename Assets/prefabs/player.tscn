@@ -84,6 +84,12 @@ bg_color = Color(0.029605996, 0.11629819, 3.008172e-08, 1)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gmoaq"]
 bg_color = Color(0.41269875, 0.68949276, 3.85046e-07, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w0l5f"]
+bg_color = Color(0.13, 0.071499996, 0.12512502, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbpd7"]
+bg_color = Color(0.7901416, 0.51239294, 0.5351781, 1)
+
 [node name="Player" type="RigidBody2D" unique_id=2014763879 groups=["Player"]]
 gravity_scale = 0.0
 script = ExtResource("1_fj04p")
@@ -123,6 +129,18 @@ offset_right = 400.0
 grow_vertical = 0
 theme_override_styles/background = SubResource("StyleBoxFlat_g621r")
 theme_override_styles/fill = SubResource("StyleBoxFlat_gmoaq")
+value = 100.0
+
+[node name="RollCooldownBar" type="ProgressBar" parent="UI" unique_id=331113281]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -75.0
+offset_right = 200.0
+offset_bottom = -50.0
+grow_vertical = 0
+theme_override_styles/background = SubResource("StyleBoxFlat_w0l5f")
+theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
