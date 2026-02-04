@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://csunnqftn32r0"]
+
+[ext_resource type="Script" uid="uid://dvogflxllly0w" path="res://Script/dummy.gd" id="1_aj82d"]
+[ext_resource type="Texture2D" uid="uid://d00xftj3xa51o" path="res://Assets/imgs/Bob.png" id="2_f3qvs"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_canp3"]
+radius = 46.0
+
+[node name="Dummy" type="Node2D" unique_id=1486159998]
+script = ExtResource("1_aj82d")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=569940569]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1167644740]
+shape = SubResource("CircleShape2D_canp3")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=544361814]
+texture = ExtResource("2_f3qvs")

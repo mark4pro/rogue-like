@@ -42,12 +42,15 @@ func _ready() -> void:
 	health_bar.max_value = max_health
 	health_bar.value = health
 	
-func take_damage(amount):
+func take_damage(amount: float):
 	if not is_rolling:
 		health -= amount
-		health = clamp(health, 0, max_health)
+	print(str(health))
 
 func _process(delta: float) -> void:
+	#Clamp health
+	health = clamp(health, 0, max_health)
+	
 	#Movement check
 	is_moving = not dir == Vector2.ZERO
 	is_sprinting = speed == sprint_speed
@@ -120,6 +123,9 @@ func _process(delta: float) -> void:
 		$Sprite2D.rotation = 0
 		roll_cooldown.start()
 		is_rolling = false 
+	
+	if not health > 0:
+		queue_free() #change this later
 	
 	#Update the UI here
 	health_bar.value = (health / max_health) * 100

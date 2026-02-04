@@ -1,8 +1,12 @@
 [gd_scene format=3 uid="uid://b2r487f6fn0ic"]
 
 [ext_resource type="PackedScene" uid="uid://bjts4lj4357yt" path="res://Assets/prefabs/player.tscn" id="1_4ox28"]
+[ext_resource type="PackedScene" uid="uid://csunnqftn32r0" path="res://Assets/prefabs/dummy.tscn" id="2_ubntj"]
 
 [node name="shit" type="Node2D" unique_id=349187987]
 
 [node name="Player" parent="." unique_id=2014763879 instance=ExtResource("1_4ox28")]
 position = Vector2(267, 100)
+
+[node name="Dummy" parent="." unique_id=1486159998 instance=ExtResource("2_ubntj")]
+position = Vector2(387, 154)
