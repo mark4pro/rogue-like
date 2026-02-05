@@ -136,7 +136,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"end_roll",
-"speed": 5.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -176,7 +176,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"start_roll",
-"speed": 5.0
+"speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
