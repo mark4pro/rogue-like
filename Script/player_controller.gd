@@ -1,12 +1,12 @@
 extends RigidBody2D
 
+@onready var sprite : AnimatedSprite2D = $Sprite2D
 @onready var health_bar : TextureRect = $UI/HealthBar
 @onready var stamina_bar : ProgressBar = $UI/StaminaBar
 @onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
 @onready var roll_cooldown : Timer = $roll_cooldown
-
-@onready var grass_particles : GPUParticles2D = $grass
-@onready var more_grass_particles : GPUParticles2D = $grass2
+@onready var left_grass : GPUParticles2D = $leftGrass
+@onready var right_grass : GPUParticles2D = $rightGrass
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -27,6 +27,8 @@ extends RigidBody2D
 @export var stamina_norm_color : Color
 @export var stamina_exh_color : Color
 
+var anim : String = ""
+
 var regen_stamina : bool = false
 var can_sprint : bool = true
 var is_rolling : bool = false
@@ -37,6 +39,8 @@ var is_sprinting : bool = false
 var dir : Vector2 = Vector2.ZERO
 var speed : float = walk_speed
 
+var roll_state : int = 0 #0: not rolling, 1: start roll, 2: roll logic, 3: end roll
+
 var rspeed : float = roll_speed
 var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
@@ -46,6 +50,8 @@ func take_damage(amount: float):
 		health -= amount
 
 func _process(delta: float) -> void:
+	anim = sprite.animation
+	
 	#Clamp health
 	health = clamp(health, 0, max_health)
 	
@@ -54,13 +60,7 @@ func _process(delta: float) -> void:
 	is_sprinting = speed == sprint_speed
 	can_sprint = not regen_stamina and stamina > 0
 	regen_stamina = not can_sprint and stamina < max_stamina
-	
-	if is_moving:
-		grass_particles.emitting = true
-		more_grass_particles.emitting = true
-	else:
-		grass_particles.emitting = false
-		more_grass_particles.emitting = false
+	roll_state =  roll_state % 3
 	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
@@ -86,19 +86,26 @@ func _process(delta: float) -> void:
 	
 	#Set animation speed
 	if is_sprinting:
-		$Sprite2D.speed_scale = 3
+		sprite.speed_scale = 3
 	else:
-		$Sprite2D.speed_scale = 1
+		sprite.speed_scale = 1
 	
 	#Walk animation state
 	if not dir == Vector2.ZERO:
-		$Sprite2D.play("walk")
+		sprite.play("walk")
 	else:
-		$Sprite2D.stop()
-		$Sprite2D.play("roll")
-
-		
+		if anim == "walk":
+			sprite.stop()
 	
+	#Roll animation state
+	print(roll_state)
+	match roll_state:
+		1:
+			if anim != "start_roll": sprite.play("start_roll")
+		2:
+			if anim != "roll": sprite.play("roll")
+		3:
+			if anim != "end_roll": sprite.play("end_roll")
 	
 	#Activate roll
 	if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
@@ -107,35 +114,45 @@ func _process(delta: float) -> void:
 		roll_dir = roll_dir.normalized()
 		is_rolling = true
 		can_roll = false
+		roll_state += 1
 	
 	#Flip sprite and rotation based on movement direction
 	if linear_velocity.x < 0:
-		$Sprite2D.flip_h = true
-		grass_particles.visible = true
-		more_grass_particles.visible = false
+		sprite.flip_h = true
 	elif linear_velocity.x > 0:
-		$Sprite2D.flip_h = false
-		more_grass_particles.visible = true
-		grass_particles.visible = false
+		sprite.flip_h = false
 	
 	#Flip sprite and rotation based on roll direction
 	if is_rolling:
 		if roll_dir.x < 0:
-			$Sprite2D.flip_h = true
+			sprite.flip_h = true
 			rspeed = -roll_rot_speed
 		elif roll_dir.x > 0:
-			$Sprite2D.flip_h = false
+			sprite.flip_h = false
 			rspeed = roll_rot_speed
 	
 	#Finish roll and start cool down
 	#Had to change this since _process updates before _physics_process thus if rotation = 0
 	#	and triggering this at the wrong time.
-	if ($Sprite2D.rotation_degrees >= 360 or $Sprite2D.rotation_degrees <= -360) and is_rolling:
-		$Sprite2D.rotation = 0
+	if (sprite.rotation_degrees >= 360 or sprite.rotation_degrees <= -360) and is_rolling:
+		sprite.rotation = 0
 		roll_cooldown.start()
 		is_rolling = false 
-		
+		roll_state += 1
 	
+	#Particles
+	if is_moving and not is_rolling:
+		left_grass.emitting = not sprite.flip_h
+		right_grass.emitting = sprite.flip_h
+		left_grass.visible = not sprite.flip_h
+		right_grass.visible = sprite.flip_h
+	else:
+		left_grass.emitting = false
+		right_grass.emitting = false
+		left_grass.visible = false
+		right_grass.visible = false
+	
+	#Death
 	if not health > 0:
 		queue_free() #change this later
 	
@@ -153,16 +170,20 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	#Move player
-	if not is_rolling:
+	if not is_rolling and roll_state == 0:
 		dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 	else:
 		dir = Vector2.ZERO #Don't move when rolling
 	linear_velocity = dir * speed * 1000 * delta;
 	
 	#Roll logic
-	if is_rolling:
-		$Sprite2D.rotation += rspeed * delta
+	if is_rolling and roll_state != 1:
+		sprite.rotation += rspeed * delta
 		apply_impulse(roll_dir * roll_speed * 1000 * delta)
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
+
+func _on_sprite_2d_animation_finished() -> void:
+	if anim == "start_roll" or anim == "end_roll":
+		roll_state += 1
