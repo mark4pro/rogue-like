@@ -1,6 +1,7 @@
 extends RigidBody2D
 
-@onready var sprite : AnimatedSprite2D = $Sprite2D
+@onready var sprite : AnimatedSprite2D = $RotPoint/Sprite2D
+@onready var rot_point : Node2D = $RotPoint
 @onready var health_bar : TextureRect = $UI/HealthBar
 @onready var stamina_bar : ProgressBar = $UI/StaminaBar
 @onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
@@ -135,8 +136,8 @@ func _process(delta: float) -> void:
 	#Finish roll and start cool down
 	#Had to change this since _process updates before _physics_process thus if rotation = 0
 	#	and triggering this at the wrong time.
-	if (sprite.rotation_degrees >= 360 or sprite.rotation_degrees <= -360) and is_rolling:
-		sprite.rotation = 0
+	if (rot_point.rotation_degrees >= 360 or rot_point.rotation_degrees <= -360) and is_rolling:
+		rot_point.rotation = 0
 		roll_cooldown.start()
 		is_rolling = false 
 		roll_state += 1
@@ -179,7 +180,7 @@ func _physics_process(delta: float) -> void:
 	
 	#Roll logic
 	if is_rolling and roll_state != 1:
-		sprite.rotation += rspeed * delta
+		rot_point.rotation += rspeed * delta
 		apply_impulse(roll_dir * roll_speed * 1000 * delta)
 
 func _on_roll_cooldown_timeout() -> void:

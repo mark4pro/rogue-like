@@ -136,7 +136,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"end_roll",
-"speed": 24.0
+"speed": 40.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -176,7 +176,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"start_roll",
-"speed": 24.0
+"speed": 40.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -243,11 +243,15 @@ stamina_norm_color = Color(0.4117647, 0.6901961, 0, 1)
 stamina_exh_color = Color(0.31672, 0.37, 0.2368, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099576623]
-position = Vector2(-1, 6)
+position = Vector2(-2, 5)
 shape = SubResource("RectangleShape2D_ykx3s")
 
-[node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1474160666]
+[node name="RotPoint" type="Node2D" parent="." unique_id=1568228705]
+position = Vector2(0, 4)
+
+[node name="Sprite2D" type="AnimatedSprite2D" parent="RotPoint" unique_id=1474160666]
 texture_filter = 1
+position = Vector2(0, -4)
 sprite_frames = SubResource("SpriteFrames_i87ed")
 animation = &"walk"
 speed_scale = 4.005
@@ -317,5 +321,5 @@ lifetime = 0.05
 speed_scale = 0.5
 process_material = SubResource("ParticleProcessMaterial_gmoaq")
 
-[connection signal="animation_finished" from="Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
+[connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
