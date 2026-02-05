@@ -99,6 +99,8 @@ func _process(delta: float) -> void:
 	
 	#Roll animation state
 	match roll_state:
+		0:
+			if anim != "walk": anim = "walk"
 		1:
 			if anim != "start_roll": sprite.play("start_roll")
 		2:
