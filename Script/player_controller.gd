@@ -95,8 +95,10 @@ func _process(delta: float) -> void:
 		$Sprite2D.play("walk")
 	else:
 		$Sprite2D.stop()
-	if is_rolling:
-		$Sprite2D.stop()
+		$Sprite2D.play("roll")
+
+		
+	
 	
 	#Activate roll
 	if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
@@ -132,6 +134,7 @@ func _process(delta: float) -> void:
 		$Sprite2D.rotation = 0
 		roll_cooldown.start()
 		is_rolling = false 
+		
 	
 	if not health > 0:
 		queue_free() #change this later
