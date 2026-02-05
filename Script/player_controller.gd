@@ -60,7 +60,7 @@ func _process(delta: float) -> void:
 	is_sprinting = speed == sprint_speed
 	can_sprint = not regen_stamina and stamina > 0
 	regen_stamina = not can_sprint and stamina < max_stamina
-	roll_state =  roll_state % 3
+	roll_state =  roll_state % 4
 	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
@@ -98,7 +98,6 @@ func _process(delta: float) -> void:
 			sprite.stop()
 	
 	#Roll animation state
-	print(roll_state)
 	match roll_state:
 		1:
 			if anim != "start_roll": sprite.play("start_roll")

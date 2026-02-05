@@ -249,7 +249,7 @@ shape = SubResource("RectangleShape2D_ykx3s")
 [node name="Sprite2D" type="AnimatedSprite2D" parent="." unique_id=1474160666]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_i87ed")
-animation = &"start_roll"
+animation = &"walk"
 speed_scale = 4.005
 
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
