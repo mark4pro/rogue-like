@@ -10,6 +10,9 @@ extends RigidBody2D
 @onready var roll_cooldown : Timer = $roll_cooldown
 @onready var left_grass : GPUParticles2D = $leftGrass
 @onready var right_grass : GPUParticles2D = $rightGrass
+@onready var Inventory_UI = $InventoryUI
+
+#CHECK LINE 203 FIRST
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -60,7 +63,6 @@ func take_damage(amount: float):
 
 func _process(delta: float) -> void:
 	anim = sprite.animation
-	
 	#Clamp health
 	health = clamp(health, 0, max_health)
 	
@@ -191,6 +193,15 @@ func _physics_process(delta: float) -> void:
 	if is_rolling and roll_state != 1:
 		rot_point.rotation += rspeed * delta
 		apply_impulse(roll_dir * roll_speed * 1000 * delta)
+#open and close inventory
+func _input(event):
+	if event.is_action_pressed("inventory"):
+		Inventory_UI.visible = !Inventory_UI.visible
+	
+	
+		#line below this has a bug
+		#get_tree().paused = !get_tree().paused
+	
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
