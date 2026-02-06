@@ -51,12 +51,8 @@ var rspeed : float = roll_speed
 var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
 
-
-
 func _ready():
 	Global.set_player_reference(self)
-
-
 
 func take_damage(amount: float):
 	if not is_rolling:

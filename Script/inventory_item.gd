@@ -19,13 +19,10 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		item_sprite.texture = item_texture
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint():
 		item_sprite.texture = item_texture
-		
-		
 	if player_in_range and Input.is_action_just_pressed("pickup"):
 		pickup_item()
 

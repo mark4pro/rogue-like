@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://bdmkbl0brl28l"]
 
-[ext_resource type="Script" uid="uid://bfkxo2sqj41lh" path="res://inventory_item.gd" id="1_ia6di"]
-[ext_resource type="Texture2D" uid="uid://v515qo5ym2tk" path="res://Assets/imgs/snail_medicine.png" id="2_5hapr"]
+[ext_resource type="Script" uid="uid://bfkxo2sqj41lh" path="res://Script/inventory_item.gd" id="1_ia6di"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dul41"]
 size = Vector2(22, 22)
@@ -10,7 +9,6 @@ size = Vector2(22, 22)
 script = ExtResource("1_ia6di")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=248005377]
-texture = ExtResource("2_5hapr")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=78477572]
 
