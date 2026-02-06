@@ -135,7 +135,7 @@ func mapGen() -> void:
 					newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
 				
 				TileType.FLOOR:
-					ground.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))
+					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 3))
 				
 				TileType.WALL:
 					walls.set_cell(Vector2i(x, y), 0, Vector2i(0, 2))
