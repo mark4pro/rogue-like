@@ -1,5 +1,7 @@
 extends RigidBody2D
 
+@onready var interact_ui = $interactUI
+
 @onready var sprite : AnimatedSprite2D = $RotPoint/Sprite2D
 @onready var rot_point : Node2D = $RotPoint
 @onready var health_bar : TextureRect = $UI/HealthBar
@@ -28,6 +30,9 @@ extends RigidBody2D
 @export var stamina_norm_color : Color
 @export var stamina_exh_color : Color
 
+
+
+
 var anim : String = ""
 
 var regen_stamina : bool = false
@@ -45,7 +50,14 @@ var roll_state : int = 0 #0: not rolling, 1: start roll, 2: roll logic, 3: end r
 var rspeed : float = roll_speed
 var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
-	
+
+
+
+func _ready():
+	Global.set_player_reference(self)
+
+
+
 func take_damage(amount: float):
 	if not is_rolling:
 		health -= amount
