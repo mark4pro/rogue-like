@@ -1,19 +1,21 @@
 extends Control
 
-@onready var grid_container = $GridContainer
-# Called when the node enters the scene tree for the first time.
+@onready var grid_container = $ColorRect/GridContainer
+
 func _ready() -> void:
-	Global.Inventory_update.connect(_on_inventory_updated)
-	_on_inventory_updated()
+	gen_inventory()
 
+func clear_grid():
+	for c in grid_container.get_children(): c.queue_free()
 
-
-func _on_inventory_updated():
-	clear_grid_container()
-	
-func clear_grid_container():
-	while grid_container.get_child_count() > 0:
-		var child = grid_container.get_child(0)
-		grid_container.remove_child(child)
-		child.queue_free()
-	
+func gen_inventory():
+	clear_grid()
+	var empty : int = Global.MaxInventory - Global.Inventory.size()
+	for i in Global.Inventory:
+		var newInventoryItem : Control = Global.inventoryItem.instantiate()
+		newInventoryItem.item = i
+		grid_container.add_child(newInventoryItem)
+	for e in range(empty):
+		var newInventoryItem : Control = Global.inventoryItem.instantiate()
+		newInventoryItem.item = null
+		grid_container.add_child(newInventoryItem)

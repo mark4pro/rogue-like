@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://tlobv0bfa6bo"]
+
+[ext_resource type="Script" uid="uid://cjdp0wyd8ewvv" path="res://Script/inventoryItem.gd" id="1_y7bcj"]
+
+[sub_resource type="Gradient" id="Gradient_y7bcj"]
+colors = PackedColorArray(0.21, 0.21, 0.21, 1, 0.21176471, 0.21176471, 0.21176471, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jn7ii"]
+gradient = SubResource("Gradient_y7bcj")
+
+[node name="InventoryItem" type="TextureRect" unique_id=691380142]
+z_index = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_y7bcj")
+
+[node name="BG" type="TextureRect" parent="." unique_id=1142438980]
+z_index = -1
+layout_mode = 0
+texture = SubResource("GradientTexture2D_jn7ii")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

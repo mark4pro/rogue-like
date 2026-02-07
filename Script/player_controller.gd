@@ -9,6 +9,7 @@ extends RigidBody2D
 @onready var left_grass : GPUParticles2D = $leftGrass
 @onready var right_grass : GPUParticles2D = $rightGrass
 @onready var Inventory_UI : CanvasLayer = $InventoryUI
+@onready var camera : Camera2D = $Camera2D
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -50,6 +51,7 @@ var roll_dir : Vector2 = Vector2.ZERO
 func _ready():
 	Inventory_UI.visible = false
 	Global.player = self
+	Global.inventoryUI = $InventoryUI/Inventory_UI
 
 func take_damage(amount: float):
 	if not is_rolling and not get_tree().paused:
@@ -121,7 +123,7 @@ func _process(delta: float) -> void:
 		
 		#Activate roll
 		if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
-			roll_target = $Camera2D.get_global_mouse_position()
+			roll_target = camera.get_global_mouse_position()
 			roll_dir = roll_target - position
 			roll_dir = roll_dir.normalized()
 			is_rolling = true
@@ -186,6 +188,7 @@ func _process(delta: float) -> void:
 	roll_cooldown_bar.visible = roll_cooldown.time_left > 0
 	
 	if Input.is_action_just_pressed("inventory"):
+		Global.inventoryUI.gen_inventory()
 		Inventory_UI.visible = !Inventory_UI.visible
 		get_tree().paused = !get_tree().paused
 	

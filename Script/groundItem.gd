@@ -14,11 +14,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if player_in_range and Input.is_action_just_pressed("pickup"):
+	if player_in_range and Input.is_action_just_pressed("pickup") and not get_tree().paused:
 		pickup_item()
 
 func pickup_item():
-	if Global.player:
+	if Global.player and Global.hasSpace(item):
 		Global.add_item(item)
 		self.queue_free()
 

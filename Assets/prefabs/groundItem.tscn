@@ -1,11 +1,12 @@
 [gd_scene format=3 uid="uid://b5eq6i6you4bx"]
 
-[ext_resource type="Script" uid="uid://bfkxo2sqj41lh" path="res://Script/inventory_item.gd" id="1_1y6tu"]
+[ext_resource type="Script" uid="uid://bfkxo2sqj41lh" path="res://Script/groundItem.gd" id="1_1y6tu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dul41"]
 size = Vector2(22, 22)
 
 [node name="groundItem" type="Node2D" unique_id=1184176859 groups=["items"]]
+z_index = 2
 script = ExtResource("1_1y6tu")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=248005377]
@@ -16,7 +17,6 @@ script = ExtResource("1_1y6tu")
 shape = SubResource("RectangleShape2D_dul41")
 
 [node name="interactUI" type="CanvasLayer" parent="." unique_id=96757981]
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="interactUI" unique_id=1346286352]
 anchors_preset = -1
@@ -24,21 +24,22 @@ anchor_left = 0.82100004
 anchor_top = 0.93100005
 anchor_right = 0.82100004
 anchor_bottom = 0.93100005
-offset_left = 41.67993
-offset_top = 22.519958
-offset_right = 341.67993
-offset_bottom = 72.51996
+offset_left = 43.67993
+offset_top = 24.519958
+offset_right = 343.67993
+offset_bottom = 74.51996
 grow_horizontal = 0
 grow_vertical = 0
-color = Color(1, 0.30588236, 0.12156863, 1)
+color = Color(0.13, 0.10556, 0.098799996, 0.3019608)
 
 [node name="Label" type="Label" parent="interactUI/ColorRect" unique_id=854683654]
 layout_mode = 0
-offset_left = 42.0
-offset_top = 7.0
-offset_right = 227.0
-offset_bottom = 30.0
+offset_right = 300.0
+offset_bottom = 50.0
+theme_override_font_sizes/font_size = 20
 text = "press \"e\" to pickup item"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

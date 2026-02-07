@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://cl2m3dpyfhdty"]
+
+[ext_resource type="Script" uid="uid://dghtvdfwbkc3c" path="res://Script/context_menu.gd" id="1_mtgmi"]
+
+[node name="ContextMenu" type="Control" unique_id=473995532]
+z_index = 2
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mtgmi")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=428751657]
+custom_minimum_size = Vector2(100, 25)
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 31.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=790111456]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="equipBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1809940055]
+visible = false
+layout_mode = 2
+text = "Equip"
+
+[node name="unequipBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1070392595]
+visible = false
+layout_mode = 2
+text = "Unequip"
+
+[node name="useBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=382146567]
+visible = false
+layout_mode = 2
+text = "Use"
+
+[node name="dropBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=2061061854]
+visible = false
+layout_mode = 2
+text = "Drop"
+
+[connection signal="mouse_entered" from="PanelContainer" to="." method="_on_panel_container_mouse_entered"]
+[connection signal="mouse_exited" from="PanelContainer" to="." method="_on_panel_container_mouse_exited"]
+[connection signal="button_down" from="PanelContainer/VBoxContainer/equipBttn" to="." method="_on_equip_bttn_button_down"]
+[connection signal="button_down" from="PanelContainer/VBoxContainer/unequipBttn" to="." method="_on_unequip_bttn_button_down"]
+[connection signal="button_down" from="PanelContainer/VBoxContainer/useBttn" to="." method="_on_use_bttn_button_down"]
+[connection signal="button_down" from="PanelContainer/VBoxContainer/dropBttn" to="." method="_on_drop_bttn_button_down"]
