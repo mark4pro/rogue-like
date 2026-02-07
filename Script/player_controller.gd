@@ -48,6 +48,7 @@ var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
 
 func _ready():
+	Inventory_UI.visible = false
 	Global.set_player_reference(self)
 
 func take_damage(amount: float):

@@ -324,7 +324,6 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
 [node name="InventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
-visible = false
 
 [node name="ColorRect" type="ColorRect" parent="InventoryUI" unique_id=1208581209]
 anchors_preset = 15
