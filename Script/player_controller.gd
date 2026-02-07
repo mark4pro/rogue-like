@@ -1,7 +1,5 @@
 extends RigidBody2D
 
-@onready var interact_ui = $interactUI
-
 @onready var sprite : AnimatedSprite2D = $RotPoint/Sprite2D
 @onready var rot_point : Node2D = $RotPoint
 @onready var health_bar : TextureRect = $UI/HealthBar
@@ -10,9 +8,7 @@ extends RigidBody2D
 @onready var roll_cooldown : Timer = $roll_cooldown
 @onready var left_grass : GPUParticles2D = $leftGrass
 @onready var right_grass : GPUParticles2D = $rightGrass
-@onready var Inventory_UI = $InventoryUI
-
-#CHECK LINE 203 FIRST
+@onready var Inventory_UI : CanvasLayer = $InventoryUI
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -32,9 +28,6 @@ extends RigidBody2D
 @export_category("UI")
 @export var stamina_norm_color : Color
 @export var stamina_exh_color : Color
-
-
-
 
 var anim : String = ""
 
@@ -58,7 +51,7 @@ func _ready():
 	Global.set_player_reference(self)
 
 func take_damage(amount: float):
-	if not is_rolling:
+	if not is_rolling and not get_tree().paused:
 		health -= amount
 
 func _process(delta: float) -> void:
@@ -79,95 +72,105 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_released("sprint") or not is_moving:
 		speed = walk_speed
 	
-	#Drain stamina if sprinting
-	if is_moving and is_sprinting and can_sprint:
-		stamina -= stamina_drain * delta
-	
-	#Regen stamina if stamina isn't full (doesn't stop strinting)
-	if not is_sprinting and can_sprint and stamina < max_stamina:
-		stamina += stamina_regen * delta
-	
-	#Regen stamina if fully drained (stops strinting)
-	if regen_stamina:
-		stamina += stamina_exhausted_regen * delta
-	
-	#Set speed back to walk speed
-	if not can_sprint:
-		speed = walk_speed
-	
-	#Set animation speed
-	if is_sprinting:
-		sprite.speed_scale = 3
-	else:
-		sprite.speed_scale = 1
-	
-	#Walk animation state
-	if not dir == Vector2.ZERO:
-		sprite.play("walk")
-	else:
-		if anim == "walk":
-			sprite.stop()
-	
-	#Roll animation state
-	match roll_state:
-		0:
-			if anim != "walk": 
-				sprite.animation = "walk"
-		1:
-			if anim != "start_roll": sprite.play("start_roll")
-		2:
-			if anim != "roll": sprite.play("roll")
-		3:
-			if anim != "end_roll": sprite.play("end_roll")
-	
-	#Activate roll
-	if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
-		roll_target = $Camera2D.get_global_mouse_position()
-		roll_dir = roll_target - position
-		roll_dir = roll_dir.normalized()
-		is_rolling = true
-		can_roll = false
-		roll_state += 1
-	
-	#Flip sprite and rotation based on movement direction
-	if linear_velocity.x < 0:
-		sprite.flip_h = true
-	elif linear_velocity.x > 0:
-		sprite.flip_h = false
-	
-	#Flip sprite and rotation based on roll direction
-	if is_rolling:
-		if roll_dir.x < 0:
+	if not get_tree().paused:
+		roll_cooldown.paused = false
+		
+		#Drain stamina if sprinting
+		if is_moving and is_sprinting and can_sprint:
+			stamina -= stamina_drain * delta
+		
+		#Regen stamina if stamina isn't full (doesn't stop strinting)
+		if not is_sprinting and can_sprint and stamina < max_stamina:
+			stamina += stamina_regen * delta
+		
+		#Regen stamina if fully drained (stops strinting)
+		if regen_stamina:
+			stamina += stamina_exhausted_regen * delta
+		
+		#Set speed back to walk speed
+		if not can_sprint:
+			speed = walk_speed
+		
+		#Set animation speed
+		if is_sprinting:
+			sprite.speed_scale = 3
+		else:
+			sprite.speed_scale = 1
+		
+		#Walk animation state
+		if not dir == Vector2.ZERO:
+			sprite.play("walk")
+		else:
+			if anim == "walk":
+				sprite.stop()
+		
+		#Roll animation state
+		match roll_state:
+			0:
+				if anim != "walk": sprite.animation = "walk"
+			1:
+				if anim != "start_roll": sprite.play("start_roll")
+				if not sprite.is_playing(): sprite.play("start_roll")
+			2:
+				if anim != "roll": sprite.play("roll")
+				if not sprite.is_playing(): sprite.play("roll")
+			3:
+				if anim != "end_roll": sprite.play("end_roll")
+				if not sprite.is_playing(): sprite.play("end_roll")
+		
+		#Activate roll
+		if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
+			roll_target = $Camera2D.get_global_mouse_position()
+			roll_dir = roll_target - position
+			roll_dir = roll_dir.normalized()
+			is_rolling = true
+			can_roll = false
+			roll_state += 1
+		
+		#Flip sprite and rotation based on movement direction
+		if linear_velocity.x < 0:
 			sprite.flip_h = true
-			rspeed = -roll_rot_speed
-		elif roll_dir.x > 0:
+		elif linear_velocity.x > 0:
 			sprite.flip_h = false
-			rspeed = roll_rot_speed
+		
+		#Flip sprite and rotation based on roll direction
+		if is_rolling:
+			if roll_dir.x < 0:
+				sprite.flip_h = true
+				rspeed = -roll_rot_speed
+			elif roll_dir.x > 0:
+				sprite.flip_h = false
+				rspeed = roll_rot_speed
 	
-	#Finish roll and start cool down
-	#Had to change this since _process updates before _physics_process thus if rotation = 0
-	#	and triggering this at the wrong time.
-	if (rot_point.rotation_degrees >= 360 or rot_point.rotation_degrees <= -360) and is_rolling:
-		rot_point.rotation = 0
-		roll_cooldown.start()
-		is_rolling = false 
-		roll_state += 1
-	
-	#Particles
-	if is_moving and not is_rolling:
-		left_grass.emitting = not sprite.flip_h
-		right_grass.emitting = sprite.flip_h
-		left_grass.visible = not sprite.flip_h
-		right_grass.visible = sprite.flip_h
+		#Finish roll and start cool down
+		#Had to change this since _process updates before _physics_process thus if rotation = 0
+		#	and triggering this at the wrong time.
+		if (rot_point.rotation_degrees >= 360 or rot_point.rotation_degrees <= -360) and is_rolling:
+			rot_point.rotation = 0
+			roll_cooldown.start()
+			is_rolling = false 
+			roll_state += 1
+		
+		#Particles
+		if is_moving and not is_rolling:
+			left_grass.emitting = not sprite.flip_h
+			right_grass.emitting = sprite.flip_h
+			left_grass.visible = not sprite.flip_h
+			right_grass.visible = sprite.flip_h
+		else:
+			left_grass.emitting = false
+			right_grass.emitting = false
+			left_grass.visible = false
+			right_grass.visible = false
+		
+		#Death
+		if not health > 0:
+			queue_free() #change this later
 	else:
-		left_grass.emitting = false
-		right_grass.emitting = false
+		sprite.pause()
+		roll_cooldown.paused = true
 		left_grass.visible = false
 		right_grass.visible = false
-	
-	#Death
-	if not health > 0:
-		queue_free() #change this later
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5
@@ -180,28 +183,26 @@ func _process(delta: float) -> void:
 	
 	roll_cooldown_bar.value = (1 - (roll_cooldown.time_left / roll_cooldown.wait_time)) * 100
 	roll_cooldown_bar.visible = roll_cooldown.time_left > 0
-
-func _physics_process(delta: float) -> void:
-	#Move player
-	if not is_rolling and roll_state == 0:
-		dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
-	else:
-		dir = Vector2.ZERO #Don't move when rolling
-	linear_velocity = dir * speed * 1000 * delta;
 	
-	#Roll logic
-	if is_rolling and roll_state != 1:
-		rot_point.rotation += rspeed * delta
-		apply_impulse(roll_dir * roll_speed * 1000 * delta)
-#open and close inventory
-func _input(event):
-	if event.is_action_pressed("inventory"):
+	if Input.is_action_just_pressed("inventory"):
 		Inventory_UI.visible = !Inventory_UI.visible
 	
-	
-		#line below this has a bug
-		#get_tree().paused = !get_tree().paused
-	
+	if Input.is_action_just_pressed("pause"):
+		get_tree().paused = !get_tree().paused
+
+func _physics_process(delta: float) -> void:
+	if not get_tree().paused:
+		#Move player
+		if not is_rolling and roll_state == 0:
+			dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
+		else:
+			dir = Vector2.ZERO #Don't move when rolling
+		linear_velocity = dir * speed * 1000 * delta;
+		
+		#Roll logic
+		if is_rolling and roll_state != 1:
+			rot_point.rotation += rspeed * delta
+			apply_impulse(roll_dir * roll_speed * 1000 * delta)
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true

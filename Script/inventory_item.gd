@@ -9,7 +9,6 @@ extends Node2D
 
 var scene_path: String = "res://Assets/prefabs/inventory_item.tscn"
 
-
 @onready var item_sprite = $Sprite2D
 
 var player_in_range = false

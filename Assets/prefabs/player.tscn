@@ -209,18 +209,6 @@ animations = [{
 "speed": 8.0
 }]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g621r"]
-bg_color = Color(0.029605996, 0.11629819, 3.008172e-08, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gmoaq"]
-bg_color = Color(0.41269875, 0.68949276, 3.85046e-07, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w0l5f"]
-bg_color = Color(0.13, 0.071499996, 0.12512502, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbpd7"]
-bg_color = Color(0.7901416, 0.51239294, 0.5351781, 1)
-
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gmoaq"]
 particle_flag_disable_z = true
 emission_shape = 6
@@ -234,6 +222,18 @@ angle_max = -720.0
 inherit_velocity_ratio = 0.892
 gravity = Vector3(0, 98, 0)
 color = Color(0.25341263, 0.9858586, 0.31046113, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g621r"]
+bg_color = Color(0.029605996, 0.11629819, 3.008172e-08, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_gmoaq"]
+bg_color = Color(0.41269875, 0.68949276, 3.85046e-07, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_w0l5f"]
+bg_color = Color(0.13, 0.071499996, 0.12512502, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbpd7"]
+bg_color = Color(0.7901416, 0.51239294, 0.5351781, 1)
 
 [node name="Player" type="RigidBody2D" unique_id=2014763879 groups=["Player"]]
 process_mode = 3
@@ -255,7 +255,7 @@ position = Vector2(0, 4)
 texture_filter = 1
 position = Vector2(0, -4)
 sprite_frames = SubResource("SpriteFrames_i87ed")
-animation = &"walk"
+animation = &"end_roll"
 speed_scale = 4.005
 
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
@@ -264,6 +264,30 @@ one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=557111740]
 zoom = Vector2(7, 7)
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=118503801]
+modulate = Color(1, 1, 1, 0.6784314)
+show_behind_parent = true
+z_index = -1
+position = Vector2(0, 10.895)
+scale = Vector2(0.746, 0.095)
+texture = ExtResource("4_gmoaq")
+
+[node name="rightGrass" type="GPUParticles2D" parent="." unique_id=682299537]
+position = Vector2(8, 9)
+emitting = false
+amount = 6
+lifetime = 0.05
+speed_scale = 0.5
+process_material = SubResource("ParticleProcessMaterial_gmoaq")
+
+[node name="leftGrass" type="GPUParticles2D" parent="." unique_id=1876608386]
+position = Vector2(-10, 9)
+emitting = false
+amount = 6
+lifetime = 0.05
+speed_scale = 0.5
+process_material = SubResource("ParticleProcessMaterial_gmoaq")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=963694637]
 
@@ -299,31 +323,8 @@ theme_override_styles/background = SubResource("StyleBoxFlat_w0l5f")
 theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
-[node name="Shadow" type="Sprite2D" parent="." unique_id=118503801]
-modulate = Color(1, 1, 1, 0.6784314)
-show_behind_parent = true
-z_index = -1
-position = Vector2(0, 10.895)
-scale = Vector2(0.746, 0.095)
-texture = ExtResource("4_gmoaq")
-
-[node name="rightGrass" type="GPUParticles2D" parent="." unique_id=682299537]
-position = Vector2(8, 9)
-emitting = false
-amount = 6
-lifetime = 0.05
-speed_scale = 0.5
-process_material = SubResource("ParticleProcessMaterial_gmoaq")
-
-[node name="leftGrass" type="GPUParticles2D" parent="." unique_id=1876608386]
-position = Vector2(-10, 9)
-emitting = false
-amount = 6
-lifetime = 0.05
-speed_scale = 0.5
-process_material = SubResource("ParticleProcessMaterial_gmoaq")
-
 [node name="InventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="InventoryUI" unique_id=1208581209]
 anchors_preset = 15
