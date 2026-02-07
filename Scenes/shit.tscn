@@ -2,8 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://bjts4lj4357yt" path="res://Assets/prefabs/player.tscn" id="1_4ox28"]
 [ext_resource type="PackedScene" uid="uid://csunnqftn32r0" path="res://Assets/prefabs/dummy.tscn" id="2_ubntj"]
-[ext_resource type="PackedScene" uid="uid://bdmkbl0brl28l" path="res://Assets/prefabs/inventory_item.tscn" id="3_6bv1j"]
-[ext_resource type="Texture2D" uid="uid://v515qo5ym2tk" path="res://Assets/imgs/snail_medicine.png" id="4_m8brx"]
+[ext_resource type="PackedScene" uid="uid://b5eq6i6you4bx" path="res://Assets/prefabs/groundItem.tscn" id="3_m8brx"]
+[ext_resource type="Resource" uid="uid://dwu6vcmregnk8" path="res://Assets/items/health_1.tres" id="4_520yk"]
 
 [node name="shit" type="Node2D" unique_id=349187987]
 
@@ -13,9 +13,6 @@ position = Vector2(267, 100)
 [node name="Dummy" parent="." unique_id=1486159998 instance=ExtResource("2_ubntj")]
 position = Vector2(387, 154)
 
-[node name="Inventory_item" parent="." unique_id=1184176859 instance=ExtResource("3_6bv1j")]
-position = Vector2(161, 163)
-item_type = "Ballz"
-item_name = "PP"
-item_texture = ExtResource("4_m8brx")
-item_effect = "r"
+[node name="groundItem" parent="." unique_id=1184176859 instance=ExtResource("3_m8brx")]
+position = Vector2(265, 143)
+item = ExtResource("4_520yk")

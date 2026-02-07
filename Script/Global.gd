@@ -1,21 +1,22 @@
 extends Node
 
-var Inventory = []
+var Inventory : Array[BaseItem] = []
+
+var player : RigidBody2D = null
+
+@export var use : bool = false
 
 signal Inventory_update
 
-var player_node: Node = null
+func _ready() -> void:
+	Inventory.append(load("res://Assets/items/health_1.tres"))
 
-func _ready():
-	#amount of inventory slots
-	Inventory.resize(30)
-
-func add_item(item):
-	for i in Inventory:
-		if i != null and i["type"] == item["type"] and i["effect"] == item["effect"]:
-			i["quantitiy"] += item["quantity"]
-		elif i == null:
-			i = item
+func add_item(item : BaseItem):
+	var index = Inventory.find_custom(func(i): return i.id == item.id)
+	if not index == -1:
+		Inventory[index].quantitiy += item.quantitiy
+	else:
+		Inventory.append(item)
 	Inventory_update.emit()
 
 func remove_item():
@@ -24,5 +25,10 @@ func remove_item():
 func increase_inventory_size():
 	Inventory_update.emit()
 
-func set_player_reference(player):
-	player_node = player
+func _process(delta: float) -> void:
+	for i in Inventory:
+		if i.quantitiy <= 0: Inventory.erase(i)
+	
+	if Inventory.size() > 0 and use and OS.has_feature("editor"):
+		Inventory[0].use()
+		use = false

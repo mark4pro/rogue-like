@@ -1,22 +1,22 @@
-[gd_scene format=3 uid="uid://bdmkbl0brl28l"]
+[gd_scene format=3 uid="uid://b5eq6i6you4bx"]
 
-[ext_resource type="Script" uid="uid://bfkxo2sqj41lh" path="res://Script/inventory_item.gd" id="1_ia6di"]
+[ext_resource type="Script" uid="uid://bfkxo2sqj41lh" path="res://Script/inventory_item.gd" id="1_1y6tu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dul41"]
 size = Vector2(22, 22)
 
-[node name="Inventory_item" type="Node2D" unique_id=1184176859 groups=["items"]]
-script = ExtResource("1_ia6di")
+[node name="groundItem" type="Node2D" unique_id=1184176859 groups=["items"]]
+script = ExtResource("1_1y6tu")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=248005377]
+[node name="Icon" type="Sprite2D" parent="." unique_id=248005377]
 
 [node name="Area2D" type="Area2D" parent="." unique_id=78477572]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1662891822]
-position = Vector2(1, 0)
 shape = SubResource("RectangleShape2D_dul41")
 
 [node name="interactUI" type="CanvasLayer" parent="." unique_id=96757981]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="interactUI" unique_id=1346286352]
 anchors_preset = -1

@@ -255,7 +255,7 @@ position = Vector2(0, 4)
 texture_filter = 1
 position = Vector2(0, -4)
 sprite_frames = SubResource("SpriteFrames_i87ed")
-animation = &"end_roll"
+animation = &"walk"
 speed_scale = 4.005
 
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
@@ -324,6 +324,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
 [node name="InventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
+visible = false
 
 [node name="ColorRect" type="ColorRect" parent="InventoryUI" unique_id=1208581209]
 anchors_preset = 15

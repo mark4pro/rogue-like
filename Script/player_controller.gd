@@ -49,7 +49,7 @@ var roll_dir : Vector2 = Vector2.ZERO
 
 func _ready():
 	Inventory_UI.visible = false
-	Global.set_player_reference(self)
+	Global.player = self
 
 func take_damage(amount: float):
 	if not is_rolling and not get_tree().paused:
