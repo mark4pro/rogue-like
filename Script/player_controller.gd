@@ -55,13 +55,7 @@ func _ready():
 	Inventory_UI.visible = false
 	pauseMenu.visible = false
 	Global.inventoryUI = $InventoryUI/Inventory_UI
-	Global.resume_pressed_signal.connect(_on_global_resume_pressed)
 
-#resume button functionality
-func _on_global_resume_pressed():
-	pauseMenu.visible = false
-	get_tree().paused = false
-	
 func take_damage(amount: float):
 	if not is_rolling and not get_tree().paused:
 		health -= amount
@@ -226,8 +220,3 @@ func _on_roll_cooldown_timeout() -> void:
 func _on_sprite_2d_animation_finished() -> void:
 	if anim == "start_roll" or anim == "end_roll":
 		roll_state += 1
-
-
-
-	
-	

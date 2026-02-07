@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bcetjsof4a06x" path="res://Assets/imgs/heart.png" id="3_g621r"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/shadow.png" id="4_gmoaq"]
 [ext_resource type="Script" uid="uid://dwmaslk0joqji" path="res://inventory_ui.gd" id="5_w0l5f"]
-[ext_resource type="PackedScene" uid="uid://c4fy3lgjo63rc" path="res://Assets/prefabs/pauseMenu.tscn" id="6_mbpd7"]
+[ext_resource type="Script" uid="uid://lad2fj3lc8w3" path="res://Script/pause_menu.gd" id="6_4312i"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
 size = Vector2(23.75, 10)
@@ -362,7 +362,45 @@ columns = 8
 
 [node name="pause_menu" type="CanvasLayer" parent="." unique_id=732976117]
 
-[node name="pauseMenu" parent="pause_menu" unique_id=403354627 instance=ExtResource("6_mbpd7")]
+[node name="pauseMenu" type="Control" parent="pause_menu" unique_id=403354627]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_4312i")
+
+[node name="ColorRect" type="ColorRect" parent="pause_menu/pauseMenu" unique_id=308135388]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.28857848, 5.609639e-05, 0.28857633, 1)
+
+[node name="Resume" type="Button" parent="pause_menu/pauseMenu/ColorRect" unique_id=1713300757]
+layout_mode = 0
+offset_left = 688.0
+offset_top = 60.0
+offset_right = 1242.0
+offset_bottom = 169.0
+text = "
+"
+metadata/_edit_group_ = true
+
+[node name="Label" type="Label" parent="pause_menu/pauseMenu/ColorRect/Resume" unique_id=527838027]
+layout_mode = 0
+offset_left = -5.0
+offset_right = 557.0
+offset_bottom = 107.0
+theme_override_font_sizes/font_size = 25
+text = "Resume
+"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
+[connection signal="button_down" from="pause_menu/pauseMenu/ColorRect/Resume" to="pause_menu/pauseMenu" method="_on_resume_button_down"]

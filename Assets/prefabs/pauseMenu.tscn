@@ -1,6 +1,14 @@
-[gd_scene format=3 uid="uid://c4fy3lgjo63rc"]
+[gd_scene format=3 uid="uid://cktor13xgdowp"]
 
-[ext_resource type="Script" uid="uid://ixa8x1aiq8a4" path="res://Assets/prefabs/resume.gd" id="1_dp0ln"]
+[sub_resource type="GDScript" id="GDScript_h03ji"]
+script/source = "extends Button
+
+func _ready() -> void:
+	self.pressed.connect(_on_pressed)
+
+func _on_pressed():
+	Global.resume_pressed_signal.emit()
+"
 
 [node name="pauseMenu" type="Control" unique_id=403354627]
 layout_mode = 3
@@ -27,7 +35,7 @@ offset_right = 1242.0
 offset_bottom = 169.0
 text = "
 "
-script = ExtResource("1_dp0ln")
+script = SubResource("GDScript_h03ji")
 metadata/_edit_group_ = true
 
 [node name="Label" type="Label" parent="ColorRect/Resume" unique_id=527838027]
