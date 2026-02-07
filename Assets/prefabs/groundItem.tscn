@@ -6,7 +6,6 @@
 size = Vector2(22, 22)
 
 [node name="groundItem" type="Node2D" unique_id=1184176859 groups=["items"]]
-z_index = 2
 script = ExtResource("1_1y6tu")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=248005377]
