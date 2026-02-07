@@ -1,6 +1,6 @@
 extends Node2D
 
-@export var damage : float = 5
+@export var damage : float = 0.5
 
 var touching : bool = false
 
