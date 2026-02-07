@@ -50,7 +50,6 @@ var roll_dir : Vector2 = Vector2.ZERO
 
 func _ready():
 	Inventory_UI.visible = false
-	Global.player = self
 	Global.inventoryUI = $InventoryUI/Inventory_UI
 
 func take_damage(amount: float):

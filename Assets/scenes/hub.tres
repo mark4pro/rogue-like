@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SceneRes" format=3 uid="uid://cd4ijegw25bc"]
+
+[ext_resource type="Script" uid="uid://b8crlxd81xkqx" path="res://Script/Res/sceneRes.gd" id="1_buicg"]
+
+[resource]
+script = ExtResource("1_buicg")
+name = "Hub"
+rootNode = "shit"
+path = "res://Scenes/shit.tscn"
+metadata/_custom_type_script = "uid://b8crlxd81xkqx"

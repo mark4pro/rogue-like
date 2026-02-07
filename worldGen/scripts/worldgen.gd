@@ -11,8 +11,7 @@ extends Node
 
 var seed : int = randi()
 
-var hasWorldNode : bool = false
-var loaded : bool = false
+var hasWorldNode : Node2D = null
 
 var player : RigidBody2D = null
 
@@ -144,55 +143,40 @@ func regen() -> void:
 	seed = randi()
 	seed(seed)
 	if not thisSeed == -1: seed = thisSeed
-	if isTestEnv and loaded:
-		if isTestEnv: isTestEnv.get_node("World").free()
-		hasWorldNode = false
-		loaded = false
-
-func _ready() -> void:
-	regen()
+	if hasWorldNode: get_tree().current_scene.get_node("World").free()
 
 func _process(delta: float) -> void:
-	var chkPlayer = get_tree().get_nodes_in_group("Player")
-	if not chkPlayer.is_empty():
-		player = chkPlayer[0]
-		player.get_node("Camera2D").make_current()
-	else: player = null
-	isTestEnv = get_tree().root.get_node_or_null("TestGen")
-	if isTestEnv:
-		freeCam = isTestEnv.get_node("FreeCam")
-		
-		#Enable/Disable free cam
-		if chkPlayer.is_empty():
-			freeCam.make_current()
-		
-		#regen map
-		if Input.is_action_just_pressed("regen_map") and not player:
-			regen()
-		
-		#Create world node
-		if not hasWorldNode:
-			var newWorldNode : Node2D = Node2D.new()
-			isTestEnv.add_child(newWorldNode)
-			worldNode = newWorldNode
-			newWorldNode.name = "World"
-			layers = genLayers(newWorldNode)
-			hasWorldNode = true
-		
+	if Global.player: Global.player.get_node("Camera2D").make_current()
+	
+	freeCam = get_tree().current_scene.get_node_or_null("FreeCam")
+	hasWorldNode = get_tree().current_scene.get_node_or_null("World")
+	
+	#Enable/Disable free cam
+	if not Global.player and freeCam:
+		freeCam.make_current()
+	
+	#Create world node
+	if not hasWorldNode and Global.scenes[Global.sceneIndex].worldGen:
+		var newWorldNode : Node2D = Node2D.new()
+		get_tree().current_scene.add_child(newWorldNode)
+		worldNode = newWorldNode
+		newWorldNode.name = "World"
+		layers = genLayers(newWorldNode)
 		#Generate map
-		if not loaded:
-			initArrays()
-			worldData.biomeGenerator.gen()
-			for s in worldData.generators:
-				s.gen()
-			mapGen()
-			loaded = true
+		initArrays()
+		worldData.biomeGenerator.gen()
+		for s in worldData.generators:
+			s.gen()
+		mapGen()
 	
 	#Engine only
-	if OS.has_feature("editor"):
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not player:
+	#regen map
+	if OS.has_feature("editor") and freeCam:
+		if Input.is_action_just_pressed("regen_map") and not Global.player:
+			regen()
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not Global.player:
 			var newPlayer : RigidBody2D = playerRes.instantiate()
 			newPlayer.position = freeCam.get_global_mouse_position()
 			worldNode.add_child(newPlayer)
-		if Input.is_action_just_pressed("free_cam") and not player == null:
-			player.queue_free()
+		if Input.is_action_just_pressed("free_cam") and not Global.player == null:
+			Global.player.queue_free()

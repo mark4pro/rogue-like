@@ -351,13 +351,13 @@ horizontal_alignment = 1
 
 [node name="GridContainer" type="GridContainer" parent="InventoryUI/Inventory_UI/ColorRect" unique_id=561799135]
 layout_mode = 0
-offset_left = 50.0
+offset_left = 64.0
 offset_top = 80.0
-offset_right = 1870.0
-offset_bottom = 1000.0
+offset_right = 1856.0
+offset_bottom = 1040.0
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
-columns = 10
+columns = 8
 
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]

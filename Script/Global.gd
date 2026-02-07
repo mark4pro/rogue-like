@@ -5,16 +5,23 @@ var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.ts
 var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")
 
 var Inventory : Array[BaseItem] = []
-var MaxInventory : int = 30
+var MaxInventory : int = 32
 
 var player : RigidBody2D = null
 var inventoryUI : Control = null
 
 @export var use : bool = false
 
+@export var sceneIndex = 0
+@export var scenes : Dictionary = {
+	0: preload("res://Assets/scenes/hub.tres"),
+	1: preload("res://Assets/scenes/testWorld.tres")
+}
+
 func _ready() -> void:
 	#For testing
 	Inventory.append(load("res://Assets/items/health_1.tres"))
+	add_item(load("res://Assets/items/health_1.tres"))
 
 func hasSpace(item: BaseItem) -> bool:
 	if not item:
@@ -39,6 +46,13 @@ func remove_items_by_id(id: int, amount: int):
 		Inventory[index].quantitiy -= amount
 
 func _process(delta: float) -> void:
+	var playerChk = get_tree().get_nodes_in_group("Player")
+	if not playerChk.is_empty(): player = playerChk[0]
+	
+	#Scene manager
+	if get_tree().current_scene.name != scenes[sceneIndex].rootNode:
+		get_tree().change_scene_to_file(scenes[sceneIndex].path)
+	
 	#Clear items with no quanitity
 	for i in Inventory:
 		if i.quantitiy <= 0: Inventory.erase(i)

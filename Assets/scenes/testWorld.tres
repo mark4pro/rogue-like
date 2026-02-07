@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SceneRes" format=3 uid="uid://efkev7tpq38h"]
+
+[ext_resource type="Script" uid="uid://b8crlxd81xkqx" path="res://Script/Res/sceneRes.gd" id="1_icmir"]
+
+[resource]
+script = ExtResource("1_icmir")
+name = "World"
+rootNode = "TestGen"
+path = "res://worldGen/testGen.tscn"
+worldGen = true
+metadata/_custom_type_script = "uid://b8crlxd81xkqx"
