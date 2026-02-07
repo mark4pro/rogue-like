@@ -10,6 +10,7 @@ extends RigidBody2D
 @onready var right_grass : GPUParticles2D = $rightGrass
 @onready var Inventory_UI : CanvasLayer = $InventoryUI
 @onready var camera : Camera2D = $Camera2D
+@onready var pauseMenu : CanvasLayer = $pause_menu
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -48,10 +49,19 @@ var rspeed : float = roll_speed
 var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
 
+#check line 204 and 60
+
 func _ready():
 	Inventory_UI.visible = false
+	pauseMenu.visible = false
 	Global.inventoryUI = $InventoryUI/Inventory_UI
+	Global.resume_pressed_signal.connect(_on_global_resume_pressed)
 
+#resume button functionality
+func _on_global_resume_pressed():
+	pauseMenu.visible = false
+	get_tree().paused = false
+	
 func take_damage(amount: float):
 	if not is_rolling and not get_tree().paused:
 		health -= amount
@@ -191,8 +201,10 @@ func _process(delta: float) -> void:
 		Inventory_UI.visible = !Inventory_UI.visible
 		get_tree().paused = !get_tree().paused
 	
+	#pause menu 
 	if Input.is_action_just_pressed("pause"):
 		get_tree().paused = !get_tree().paused
+		pauseMenu.visible = !pauseMenu.visible
 
 func _physics_process(delta: float) -> void:
 	if not get_tree().paused:
@@ -214,3 +226,8 @@ func _on_roll_cooldown_timeout() -> void:
 func _on_sprite_2d_animation_finished() -> void:
 	if anim == "start_roll" or anim == "end_roll":
 		roll_state += 1
+
+
+
+	
+	

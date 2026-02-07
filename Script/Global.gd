@@ -10,6 +10,8 @@ var MaxInventory : int = 32
 var player : RigidBody2D = null
 var inventoryUI : Control = null
 
+signal resume_pressed_signal
+
 @export var use : bool = false
 
 @export var sceneIndex = 0

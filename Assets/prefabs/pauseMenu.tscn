@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://c4fy3lgjo63rc"]
+
+[ext_resource type="Script" uid="uid://ixa8x1aiq8a4" path="res://Assets/prefabs/resume.gd" id="1_dp0ln"]
+
+[node name="pauseMenu" type="Control" unique_id=403354627]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=308135388]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.28857848, 5.609639e-05, 0.28857633, 1)
+
+[node name="Resume" type="Button" parent="ColorRect" unique_id=1713300757]
+layout_mode = 0
+offset_left = 688.0
+offset_top = 60.0
+offset_right = 1242.0
+offset_bottom = 169.0
+text = "
+"
+script = ExtResource("1_dp0ln")
+metadata/_edit_group_ = true
+
+[node name="Label" type="Label" parent="ColorRect/Resume" unique_id=527838027]
+layout_mode = 0
+offset_left = -5.0
+offset_right = 557.0
+offset_bottom = 107.0
+theme_override_font_sizes/font_size = 25
+text = "Resume
+"
+horizontal_alignment = 1
+vertical_alignment = 1

@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://bcetjsof4a06x" path="res://Assets/imgs/heart.png" id="3_g621r"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/shadow.png" id="4_gmoaq"]
 [ext_resource type="Script" uid="uid://dwmaslk0joqji" path="res://inventory_ui.gd" id="5_w0l5f"]
+[ext_resource type="PackedScene" uid="uid://c4fy3lgjo63rc" path="res://Assets/prefabs/pauseMenu.tscn" id="6_mbpd7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
 size = Vector2(23.75, 10)
@@ -358,6 +359,10 @@ offset_bottom = 1040.0
 theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 8
+
+[node name="pause_menu" type="CanvasLayer" parent="." unique_id=732976117]
+
+[node name="pauseMenu" parent="pause_menu" unique_id=403354627 instance=ExtResource("6_mbpd7")]
 
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
