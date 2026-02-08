@@ -402,30 +402,25 @@ text = "Resume
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ColorRect2" type="ColorRect" parent="pause_menu/pauseMenu" unique_id=462147258]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-color = Color(0.26618728, 4.7577247e-05, 0.2661852, 1)
-
-[node name="exit_game" type="Button" parent="pause_menu/pauseMenu/ColorRect2" unique_id=251820944]
+[node name="exit_game" type="Button" parent="pause_menu/pauseMenu" unique_id=251820944]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 17.2
 anchor_top = 4.8
 anchor_right = 17.2
 anchor_bottom = 4.8
-offset_left = -1.0
-offset_right = 553.0
-offset_bottom = 109.0
+offset_left = -32337.0
+offset_top = -4992.0
+offset_right = -31783.0
+offset_bottom = -4883.0
 grow_horizontal = 2
 
-[node name="Label" type="Label" parent="pause_menu/pauseMenu/ColorRect2/exit_game" unique_id=589077677]
+[node name="Label" type="Label" parent="pause_menu/pauseMenu" unique_id=589077677]
 layout_mode = 0
-offset_left = 202.0
-offset_top = 20.0
-offset_right = 340.0
-offset_bottom = 79.0
+offset_left = 889.0
+offset_top = 212.0
+offset_right = 1027.0
+offset_bottom = 271.0
 theme_override_font_sizes/font_size = 25
 text = "Exit"
 horizontal_alignment = 1
@@ -434,4 +429,4 @@ vertical_alignment = 1
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
 [connection signal="button_down" from="pause_menu/pauseMenu/ColorRect/Resume" to="pause_menu/pauseMenu" method="_on_resume_button_down"]
-[connection signal="pressed" from="pause_menu/pauseMenu/ColorRect2/exit_game" to="pause_menu/pauseMenu" method="_on_exit_game_pressed"]
+[connection signal="pressed" from="pause_menu/pauseMenu/exit_game" to="pause_menu/pauseMenu" method="_on_exit_game_pressed"]
