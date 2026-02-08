@@ -54,13 +54,14 @@ func remove_items_by_id(id: int, amount: int):
 	if not index == -1:
 		Inventory[index].quantitiy -= amount
 
-func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE):
+func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE, bg: Color = Color("4a4a4a")):
 	if messageBox:
 		if messageCount + 1 > maxMessages: messageBox.get_children()[0].queue_free()
 		
 		var newMessage : ColorRect = massageUI.instantiate()
 		newMessage.ms = ms
 		newMessage.c = c
+		newMessage.bg = bg
 		newMessage.time = time
 		messageBox.add_child(newMessage)
 
