@@ -50,6 +50,7 @@ func _process(delta: float) -> void:
 	if not playerChk.is_empty(): player = playerChk[0]
 	
 	#Scene manager
+	sceneIndex = clamp(sceneIndex, 0, scenes.keys().size() - 1)
 	if get_tree().current_scene.name != scenes[sceneIndex].rootNode:
 		get_tree().change_scene_to_file(scenes[sceneIndex].path)
 	
