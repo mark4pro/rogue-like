@@ -377,30 +377,13 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 660.0
+offset_top = 47.0
+offset_right = -634.0
+offset_bottom = -365.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.28857848, 5.609639e-05, 0.28857633, 1)
-
-[node name="Resume" type="Button" parent="pause_menu/pauseMenu/ColorRect" unique_id=1713300757]
-layout_mode = 0
-offset_left = 688.0
-offset_top = 60.0
-offset_right = 1242.0
-offset_bottom = 169.0
-text = "
-"
-metadata/_edit_group_ = true
-
-[node name="Label" type="Label" parent="pause_menu/pauseMenu/ColorRect/Resume" unique_id=527838027]
-layout_mode = 0
-offset_left = -5.0
-offset_right = 557.0
-offset_bottom = 107.0
-theme_override_font_sizes/font_size = 25
-text = "Resume
-"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="exit_game" type="Button" parent="pause_menu/pauseMenu" unique_id=251820944]
 layout_mode = 1
@@ -414,19 +397,41 @@ offset_top = -4992.0
 offset_right = -31783.0
 offset_bottom = -4883.0
 grow_horizontal = 2
+metadata/_edit_group_ = true
 
-[node name="Label" type="Label" parent="pause_menu/pauseMenu" unique_id=589077677]
+[node name="Label" type="Label" parent="pause_menu/pauseMenu/exit_game" unique_id=589077677]
 layout_mode = 0
-offset_left = 889.0
-offset_top = 212.0
-offset_right = 1027.0
-offset_bottom = 271.0
+offset_left = 202.0
+offset_top = 20.0
+offset_right = 340.0
+offset_bottom = 79.0
 theme_override_font_sizes/font_size = 25
 text = "Exit"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Resume" type="Button" parent="pause_menu/pauseMenu" unique_id=1713300757]
+layout_mode = 0
+offset_left = 688.0
+offset_top = 60.0
+offset_right = 1242.0
+offset_bottom = 169.0
+text = "
+"
+metadata/_edit_group_ = true
+
+[node name="Label" type="Label" parent="pause_menu/pauseMenu/Resume" unique_id=527838027]
+layout_mode = 0
+offset_left = -5.0
+offset_right = 557.0
+offset_bottom = 107.0
+theme_override_font_sizes/font_size = 25
+text = "Resume
+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
-[connection signal="button_down" from="pause_menu/pauseMenu/ColorRect/Resume" to="pause_menu/pauseMenu" method="_on_resume_button_down"]
 [connection signal="pressed" from="pause_menu/pauseMenu/exit_game" to="pause_menu/pauseMenu" method="_on_exit_game_pressed"]
+[connection signal="button_down" from="pause_menu/pauseMenu/Resume" to="pause_menu/pauseMenu" method="_on_resume_button_down"]
