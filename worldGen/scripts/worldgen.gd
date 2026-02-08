@@ -137,6 +137,36 @@ func mapGen() -> void:
 				
 				TileType.WALL:
 					walls.set_cell(Vector2i(x, y), 0, Vector2i(0, 2))
+	
+	#Gen world bounds
+	var used_rect := ground.get_used_rect()
+	var tile_size := ground.tile_set.tile_size
+	
+	var size_in_pixels = used_rect.size * tile_size
+	size_in_pixels = Vector2(size_in_pixels)
+	size_in_pixels *= ground.scale
+	print(size_in_pixels)
+	
+	var newStaticBody : StaticBody2D = StaticBody2D.new()
+	newStaticBody.name = "Bounds"
+	newStaticBody.add_to_group("Bounds")
+	
+	var newCollisionPoly : CollisionPolygon2D = CollisionPolygon2D.new()
+	newCollisionPoly.name = "CollisionPolygon2D"
+	
+	var points := PackedVector2Array()
+	
+	points.append(Vector2.ZERO)
+	points.append(Vector2(size_in_pixels.x, 0))
+	points.append(Vector2(size_in_pixels.x, size_in_pixels.y))
+	points.append(Vector2(0, size_in_pixels.y))
+	
+	newCollisionPoly.polygon = points
+	newCollisionPoly.build_mode = CollisionPolygon2D.BUILD_SEGMENTS
+	
+	get_tree().current_scene.get_node("World").add_child(newStaticBody)
+	get_tree().current_scene.get_node("World/Bounds").add_child(newCollisionPoly)
+
 
 func regen() -> void:
 	seed = randi()
