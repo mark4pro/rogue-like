@@ -11,6 +11,7 @@ extends RigidBody2D
 @onready var Inventory_UI : CanvasLayer = $InventoryUI
 @onready var camera : Camera2D = $Camera2D
 @onready var pauseMenu : CanvasLayer = $pause_menu
+@onready var deathScreen : CanvasLayer = $Dead
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -54,6 +55,7 @@ var bounds : CollisionPolygon2D = null
 func _ready():
 	Inventory_UI.visible = false
 	pauseMenu.visible = false
+	deathScreen.visible = false
 	Global.inventoryUI = $InventoryUI/Inventory_UI
 	
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
@@ -200,7 +202,9 @@ func _process(delta: float) -> void:
 		
 		#Death
 		if not health > 0:
-			queue_free() #change this later
+			deathScreen.visible = true
+			sprite.visible = false
+			freeze = true
 	else:
 		sprite.pause()
 		roll_cooldown.paused = true
@@ -249,3 +253,7 @@ func _on_roll_cooldown_timeout() -> void:
 func _on_sprite_2d_animation_finished() -> void:
 	if anim == "start_roll" or anim == "end_roll":
 		roll_state += 1
+
+
+func _on_back_to_hub_pressed() -> void:
+	Global.sceneIndex = 0

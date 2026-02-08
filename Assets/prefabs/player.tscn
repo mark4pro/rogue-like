@@ -368,6 +368,7 @@ columns = 8
 [node name="pause_menu" type="CanvasLayer" parent="." unique_id=732976117]
 
 [node name="pauseMenu" type="Control" parent="pause_menu" unique_id=403354627]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -436,7 +437,51 @@ text = "Resume
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Dead" type="CanvasLayer" parent="." unique_id=133084291]
+
+[node name="death_screen" type="Control" parent="Dead" unique_id=279523899]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect" type="ColorRect" parent="Dead" unique_id=1304564367]
+visible = false
+anchors_preset = -1
+anchor_left = 20.1
+anchor_top = 1.0
+anchor_right = 20.1
+anchor_bottom = 1.0
+offset_left = -37788.0
+offset_top = -1042.0
+offset_right = -37393.0
+offset_bottom = -636.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.27179256, 4.9695e-05, 0.2717905, 1)
+
+[node name="back_to_hub" type="Button" parent="Dead" unique_id=164796879]
+offset_left = 752.0
+offset_top = 23.0
+offset_right = 1241.0
+offset_bottom = 126.0
+
+[node name="Label" type="Label" parent="Dead/back_to_hub" unique_id=1413778075]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.23500001
+anchor_top = 0.155
+anchor_right = 0.23500001
+anchor_bottom = 0.155
+offset_left = 0.084991455
+offset_top = 0.034999847
+offset_right = 236.08499
+offset_bottom = 66.035
+theme_override_font_sizes/font_size = 25
+text = "Back to hub world"
+
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
 [connection signal="pressed" from="pause_menu/pauseMenu/exit_game" to="pause_menu/pauseMenu" method="_on_exit_game_pressed"]
 [connection signal="button_down" from="pause_menu/pauseMenu/Resume" to="pause_menu/pauseMenu" method="_on_resume_button_down"]
+[connection signal="pressed" from="Dead/back_to_hub" to="." method="_on_back_to_hub_pressed"]
