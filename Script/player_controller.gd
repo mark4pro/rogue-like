@@ -190,7 +190,7 @@ func _process(delta: float) -> void:
 	roll_cooldown_bar.value = (1 - (roll_cooldown.time_left / roll_cooldown.wait_time)) * 100
 	roll_cooldown_bar.visible = roll_cooldown.time_left > 0
 	
-	if Input.is_action_just_pressed("inventory"):
+	if Input.is_action_just_pressed("inventory") and not pauseMenu.visible:
 		Global.inventoryUI.gen_inventory()
 		Inventory_UI.visible = !Inventory_UI.visible
 		get_tree().paused = !get_tree().paused

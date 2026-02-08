@@ -325,6 +325,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
 [node name="InventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
+visible = false
 
 [node name="Inventory_UI" type="Control" parent="InventoryUI" unique_id=637673965]
 layout_mode = 3
@@ -361,6 +362,7 @@ theme_override_constants/v_separation = 2
 columns = 8
 
 [node name="pause_menu" type="CanvasLayer" parent="." unique_id=732976117]
+visible = false
 
 [node name="pauseMenu" type="Control" parent="pause_menu" unique_id=403354627]
 layout_mode = 3
