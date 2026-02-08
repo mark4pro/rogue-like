@@ -145,7 +145,6 @@ func mapGen() -> void:
 	var size_in_pixels = used_rect.size * tile_size
 	size_in_pixels = Vector2(size_in_pixels)
 	size_in_pixels *= ground.scale
-	print(size_in_pixels)
 	
 	var newStaticBody : StaticBody2D = StaticBody2D.new()
 	newStaticBody.name = "Bounds"

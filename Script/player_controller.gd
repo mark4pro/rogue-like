@@ -106,6 +106,7 @@ func _process(delta: float) -> void:
 	
 	if not get_tree().paused:
 		roll_cooldown.paused = false
+		Global.messageTimer.paused = false
 		
 		#Drain stamina if sprinting
 		if is_moving and is_sprinting and can_sprint:
@@ -210,6 +211,7 @@ func _process(delta: float) -> void:
 		roll_cooldown.paused = true
 		left_grass.visible = false
 		right_grass.visible = false
+		Global.messageTimer.paused = true
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5
@@ -254,6 +256,9 @@ func _on_sprite_2d_animation_finished() -> void:
 	if anim == "start_roll" or anim == "end_roll":
 		roll_state += 1
 
-
 func _on_back_to_hub_pressed() -> void:
 	Global.sceneIndex = 0
+
+func _on_message_timer_timeout() -> void:
+	var ms : Array[Node] = Global.messageBox.get_children()
+	if not ms.is_empty(): ms[0].queue_free()

@@ -30,6 +30,21 @@ light_mode = 1
 closed = false
 polygon = PackedVector2Array(16, 192, 16, 160, 336, 160, 336, -176, -336, -176, -336, 160, -48, 160, -48, 192)
 
+[sub_resource type="Gradient" id="Gradient_f11wv"]
+offsets = PackedFloat32Array(0.19277108, 0.7108434)
+colors = PackedColorArray(0, 0, 0, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_y6p6t"]
+gradient = SubResource("Gradient_f11wv")
+width = 256
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 1)
+fill_to = Vector2(0, 0.27826086)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4vksb"]
+radius = 65.85
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_y6p6t"]
 shader = ExtResource("7_lw6cm")
 shader_parameter/debug = false
@@ -103,6 +118,18 @@ polygon = PackedVector2Array(-672, 512, 672, 512, 672, -512, -672, -512)
 
 [node name="Trees" type="Node2D" parent="World" unique_id=1496900604]
 script = ExtResource("5_ourlr")
+
+[node name="Exit" type="Node2D" parent="." unique_id=2063789021]
+position = Vector2(38, 448)
+
+[node name="Sprite2D" type="Sprite2D" parent="Exit" unique_id=1399694429]
+texture = SubResource("GradientTexture2D_y6p6t")
+
+[node name="Area2D" type="Area2D" parent="Exit" unique_id=1427889116]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit/Area2D" unique_id=372835585]
+position = Vector2(0, 64)
+shape = SubResource("CircleShape2D_4vksb")
 
 [node name="Bounds" type="Sprite2D" parent="." unique_id=1784180589]
 modulate = Color(1, 1, 1, 0.9411765)

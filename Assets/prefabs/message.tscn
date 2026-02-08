@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://ckm4t02r3wbh6"]
+
+[ext_resource type="Script" uid="uid://c6wksibnsu274" path="res://Script/message.gd" id="1_pfm2h"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pfm2h"]
+bg_color = Color(1, 1, 1, 1)
+
+[node name="Message" type="ColorRect" unique_id=199305781]
+custom_minimum_size = Vector2(300, 50)
+offset_right = 300.0
+offset_bottom = 50.0
+color = Color(0.29, 0.29, 0.29, 1)
+script = ExtResource("1_pfm2h")
+
+[node name="Label" type="Label" parent="." unique_id=1975869827]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Test"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 4
+
+[node name="ProgressBar" type="ProgressBar" parent="." unique_id=616757820]
+visible = false
+custom_minimum_size = Vector2(300, 5)
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -5.0
+offset_right = 300.0
+grow_vertical = 0
+theme_override_styles/fill = SubResource("StyleBoxFlat_pfm2h")
+value = 100.0
+show_percentage = false
