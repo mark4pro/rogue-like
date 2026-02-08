@@ -136,7 +136,7 @@ func mapGen() -> void:
 					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 3))
 				
 				TileType.WALL:
-					walls.set_cell(Vector2i(x, y), 0, Vector2i(0, 2))
+					walls.set_cell(Vector2i(x, y), 0, Vector2i(1, 3))
 	
 	#Gen world bounds
 	var used_rect := ground.get_used_rect()
