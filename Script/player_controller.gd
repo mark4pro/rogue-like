@@ -62,24 +62,24 @@ func _ready():
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
 	
 	if bounds:
-		var min_x = INF
-		var max_x = -INF
-		var min_y = INF
-		var max_y = -INF
+		var minX = INF
+		var maxX = -INF
+		var minY = INF
+		var maxY = -INF
 		
 		for p in bounds.polygon:
-			min_x = min(min_x, p.x)
-			max_x = max(max_x, p.x)
-			min_y = min(min_y, p.y)
-			max_y = max(max_y, p.y)
+			minX = min(minX, p.x)
+			maxX = max(maxX, p.x)
+			minY = min(minY, p.y)
+			maxY = max(maxY, p.y)
 		
-		var top_left     = Vector2(min_x, min_y)
-		var bottom_right = Vector2(max_x, max_y)
+		var topLeft = Vector2(minX, minY)
+		var bottomRight = Vector2(maxX, maxY)
 		
-		camera.limit_left   = int(top_left.x)
-		camera.limit_top    = int(top_left.y)
-		camera.limit_right  = int(bottom_right.x)
-		camera.limit_bottom = int(bottom_right.y)
+		camera.limit_left = int(topLeft.x)
+		camera.limit_top = int(topLeft.y)
+		camera.limit_right = int(bottomRight.x)
+		camera.limit_bottom = int(bottomRight.y)
 
 func take_damage(amount: float):
 	if not is_rolling and not get_tree().paused:
