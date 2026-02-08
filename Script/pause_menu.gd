@@ -11,3 +11,7 @@ func _process(delta: float) -> void:
 func _on_resume_button_down() -> void:
 	get_tree().paused = !get_tree().paused
 	pauseCanvasLayer.visible = !pauseCanvasLayer.visible
+
+
+func _on_exit_game_pressed() -> void:
+	get_tree().quit()
