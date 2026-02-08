@@ -1,6 +1,5 @@
 extends Node
 
-@onready var playerRes : PackedScene = preload("res://Assets/prefabs/player.tscn")
 @onready var treeRes : PackedScene = preload("res://Assets/prefabs/tree.tscn")
 @onready var worldData : World = preload("res://worldGen/Worlds/default.tres").duplicate(true)
 
@@ -175,7 +174,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("regen_map") and not Global.player:
 			regen()
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not Global.player:
-			var newPlayer : RigidBody2D = playerRes.instantiate()
+			var newPlayer : RigidBody2D = Global.playerRes.instantiate()
 			newPlayer.position = freeCam.get_global_mouse_position()
 			worldNode.add_child(newPlayer)
 		if Input.is_action_just_pressed("free_cam") and not Global.player == null:

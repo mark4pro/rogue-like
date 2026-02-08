@@ -1,5 +1,6 @@
 extends Node
 
+var playerRes : PackedScene = preload("res://Assets/prefabs/player.tscn")
 var groundItem : PackedScene = preload("res://Assets/prefabs/groundItem.tscn")
 var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.tscn")
 var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")

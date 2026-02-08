@@ -49,12 +49,35 @@ var rspeed : float = roll_speed
 var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
 
-#check line 204 and 60
+var bounds : CollisionPolygon2D = null
 
 func _ready():
 	Inventory_UI.visible = false
 	pauseMenu.visible = false
 	Global.inventoryUI = $InventoryUI/Inventory_UI
+	
+	var boundsChk = get_tree().get_nodes_in_group("Bounds")
+	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
+	
+	if bounds:
+		var min_x = INF
+		var max_x = -INF
+		var min_y = INF
+		var max_y = -INF
+		
+		for p in bounds.polygon:
+			min_x = min(min_x, p.x)
+			max_x = max(max_x, p.x)
+			min_y = min(min_y, p.y)
+			max_y = max(max_y, p.y)
+		
+		var top_left     = Vector2(min_x, min_y)
+		var bottom_right = Vector2(max_x, max_y)
+		
+		camera.limit_left   = int(top_left.x)
+		camera.limit_top    = int(top_left.y)
+		camera.limit_right  = int(bottom_right.x)
+		camera.limit_bottom = int(bottom_right.y)
 
 func take_damage(amount: float):
 	if not is_rolling and not get_tree().paused:
@@ -62,6 +85,7 @@ func take_damage(amount: float):
 
 func _process(delta: float) -> void:
 	anim = sprite.animation
+	
 	#Clamp health
 	health = clamp(health, 0, max_health)
 	
@@ -147,7 +171,12 @@ func _process(delta: float) -> void:
 			elif roll_dir.x > 0:
 				sprite.flip_h = false
 				rspeed = roll_rot_speed
-	
+		
+		if sprite.flip_h:
+			$CollisionShape2D.position.x = 1.5
+		else:
+			$CollisionShape2D.position.x = -1.5
+		
 		#Finish roll and start cool down
 		#Had to change this since _process updates before _physics_process thus if rotation = 0
 		#	and triggering this at the wrong time.

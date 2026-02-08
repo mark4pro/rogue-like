@@ -5,6 +5,6 @@
 [resource]
 script = ExtResource("1_buicg")
 name = "Hub"
-rootNode = "shit"
-path = "res://Scenes/shit.tscn"
+rootNode = "Hub"
+path = "res://Scenes/hub.tscn"
 metadata/_custom_type_script = "uid://b8crlxd81xkqx"
