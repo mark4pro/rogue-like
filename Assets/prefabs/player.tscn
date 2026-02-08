@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/shadow.png" id="4_gmoaq"]
 [ext_resource type="Script" uid="uid://dwmaslk0joqji" path="res://inventory_ui.gd" id="5_w0l5f"]
 [ext_resource type="Script" uid="uid://lad2fj3lc8w3" path="res://Script/pause_menu.gd" id="6_4312i"]
+[ext_resource type="Script" uid="uid://b6bwarcve0kkn" path="res://Script/death_screen.gd" id="7_4312i"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mbpd7"]
 friction = 0.0
@@ -345,17 +346,17 @@ alignment = 2
 [node name="MessageTimer" type="Timer" parent="UI" unique_id=1616340881]
 wait_time = 2.0
 
-[node name="InventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
+[node name="inventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
 visible = false
 
-[node name="Inventory_UI" type="Control" parent="InventoryUI" unique_id=637673965]
+[node name="inventory" type="Control" parent="inventoryUI" unique_id=637673965]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("5_w0l5f")
 
-[node name="ColorRect" type="ColorRect" parent="InventoryUI/Inventory_UI" unique_id=1208581209]
+[node name="ColorRect" type="ColorRect" parent="inventoryUI/inventory" unique_id=1208581209]
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 1080.0
@@ -363,7 +364,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.21, 0.16534, 0.1491, 1)
 
-[node name="Label" type="Label" parent="InventoryUI/Inventory_UI/ColorRect" unique_id=1893994091]
+[node name="Label" type="Label" parent="inventoryUI/inventory/ColorRect" unique_id=1893994091]
 layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 69.0
@@ -372,7 +373,7 @@ theme_override_font_sizes/font_size = 50
 text = "Inventory"
 horizontal_alignment = 1
 
-[node name="GridContainer" type="GridContainer" parent="InventoryUI/Inventory_UI/ColorRect" unique_id=561799135]
+[node name="GridContainer" type="GridContainer" parent="inventoryUI/inventory/ColorRect" unique_id=561799135]
 layout_mode = 0
 offset_left = 64.0
 offset_top = 80.0
@@ -382,10 +383,9 @@ theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 8
 
-[node name="pause_menu" type="CanvasLayer" parent="." unique_id=732976117]
-visible = false
+[node name="pauseMenu" type="CanvasLayer" parent="." unique_id=732976117]
 
-[node name="pauseMenu" type="Control" parent="pause_menu" unique_id=403354627]
+[node name="pauseMenu" type="Control" parent="pauseMenu" unique_id=403354627]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -395,68 +395,97 @@ grow_vertical = 2
 script = ExtResource("6_4312i")
 metadata/_edit_group_ = true
 
-[node name="exit_game" type="Button" parent="pause_menu/pauseMenu" unique_id=251820944]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 17.2
-anchor_top = 4.8
-anchor_right = 17.2
-anchor_bottom = 4.8
-offset_left = -32337.0
-offset_top = -4992.0
-offset_right = -31783.0
-offset_bottom = -4883.0
-grow_horizontal = 2
-metadata/_edit_group_ = true
-
-[node name="Label" type="Label" parent="pause_menu/pauseMenu/exit_game" unique_id=589077677]
+[node name="ColorRect" type="ColorRect" parent="pauseMenu/pauseMenu" unique_id=1491490495]
+custom_minimum_size = Vector2(600, 340)
 layout_mode = 0
-offset_left = 202.0
-offset_top = 20.0
-offset_right = 340.0
-offset_bottom = 79.0
-theme_override_font_sizes/font_size = 25
-text = "Exit"
-horizontal_alignment = 1
-vertical_alignment = 1
+offset_left = 660.0
+offset_top = 370.0
+offset_right = 1260.0
+offset_bottom = 710.0
+color = Color(0.14767182, 0.14767179, 0.14767179, 1)
 
-[node name="Resume" type="Button" parent="pause_menu/pauseMenu" unique_id=1713300757]
+[node name="Resume" type="Button" parent="pauseMenu/pauseMenu/ColorRect" unique_id=1713300757]
+custom_minimum_size = Vector2(580, 100)
 layout_mode = 0
-offset_left = 688.0
-offset_top = 60.0
-offset_right = 1242.0
-offset_bottom = 169.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 590.0
+offset_bottom = 110.0
 text = "
 "
 metadata/_edit_group_ = true
 
-[node name="Label" type="Label" parent="pause_menu/pauseMenu/Resume" unique_id=527838027]
-layout_mode = 0
-offset_left = -5.0
-offset_right = 557.0
-offset_bottom = 107.0
-theme_override_font_sizes/font_size = 25
-text = "Resume
-"
+[node name="Label" type="Label" parent="pauseMenu/pauseMenu/ColorRect/Resume" unique_id=527838027]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 35
+text = "Resume"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Dead" type="CanvasLayer" parent="." unique_id=133084291]
+[node name="backToHub" type="Button" parent="pauseMenu/pauseMenu/ColorRect" unique_id=1232013853]
+custom_minimum_size = Vector2(580, 100)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 120.0
+offset_right = 590.0
+offset_bottom = 220.0
 
-[node name="death_screen" type="Control" parent="Dead" unique_id=279523899]
+[node name="Label" type="Label" parent="pauseMenu/pauseMenu/ColorRect/backToHub" unique_id=1768137557]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 35
+text = "Back to hub world"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="exitGame" type="Button" parent="pauseMenu/pauseMenu/ColorRect" unique_id=251820944]
+custom_minimum_size = Vector2(580, 100)
+layout_mode = 0
+offset_left = 10.0
+offset_top = 230.0
+offset_right = 590.0
+offset_bottom = 330.0
+metadata/_edit_group_ = true
+
+[node name="Label" type="Label" parent="pauseMenu/pauseMenu/ColorRect/exitGame" unique_id=589077677]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 35
+text = "Exit"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="deathMenu" type="CanvasLayer" parent="." unique_id=133084291]
+visible = false
+
+[node name="deathScreen" type="Control" parent="deathMenu" unique_id=279523899]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+script = ExtResource("7_4312i")
 
-[node name="back_to_hub" type="Button" parent="Dead/death_screen" unique_id=164796879]
+[node name="backToHub" type="Button" parent="deathMenu/deathScreen" unique_id=164796879]
 layout_mode = 0
 offset_left = 710.0
 offset_top = 950.0
 offset_right = 1210.0
 offset_bottom = 1050.0
 
-[node name="Label" type="Label" parent="Dead/death_screen/back_to_hub" unique_id=1413778075]
+[node name="Label" type="Label" parent="deathMenu/deathScreen/backToHub" unique_id=1413778075]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -471,6 +500,7 @@ vertical_alignment = 1
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
 [connection signal="timeout" from="UI/MessageTimer" to="." method="_on_message_timer_timeout"]
-[connection signal="pressed" from="pause_menu/pauseMenu/exit_game" to="pause_menu/pauseMenu" method="_on_exit_game_pressed"]
-[connection signal="button_down" from="pause_menu/pauseMenu/Resume" to="pause_menu/pauseMenu" method="_on_resume_button_down"]
-[connection signal="pressed" from="Dead/death_screen/back_to_hub" to="." method="_on_back_to_hub_pressed"]
+[connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/Resume" to="pauseMenu/pauseMenu" method="_on_resume_button_down"]
+[connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/backToHub" to="pauseMenu/pauseMenu" method="_on_back_to_hub_button_down"]
+[connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/exitGame" to="pauseMenu/pauseMenu" method="_on_exit_game_button_down"]
+[connection signal="button_down" from="deathMenu/deathScreen/backToHub" to="deathMenu/deathScreen" method="_on_back_to_hub_button_down"]

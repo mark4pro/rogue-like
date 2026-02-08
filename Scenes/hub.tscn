@@ -11,6 +11,7 @@
 [ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="7_lw6cm"]
 [ext_resource type="Texture2D" uid="uid://8ijmbvm5swve" path="res://Assets/imgs/Hub/Hub_Bounds.png" id="8_vkujn"]
 [ext_resource type="PackedScene" uid="uid://biahn66yel13i" path="res://Assets/prefabs/tree.tscn" id="9_f11wv"]
+[ext_resource type="Script" uid="uid://vrbdmd6n1uor" path="res://Script/Hub_exit.gd" id="9_y6p6t"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f11wv"]
 shader = ExtResource("4_vkujn")
@@ -121,6 +122,7 @@ script = ExtResource("5_ourlr")
 
 [node name="Exit" type="Node2D" parent="." unique_id=2063789021]
 position = Vector2(38, 448)
+script = ExtResource("9_y6p6t")
 
 [node name="Sprite2D" type="Sprite2D" parent="Exit" unique_id=1399694429]
 texture = SubResource("GradientTexture2D_y6p6t")
@@ -222,3 +224,6 @@ height = 268.0
 
 [node name="Ambient" type="CanvasModulate" parent="DaylightSystem" unique_id=1210830975]
 color = Color(0.34407556, 0.3440758, 0.34407565, 1)
+
+[connection signal="body_entered" from="Exit/Area2D" to="Exit" method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Exit/Area2D" to="Exit" method="_on_area_2d_body_exited"]

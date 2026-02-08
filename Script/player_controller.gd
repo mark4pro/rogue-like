@@ -8,10 +8,10 @@ extends RigidBody2D
 @onready var roll_cooldown : Timer = $roll_cooldown
 @onready var left_grass : GPUParticles2D = $leftGrass
 @onready var right_grass : GPUParticles2D = $rightGrass
-@onready var Inventory_UI : CanvasLayer = $InventoryUI
+@onready var Inventory_UI : CanvasLayer = $inventoryUI
 @onready var camera : Camera2D = $Camera2D
-@onready var pauseMenu : CanvasLayer = $pause_menu
-@onready var deathScreen : CanvasLayer = $Dead
+@onready var pauseMenu : CanvasLayer = $pauseMenu
+@onready var deathScreen : CanvasLayer = $deathMenu
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -56,7 +56,7 @@ func _ready():
 	Inventory_UI.visible = false
 	pauseMenu.visible = false
 	deathScreen.visible = false
-	Global.inventoryUI = $InventoryUI/Inventory_UI
+	Global.inventoryUI = $inventoryUI/inventory
 	
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
@@ -255,9 +255,6 @@ func _on_roll_cooldown_timeout() -> void:
 func _on_sprite_2d_animation_finished() -> void:
 	if anim == "start_roll" or anim == "end_roll":
 		roll_state += 1
-
-func _on_back_to_hub_pressed() -> void:
-	Global.sceneIndex = 0
 
 func _on_message_timer_timeout() -> void:
 	var ms : Array[Node] = Global.messageBox.get_children()

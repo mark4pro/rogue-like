@@ -12,7 +12,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if player_in_range and Input.is_action_just_pressed("pickup") and not get_tree().paused:
+	if player_in_range and Input.is_action_just_pressed("interact") and not get_tree().paused:
 		pickup_item()
 
 func pickup_item():
@@ -23,7 +23,7 @@ func pickup_item():
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):
 		player_in_range = true
-		Global.sendMessage("Press E to pickup " + item.name, 1.0)
+		Global.sendMessage("Press E to pickup " + item.name + ".", 1.0)
 
 func _on_area_2d_body_exited(body: Node2D) -> void:
 	if body.is_in_group("Player"):
