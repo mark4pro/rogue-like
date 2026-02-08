@@ -329,7 +329,6 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
 [node name="InventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
-visible = false
 
 [node name="Inventory_UI" type="Control" parent="InventoryUI" unique_id=637673965]
 layout_mode = 3
@@ -368,7 +367,6 @@ columns = 8
 [node name="pause_menu" type="CanvasLayer" parent="." unique_id=732976117]
 
 [node name="pauseMenu" type="Control" parent="pause_menu" unique_id=403354627]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -376,17 +374,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_4312i")
+metadata/_edit_group_ = true
 
 [node name="ColorRect" type="ColorRect" parent="pause_menu/pauseMenu" unique_id=308135388]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 660.0
-offset_top = 47.0
-offset_right = -634.0
-offset_bottom = -365.0
+anchors_preset = -1
+anchor_left = 0.344
+anchor_top = 0.044000003
+anchor_right = 0.344
+anchor_bottom = 0.044000003
+offset_left = -0.4800415
+offset_top = -0.5200043
+offset_right = 625.51996
+offset_bottom = 667.48
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.28857848, 5.609639e-05, 0.28857633, 1)
