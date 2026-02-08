@@ -376,22 +376,6 @@ grow_vertical = 2
 script = ExtResource("6_4312i")
 metadata/_edit_group_ = true
 
-[node name="ColorRect" type="ColorRect" parent="pause_menu/pauseMenu" unique_id=308135388]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.344
-anchor_top = 0.044000003
-anchor_right = 0.344
-anchor_bottom = 0.044000003
-offset_left = -0.4800415
-offset_top = -0.5200043
-offset_right = 625.51996
-offset_bottom = 667.48
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.28857848, 5.609639e-05, 0.28857633, 1)
-
 [node name="exit_game" type="Button" parent="pause_menu/pauseMenu" unique_id=251820944]
 layout_mode = 1
 anchors_preset = -1
@@ -445,21 +429,6 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-
-[node name="ColorRect" type="ColorRect" parent="Dead" unique_id=1304564367]
-visible = false
-anchors_preset = -1
-anchor_left = 20.1
-anchor_top = 1.0
-anchor_right = 20.1
-anchor_bottom = 1.0
-offset_left = -37788.0
-offset_top = -1042.0
-offset_right = -37393.0
-offset_bottom = -636.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.27179256, 4.9695e-05, 0.2717905, 1)
 
 [node name="back_to_hub" type="Button" parent="Dead" unique_id=164796879]
 offset_left = 752.0
