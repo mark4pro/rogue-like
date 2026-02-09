@@ -10,6 +10,9 @@ var massageUI : PackedScene = preload("res://Assets/prefabs/message.tscn")
 @export var Inventory : Array[BaseItem] = []
 @export var MaxInventory : int = 32
 
+@export_category("Player stats")
+@export var armor : float = 0
+
 var messageTimer : Timer = null
 var messageBox : VBoxContainer = null
 @export_category("Messages")

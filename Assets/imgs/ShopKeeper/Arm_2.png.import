@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csvk3l3u80mid"
-path="res://.godot/imported/Hub_Effect.png-ddb2faaf2a947b0f4bf7b8e91b4892a4.ctex"
+uid="uid://cusp8t62tk8wj"
+path="res://.godot/imported/Arm_2.png-085fdc59ec65bb54cbc87a133cc513a7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/imgs/Hub/Hub_Effect.png"
-dest_files=["res://.godot/imported/Hub_Effect.png-ddb2faaf2a947b0f4bf7b8e91b4892a4.ctex"]
+source_file="res://Assets/imgs/ShopKeeper/Arm_2.png"
+dest_files=["res://.godot/imported/Arm_2.png-085fdc59ec65bb54cbc87a133cc513a7.ctex"]
 
 [params]
 

@@ -3,11 +3,15 @@
 [ext_resource type="Texture2D" uid="uid://b4wqwv3j7lcld" path="res://Assets/imgs/Hub/Hub_Floor.png" id="1_2ch6h"]
 [ext_resource type="Script" uid="uid://dnpg0j27rwfdh" path="res://Script/Hub_spawn.gd" id="1_ourlr"]
 [ext_resource type="Texture2D" uid="uid://duist614bhywm" path="res://Assets/imgs/Hub/Hub_Walls.png" id="2_oc3mp"]
+[ext_resource type="Texture2D" uid="uid://7yvf1s7rogy5" path="res://Assets/imgs/Hub/Hub_Shop_Desk_Bottom.png" id="3_qi2g6"]
+[ext_resource type="Texture2D" uid="uid://c85grcryitbld" path="res://Assets/imgs/Hub/Hub_Shop_Desk_Top.png" id="4_7gm0b"]
 [ext_resource type="TileSet" uid="uid://b42gidbr1gvoe" path="res://Assets/tilesets/forest_test.tres" id="4_imdk4"]
+[ext_resource type="Texture2D" uid="uid://ci6y80ar5gr7y" path="res://Assets/imgs/Hub/Hub_Shop_Desk.png" id="4_kud3j"]
 [ext_resource type="Shader" uid="uid://o3kdvw704xr4" path="res://drop_shadow_no_texture.gdshader" id="4_vkujn"]
 [ext_resource type="Texture2D" uid="uid://ck5ur4lqomjcd" path="res://Assets/imgs/Hub/Hub_Door_Top.png" id="5_4vksb"]
 [ext_resource type="Script" uid="uid://dqsqfmr74cyoj" path="res://Script/tree_tool.gd" id="5_ourlr"]
 [ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="6_f11wv"]
+[ext_resource type="PackedScene" uid="uid://dvifixv362k1q" path="res://Assets/prefabs/shop_keeper.tscn" id="7_7gm0b"]
 [ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="7_lw6cm"]
 [ext_resource type="Texture2D" uid="uid://b8qbw23wvfue3" path="res://Assets/imgs/Path.png" id="8_kud3j"]
 [ext_resource type="Texture2D" uid="uid://8ijmbvm5swve" path="res://Assets/imgs/Hub/Hub_Bounds.png" id="8_vkujn"]
@@ -15,22 +19,22 @@
 [ext_resource type="PackedScene" uid="uid://biahn66yel13i" path="res://Assets/prefabs/tree.tscn" id="9_f11wv"]
 [ext_resource type="Script" uid="uid://vrbdmd6n1uor" path="res://Script/Hub_exit.gd" id="9_y6p6t"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
+shader = ExtResource("4_vkujn")
+shader_parameter/debug = false
+shader_parameter/border_scale = 1.0
+shader_parameter/shadow_offset = Vector2(-5, 0)
+shader_parameter/color = Color(0, 0, 0, 0.30588236)
+shader_parameter/blur_amount = 3.0000001425
+shader_parameter/shadow_scale = 1.5
+shader_parameter/disable_rotating = true
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f11wv"]
 shader = ExtResource("4_vkujn")
 shader_parameter/debug = false
 shader_parameter/border_scale = 2.0
 shader_parameter/shadow_offset = Vector2(-10, -10)
 shader_parameter/color = Color(0, 0, 0, 0.30588236)
-shader_parameter/blur_amount = 3.0000001425
-shader_parameter/shadow_scale = 1.5
-shader_parameter/disable_rotating = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
-shader = ExtResource("4_vkujn")
-shader_parameter/debug = false
-shader_parameter/border_scale = 3.0
-shader_parameter/shadow_offset = Vector2(-5, -12.5)
-shader_parameter/color = Color(0, 0, 0, 0.5882353)
 shader_parameter/blur_amount = 3.0000001425
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
@@ -72,6 +76,31 @@ script = ExtResource("1_ourlr")
 [node name="Floor" type="Sprite2D" parent="House" unique_id=1419043341]
 position = Vector2(16, 16)
 texture = ExtResource("1_2ch6h")
+
+[node name="ShopDesk" type="Sprite2D" parent="House" unique_id=152516785]
+position = Vector2(-16, -79)
+texture = ExtResource("3_qi2g6")
+
+[node name="DeskTop" type="Sprite2D" parent="House/ShopDesk" unique_id=1274688]
+z_index = 5
+position = Vector2(0, -19)
+texture = ExtResource("4_7gm0b")
+
+[node name="Shadow" type="Sprite2D" parent="House/ShopDesk" unique_id=712580405]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_4vksb")
+position = Vector2(0, -11)
+texture = ExtResource("4_kud3j")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="House/ShopDesk" unique_id=1977051041]
+position = Vector2(0, -11)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="House/ShopDesk/StaticBody2D" unique_id=326413611]
+polygon = PackedVector2Array(33, -8, 33, -18, 47, -18, 47, 14, -47, 14, -47, -18, -33, -18, -33, -8)
+
+[node name="ShopKeeper" parent="House/ShopDesk" unique_id=2064473006 instance=ExtResource("7_7gm0b")]
+z_index = 5
+position = Vector2(0, -20)
 
 [node name="Wall" type="Sprite2D" parent="House" unique_id=1470917998]
 visibility_layer = 2
