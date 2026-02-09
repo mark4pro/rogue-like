@@ -41,14 +41,16 @@ var inventoryUI : Control = null
 @export var dayColor : Color = Color(1, 1, 1)
 @export var bloodMoonColor : Color = Color(0.429, 0.0, 0.013)
 @export_category("Blood Moon")
-@export var bloodMoons : bool = false
-@export var bloodMoonChance : float = 15.0
+@export var bloodMoons : bool = true
+@export var bloodMoonChance : float = 0.1
 @export var isBloodMoon : bool = false
 
 const MIDNIGHT : float = 0.0
 const SUNRISE : float = 0.25
 const NOON : float = 0.5
 const SUNSET : float = 0.75
+
+var rollBloodMoon : bool = true
 
 var ambientLight : CanvasModulate = null
 var ambientColor : Color = Color.WHITE
@@ -92,6 +94,7 @@ func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE, bg: Colo
 		messageBox.add_child(newMessage)
 
 func resetRunDays() -> void:
+	isBloodMoon = false
 	totalDays += runDays + 1
 	runDays = 0
 	timeOfDay = SUNRISE
@@ -141,20 +144,43 @@ func _process(delta: float) -> void:
 	for i in Inventory:
 		if i.quantitiy <= 0: Inventory.erase(i)
 	
+	#Time of day and light calc
 	timeOfDay += delta / dayLengthSeconds
 	timeOfDay = clamp(timeOfDay, 0.0, 1.0)
-	if timeOfDay == 1.0:
-		print("test")
+	if timeOfDay >= 1.0:
 		if sceneIndex == 0:
 			totalDays += 1
 		else:
 			runDays += 1
 		timeOfDay = 0.0
 	
+	#Blood moon
+	if sceneIndex != 0:
+		if bloodMoons and timeOfDay >= SUNSET and rollBloodMoon:
+			isBloodMoon = randf() < bloodMoonChance
+			if isBloodMoon: sendMessage("Something feels off...", 5.0, Color(0.506, 0.0, 0.0), Color(0.26, 0.2, 0.2))
+			rollBloodMoon = false
+	if timeOfDay >= SUNRISE and timeOfDay < SUNSET:
+		isBloodMoon = false
+		rollBloodMoon = true
+	
 	#Update lighting
 	var t : float = clampf(cos((timeOfDay - 0.5) * TAU) * 0.5 + 0.5, 0.0, 1.0)
 	
 	ambientColor = nightColor.lerp(dayColor, t)
+	
+	var bloodMoon_t : float = 0.0
+	
+	if isBloodMoon:
+		bloodMoon_t = 1.0
+		
+		if timeOfDay >= SUNSET:
+			bloodMoon_t = clampf((timeOfDay - SUNSET) / (1.0 - SUNSET), 0.0, 1.0)
+		
+		if timeOfDay < SUNRISE:
+			bloodMoon_t = clampf(1.0 - (timeOfDay / SUNRISE), 0.0, 1.0)
+	
+	ambientColor = ambientColor.lerp(bloodMoonColor, bloodMoon_t * 1.0)
 	
 	var moonlight : float = lerp(0.3, 0.0, t)
 	ambientColor += Color(moonlight, moonlight, moonlight)
@@ -162,13 +188,14 @@ func _process(delta: float) -> void:
 	
 	if get_tree().current_scene:
 		#Set ambient or add a new one
-		var ambientChk : CanvasModulate = get_tree().current_scene.get_node_or_null("Ambient")
-		if ambientChk: ambientLight = ambientChk
-		else:
-			var newAmbient : CanvasModulate = CanvasModulate.new()
-			newAmbient.name = "Ambient"
-			newAmbient.color = ambientColor
-			get_tree().current_scene.add_child(newAmbient)
+		if not ambientLight:
+			var ambientChk : CanvasModulate = get_tree().current_scene.get_node_or_null("Ambient")
+			if ambientChk: ambientLight = ambientChk
+			else:
+				var newAmbient : CanvasModulate = CanvasModulate.new()
+				newAmbient.name = "Ambient"
+				newAmbient.color = ambientColor
+				get_tree().current_scene.add_child(newAmbient)
 		
 		if ambientLight: ambientLight.color = ambientColor
 	
