@@ -8,7 +8,7 @@ func _process(delta: float) -> void:
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):
-		Global.sendMessage("Press E to start your journey!", 2.0)
+		Global.sendMessage("Press E to start your journey!", 5.0)
 		touching = true
 
 func _on_area_2d_body_exited(body: Node2D) -> void:

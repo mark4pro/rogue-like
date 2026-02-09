@@ -166,6 +166,7 @@ position = Vector2(38, 448)
 script = ExtResource("9_y6p6t")
 
 [node name="Sprite2D" type="Sprite2D" parent="Exit" unique_id=1399694429]
+z_index = 4
 texture = SubResource("GradientTexture2D_y6p6t")
 
 [node name="Area2D" type="Area2D" parent="Exit" unique_id=1427889116]
