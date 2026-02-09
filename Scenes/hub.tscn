@@ -10,7 +10,9 @@
 [ext_resource type="Script" uid="uid://dqsqfmr74cyoj" path="res://Script/tree_tool.gd" id="5_ourlr"]
 [ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="6_f11wv"]
 [ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="7_lw6cm"]
+[ext_resource type="Texture2D" uid="uid://b8qbw23wvfue3" path="res://Assets/imgs/Path.png" id="8_kud3j"]
 [ext_resource type="Texture2D" uid="uid://8ijmbvm5swve" path="res://Assets/imgs/Hub/Hub_Bounds.png" id="8_vkujn"]
+[ext_resource type="Texture2D" uid="uid://cwrhpbdwyem68" path="res://Assets/imgs/Path_end.png" id="9_72fsv"]
 [ext_resource type="PackedScene" uid="uid://biahn66yel13i" path="res://Assets/prefabs/tree.tscn" id="9_f11wv"]
 [ext_resource type="Script" uid="uid://vrbdmd6n1uor" path="res://Script/Hub_exit.gd" id="9_y6p6t"]
 
@@ -78,6 +80,7 @@ texture = ExtResource("1_2ch6h")
 
 [node name="Wall" type="Sprite2D" parent="House" unique_id=1470917998]
 visibility_layer = 2
+z_index = 1
 position = Vector2(16, 16)
 texture = ExtResource("2_oc3mp")
 
@@ -125,6 +128,20 @@ shadow_enabled = true
 texture = ExtResource("6_f11wv")
 texture_scale = 8.01
 height = 120.0
+
+[node name="Path" type="Line2D" parent="." unique_id=923425707]
+z_index = 1
+texture_repeat = 2
+position = Vector2(-15, 180)
+points = PackedVector2Array(-1, 7, -1, 14.020096, -1, 23, 0, 33, 1, 40, 3, 48, 7, 57, 14, 67, 19, 73, 27.11396, 81.11395, 35, 89, 42, 98, 46, 106, 48, 114, 49, 122, 52, 144, 54, 167, 54.523186, 181.64929, 55, 195, 53.92594, 211.11093, 52.74021, 228.89708, 52, 240, 51, 255, 51.344307, 268.25552, 51.653038, 280.14078, 52.108406, 297.67273, 52.056786, 314.02277, 52, 332)
+width = 32.0
+texture = ExtResource("8_kud3j")
+texture_mode = 1
+
+[node name="End" type="Sprite2D" parent="Path" unique_id=563844622]
+position = Vector2(-1, -9)
+rotation = -1.5707964
+texture = ExtResource("9_72fsv")
 
 [node name="World" type="Node2D" parent="." unique_id=1046988262]
 
