@@ -3,8 +3,6 @@
 
 shader_type canvas_item;
 
-uniform sampler2D thisTexture;
-
 uniform bool debug = false;
 uniform float border_scale = 2.0;
 uniform vec2 shadow_offset = vec2(-10.0, -10.0);
@@ -92,5 +90,5 @@ void fragment() {
 
     vec4 res = mix(shadow, main_texture, main_texture.a);
 	vec4 debug_layer = vec4(1.0, 0.0, 0.0, 0.3);
-	COLOR = shadow;//mix(debug ? debug_layer : shadow, shadow, main_texture.a);
+	COLOR = debug ? debug_layer : shadow;//mix(debug ? debug_layer : shadow, shadow, main_texture.a);
 }

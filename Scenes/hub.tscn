@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://csvk3l3u80mid" path="res://Assets/imgs/Hub/Hub_Effect.png" id="3_imdk4"]
 [ext_resource type="TileSet" uid="uid://b42gidbr1gvoe" path="res://Assets/tilesets/forest_test.tres" id="4_imdk4"]
 [ext_resource type="Shader" uid="uid://o3kdvw704xr4" path="res://drop_shadow_no_texture.gdshader" id="4_vkujn"]
+[ext_resource type="Texture2D" uid="uid://ck5ur4lqomjcd" path="res://Assets/imgs/Hub/Hub_Door_Top.png" id="5_4vksb"]
 [ext_resource type="Script" uid="uid://dqsqfmr74cyoj" path="res://Script/tree_tool.gd" id="5_ourlr"]
 [ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="6_f11wv"]
 [ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="7_lw6cm"]
@@ -21,7 +22,17 @@ shader_parameter/shadow_offset = Vector2(-10, -10)
 shader_parameter/color = Color(0, 0, 0, 0.30588236)
 shader_parameter/blur_amount = 3.0000001425
 shader_parameter/shadow_scale = 1.5
-shader_parameter/disable_rotating = false
+shader_parameter/disable_rotating = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
+shader = ExtResource("4_vkujn")
+shader_parameter/debug = false
+shader_parameter/border_scale = 3.0
+shader_parameter/shadow_offset = Vector2(-5, -12.5)
+shader_parameter/color = Color(0, 0, 0, 0.5882353)
+shader_parameter/blur_amount = 3.0000001425
+shader_parameter/shadow_scale = 1.5
+shader_parameter/disable_rotating = true
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_ourlr"]
 blend_mode = 2
@@ -75,6 +86,17 @@ show_behind_parent = true
 z_index = 4
 material = SubResource("ShaderMaterial_f11wv")
 texture = ExtResource("2_oc3mp")
+
+[node name="DoorTop" type="Sprite2D" parent="House/Wall" unique_id=1310866641]
+z_index = 5
+position = Vector2(-32, 146.5)
+texture = ExtResource("5_4vksb")
+
+[node name="Shadow" type="Sprite2D" parent="House/Wall/DoorTop" unique_id=1810004405]
+show_behind_parent = true
+material = SubResource("ShaderMaterial_4vksb")
+scale = Vector2(0.8, 1)
+texture = ExtResource("5_4vksb")
 
 [node name="Effect" type="Sprite2D" parent="House" unique_id=524129153]
 visible = false
