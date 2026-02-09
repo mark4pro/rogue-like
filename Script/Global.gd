@@ -6,26 +6,52 @@ var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.ts
 var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")
 var massageUI : PackedScene = preload("res://Assets/prefabs/message.tscn")
 
-var Inventory : Array[BaseItem] = []
-var MaxInventory : int = 32
+@export_category("Inventory")
+@export var Inventory : Array[BaseItem] = []
+@export var MaxInventory : int = 32
 
 var messageTimer : Timer = null
 var messageBox : VBoxContainer = null
-var maxMessages : int = 6
+@export_category("Messages")
+@export var maxMessages : int = 6
 
 var messages : Array[Node] = []
-var messageCount : int = 0
+@export var messageCount : int = 0
 
 var player : RigidBody2D = null
 var inventoryUI : Control = null
 
+@export_category("Testing")
 @export var addMs : bool = false
 
+@export_category("Scenes")
 @export var sceneIndex = 0
 @export var scenes : Dictionary = {
 	0: preload("res://Assets/scenes/hub.tres"),
 	1: preload("res://Assets/scenes/testWorld.tres")
 }
+
+@export_category("Day/Night System")
+@export var dayLengthSeconds : float = 120.0
+@export_range(0.0, 1.0, 0.001) var timeOfDay : float = 0.0
+@export var totalDays : int = 0 #Total amount of days past
+@export var runDays : int = 0 #Amount of days past during run
+@export_category("Colors")
+@export var nightColor : Color = Color(0.08, 0.08, 0.15)
+@export var dayColor : Color = Color(1, 1, 1)
+@export var bloodMoonColor : Color = Color(0.429, 0.0, 0.013)
+@export_category("Blood Moon")
+@export var bloodMoons : bool = false
+@export var bloodMoonChance : float = 15.0
+@export var isBloodMoon : bool = false
+
+const MIDNIGHT : float = 0.0
+const SUNRISE : float = 0.25
+const NOON : float = 0.5
+const SUNSET : float = 0.75
+
+var ambientLight : CanvasModulate = null
+var ambientColor : Color = Color.WHITE
 
 func _ready() -> void:
 	#For testing
@@ -42,19 +68,19 @@ func hasSpace(item: BaseItem) -> bool:
 		else:
 			return Inventory.size() < MaxInventory
 
-func add_item(item: BaseItem):
+func add_item(item: BaseItem) -> void:
 	var index = Inventory.find_custom(func(i): return i.id == item.id)
 	if not index == -1:
 		Inventory[index].quantitiy += item.quantitiy
 	else:
 		Inventory.append(item)
 
-func remove_items_by_id(id: int, amount: int):
+func remove_items_by_id(id: int, amount: int) -> void:
 	var index = Inventory.find_custom(func(i): return i.id == id)
 	if not index == -1:
 		Inventory[index].quantitiy -= amount
 
-func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE, bg: Color = Color("4a4a4a")):
+func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE, bg: Color = Color("4a4a4a")) -> void:
 	if messageBox:
 		if messageCount + 1 > maxMessages: messageBox.get_children()[0].queue_free()
 		
@@ -64,6 +90,11 @@ func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE, bg: Colo
 		newMessage.bg = bg
 		newMessage.time = time
 		messageBox.add_child(newMessage)
+
+func resetRunDays() -> void:
+	totalDays += runDays + 1
+	runDays = 0
+	timeOfDay = SUNRISE
 
 func _process(delta: float) -> void:
 	var playerChk = get_tree().get_nodes_in_group("Player")
@@ -109,6 +140,37 @@ func _process(delta: float) -> void:
 	#Clear items with no quanitity
 	for i in Inventory:
 		if i.quantitiy <= 0: Inventory.erase(i)
+	
+	timeOfDay += delta / dayLengthSeconds
+	timeOfDay = clamp(timeOfDay, 0.0, 1.0)
+	if timeOfDay == 1.0:
+		print("test")
+		if sceneIndex == 0:
+			totalDays += 1
+		else:
+			runDays += 1
+		timeOfDay = 0.0
+	
+	#Update lighting
+	var t : float = clampf(cos((timeOfDay - 0.5) * TAU) * 0.5 + 0.5, 0.0, 1.0)
+	
+	ambientColor = nightColor.lerp(dayColor, t)
+	
+	var moonlight : float = lerp(0.3, 0.0, t)
+	ambientColor += Color(moonlight, moonlight, moonlight)
+
+	
+	if get_tree().current_scene:
+		#Set ambient or add a new one
+		var ambientChk : CanvasModulate = get_tree().current_scene.get_node_or_null("Ambient")
+		if ambientChk: ambientLight = ambientChk
+		else:
+			var newAmbient : CanvasModulate = CanvasModulate.new()
+			newAmbient.name = "Ambient"
+			newAmbient.color = ambientColor
+			get_tree().current_scene.add_child(newAmbient)
+		
+		if ambientLight: ambientLight.color = ambientColor
 	
 	#For testing
 	if addMs and OS.has_feature("editor"):

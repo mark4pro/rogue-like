@@ -39,6 +39,7 @@ func _on_resume_button_down() -> void:
 	pauseCanvasLayer.visible = !pauseCanvasLayer.visible
 
 func _on_back_to_hub_button_down() -> void:
+	Global.resetRunDays()
 	get_tree().paused = false
 	Global.sceneIndex = 0
 
