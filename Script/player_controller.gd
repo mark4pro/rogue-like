@@ -41,6 +41,9 @@ var can_roll : bool = true
 var is_moving : bool = false
 var is_sprinting : bool = false
 
+var is_dead : bool = false
+var played_death_anim : bool = false
+
 var dir : Vector2 = Vector2.ZERO
 var speed : float = walk_speed
 
@@ -90,6 +93,21 @@ func _process(delta: float) -> void:
 	
 	#Clamp health
 	health = clamp(health, 0, max_health)
+	is_dead = not health > 0
+	deathScreen.visible = is_dead
+	
+	if is_dead:
+		if not played_death_anim:
+			sprite.call_deferred("play", "death")
+			played_death_anim = true
+		$Shadow.visible = sprite.frame < sprite.sprite_frames.get_frame_count("death") - 1
+		rot_point.rotation = 0
+		roll_cooldown.stop()
+		is_rolling = false 
+		roll_state = 0
+		Inventory_UI.visible = false
+	else:
+		played_death_anim = false
 	
 	#Movement check
 	is_moving = not dir == Vector2.ZERO
@@ -134,13 +152,12 @@ func _process(delta: float) -> void:
 		if not dir == Vector2.ZERO:
 			sprite.play("walk")
 		else:
-			if anim == "walk":
-				sprite.stop()
+			if anim == "walk": sprite.stop()
 		
 		#Roll animation state
 		match roll_state:
 			0:
-				if anim != "walk": sprite.animation = "walk"
+				if anim != "walk" and not is_dead: sprite.animation = "walk"
 			1:
 				if anim != "start_roll": sprite.play("start_roll")
 				if not sprite.is_playing(): sprite.play("start_roll")
@@ -152,7 +169,7 @@ func _process(delta: float) -> void:
 				if not sprite.is_playing(): sprite.play("end_roll")
 		
 		#Activate roll
-		if Input.is_action_just_pressed("roll") and not is_rolling and can_roll:
+		if Input.is_action_just_pressed("roll") and not is_rolling and can_roll and not is_dead:
 			roll_target = camera.get_global_mouse_position()
 			roll_dir = roll_target - position
 			roll_dir = roll_dir.normalized()
@@ -200,12 +217,6 @@ func _process(delta: float) -> void:
 			right_grass.emitting = false
 			left_grass.visible = false
 			right_grass.visible = false
-		
-		#Death
-		if not health > 0:
-			deathScreen.visible = true
-			sprite.play("death")
-			
 	else:
 		sprite.pause()
 		roll_cooldown.paused = true
@@ -225,7 +236,7 @@ func _process(delta: float) -> void:
 	roll_cooldown_bar.value = (1 - (roll_cooldown.time_left / roll_cooldown.wait_time)) * 100
 	roll_cooldown_bar.visible = roll_cooldown.time_left > 0
 	
-	if Input.is_action_just_pressed("inventory") and not pauseMenu.visible:
+	if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not is_dead:
 		Global.inventoryUI.gen_inventory()
 		Inventory_UI.visible = !Inventory_UI.visible
 		get_tree().paused = !get_tree().paused
@@ -238,7 +249,7 @@ func _process(delta: float) -> void:
 func _physics_process(delta: float) -> void:
 	if not get_tree().paused:
 		#Move player
-		if not is_rolling and roll_state == 0:
+		if not is_rolling and roll_state == 0 and not is_dead:
 			dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 		else:
 			dir = Vector2.ZERO #Don't move when rolling
