@@ -39,6 +39,16 @@ shader_parameter/blur_amount = 3.0000001425
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_7gm0b"]
+shader = ExtResource("4_vkujn")
+shader_parameter/debug = false
+shader_parameter/border_scale = 2.0
+shader_parameter/shadow_offset = Vector2(-10, -10)
+shader_parameter/color = Color(0, 0, 0, 0.5529412)
+shader_parameter/blur_amount = 3.0000001425
+shader_parameter/shadow_scale = 1.5
+shader_parameter/disable_rotating = true
+
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f11wv"]
 closed = false
 polygon = PackedVector2Array(16, 192, 16, 160, 336, 160, 336, -176, -336, -176, -336, 160, -48, 160, -48, 192)
@@ -121,7 +131,8 @@ texture = ExtResource("5_4vksb")
 
 [node name="Shadow" type="Sprite2D" parent="House/Wall/DoorTop" unique_id=1810004405]
 show_behind_parent = true
-material = SubResource("ShaderMaterial_4vksb")
+material = SubResource("ShaderMaterial_7gm0b")
+position = Vector2(-5, 1.5)
 scale = Vector2(0.8, 1)
 texture = ExtResource("5_4vksb")
 
