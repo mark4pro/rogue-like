@@ -49,8 +49,15 @@ func _process(delta: float) -> void:
 			voice.say(currentConvo.text)
 			voiceTrigger = true
 		
+		if currentConvo.speaker != "" and textIndex == 0: textLabel.text = currentConvo.speaker
+		
 		if txtTime >= charDelay and textIndex < currentConvo.text.length():
 			textIndex += 1
 			var currentString : String = currentConvo.text.substr(0, textIndex)
-			textLabel.text = currentString
+			if currentConvo.speaker == "":
+				textLabel.text = currentString
+			else:
+				textLabel.text = currentConvo.speaker + ": " + currentString
 			txtTime = 0
+		if textIndex >= currentConvo.text.length():
+			pass
