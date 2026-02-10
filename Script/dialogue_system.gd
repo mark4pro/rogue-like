@@ -1,6 +1,7 @@
 extends CanvasLayer
 
 @onready var textLabel : Label = $BG/Text
+@onready var arrow : TextureRect = $BG/Arrow
 @onready var voice : VoiceAudioStreamPlayer = $VoiceAudioStreamPlayer
 
 @export var dialogue : Array[Dialogue] = []
@@ -18,6 +19,9 @@ var voiceTrigger : bool = false
 
 func stop() -> void:
 	currentDial = null
+	textIndex = 0
+	txtTime = 0
+	convoIndex += 1
 	voice.stop_saying()
 
 func start(id: String) -> void:
@@ -37,6 +41,7 @@ func _process(delta: float) -> void:
 		prevConvo = convoIndex
 	
 	if currentDial:
+		convoIndex = clamp(convoIndex, 0, currentDial.convos.size() - 1)
 		currentConvo = currentDial.convos[convoIndex]
 		
 		txtTime += delta
@@ -59,5 +64,12 @@ func _process(delta: float) -> void:
 			else:
 				textLabel.text = currentConvo.speaker + ": " + currentString
 			txtTime = 0
-		if textIndex >= currentConvo.text.length():
-			pass
+		
+		arrow.visible = textIndex >= currentConvo.text.length()
+		if arrow.visible and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			if convoIndex == currentDial.convos.size() - 1:
+				stop()
+				return
+			textIndex = 0
+			txtTime = 0
+			convoIndex += 1

@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://b660axry2e18c" path="res://Script/Res/dialogue.gd" id="7_m4lgo"]
 [ext_resource type="Script" uid="uid://db2qca68nacs4" path="res://Script/Res/convo.gd" id="8_fggkm"]
 [ext_resource type="Script" uid="uid://duc1so4kqgbh0" path="res://Script/Res/options.gd" id="9_lb8gd"]
+[ext_resource type="Texture2D" uid="uid://lo1tmwk5jip5" path="res://Assets/imgs/UI/Arrow.png" id="11_fggkm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m4lgo"]
 atlas = ExtResource("2_t5djk")
@@ -501,6 +502,7 @@ script = ExtResource("6_q5p6k")
 metadata/_custom_type_script = "uid://bb8l2eniq2s16"
 
 [node name="BG" type="ColorRect" parent="Text" unique_id=313495297]
+modulate = Color(1, 1, 1, 0.5647059)
 custom_minimum_size = Vector2(800, 200)
 anchors_preset = 7
 anchor_left = 0.5
@@ -512,7 +514,7 @@ offset_top = -40.0
 offset_right = 20.0
 grow_horizontal = 2
 grow_vertical = 0
-color = Color(0.19607843, 0.19607843, 0.19607843, 0.5647059)
+color = Color(0.19607843, 0.19607843, 0.19607843, 1)
 
 [node name="Text" type="Label" parent="Text/BG" unique_id=1114468786]
 custom_minimum_size = Vector2(800, 200)
@@ -521,6 +523,22 @@ offset_right = 40.0
 offset_bottom = 23.0
 theme_override_font_sizes/font_size = 42
 autowrap_mode = 3
+
+[node name="Arrow" type="TextureRect" parent="Text/BG" unique_id=1066896852]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -25.0
+offset_top = -25.0
+offset_right = 15.0
+offset_bottom = 15.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("11_fggkm")
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

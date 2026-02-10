@@ -21,8 +21,10 @@ func _process(delta: float) -> void:
 		rest = false
 		
 		#Dialogue
+		inDialogue = dialogue.currentDial != null
+		dialogue.visible = inDialogue
 		if not inDialogue and Input.is_action_just_pressed("interact"):
-			dialogue.visible = true
+
 			dialogue.start("Test")
 	else:
 		head.stop()
