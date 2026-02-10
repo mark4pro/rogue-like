@@ -495,6 +495,7 @@ one_shot = true
 [node name="Text" type="CanvasLayer" parent="." unique_id=1843041407]
 script = ExtResource("6_lrpm0")
 dialogue = Array[ExtResource("7_m4lgo")]([SubResource("Resource_cspdg")])
+textSpeed = 10.0
 
 [node name="VoiceAudioStreamPlayer" type="AudioStreamPlayer" parent="Text" unique_id=1861978791]
 bus = &"Voices"
