@@ -204,7 +204,7 @@ func _process(delta: float) -> void:
 		#Death
 		if not health > 0:
 			deathScreen.visible = true
-			sprite.visible = false
+			sprite.play("death")
 			freeze = true
 	else:
 		sprite.pause()
