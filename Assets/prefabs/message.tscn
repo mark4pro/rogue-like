@@ -27,13 +27,12 @@ clip_text = true
 text_overrun_behavior = 4
 
 [node name="ProgressBar" type="ProgressBar" parent="." unique_id=616757820]
-visible = false
-custom_minimum_size = Vector2(300, 5)
+custom_minimum_size = Vector2(300, 4)
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -5.0
+offset_top = -4.0
 offset_right = 300.0
 grow_vertical = 0
 theme_override_styles/fill = SubResource("StyleBoxFlat_pfm2h")

@@ -85,6 +85,9 @@ func remove_items_by_id(id: int, amount: int) -> void:
 	if not index == -1:
 		Inventory[index].quantitiy -= amount
 
+func getKeyFromAction(action: String) -> String:
+	return InputMap.action_get_events(action)[0].as_text().split(" ")[0]
+
 func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE, bg: Color = Color("4a4a4a")) -> void:
 	if messageBox:
 		if messageCount + 1 > maxMessages: messageBox.get_children()[0].queue_free()

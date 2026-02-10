@@ -15,6 +15,10 @@ run/main_scene="uid://b2rr2nbnnax0r"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://c4oselt1ds0rx"
+
 [autoload]
 
 Worldgen="*uid://dk61fmxhfrtqg"
@@ -26,6 +30,10 @@ window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="ignore"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot-voice-generator/plugin.cfg")
 
 [global_group]
 

@@ -5,6 +5,45 @@
 [ext_resource type="Texture2D" uid="uid://qvttm23886uv" path="res://Assets/imgs/ShopKeeper/Head.png" id="2_t5djk"]
 [ext_resource type="Texture2D" uid="uid://c7t1l0a2hm5hh" path="res://Assets/imgs/ShopKeeper/Arm_1.png" id="3_q5p6k"]
 [ext_resource type="Texture2D" uid="uid://cusp8t62tk8wj" path="res://Assets/imgs/ShopKeeper/Arm_2.png" id="4_lrpm0"]
+[ext_resource type="Script" uid="uid://bsnvihgwkkh1j" path="res://Script/dialogue_system.gd" id="6_lrpm0"]
+[ext_resource type="Script" uid="uid://bb8l2eniq2s16" path="res://addons/godot-voice-generator/voice_audio_stream_player.gd" id="6_q5p6k"]
+[ext_resource type="Script" uid="uid://b660axry2e18c" path="res://Script/Res/dialogue.gd" id="7_m4lgo"]
+[ext_resource type="Script" uid="uid://db2qca68nacs4" path="res://Script/Res/convo.gd" id="8_fggkm"]
+[ext_resource type="Script" uid="uid://duc1so4kqgbh0" path="res://Script/Res/options.gd" id="9_lb8gd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m4lgo"]
+atlas = ExtResource("2_t5djk")
+region = Rect2(0, 0, 18, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lb8gd"]
+atlas = ExtResource("2_t5djk")
+region = Rect2(18, 0, 18, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fggkm"]
+atlas = ExtResource("2_t5djk")
+region = Rect2(0, 0, 18, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_see0k"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m4lgo")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lb8gd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fggkm")
+}],
+"loop": false,
+"name": &"talking",
+"speed": 5.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_t5djk"]
 size = Vector2(94, 10)
@@ -362,6 +401,22 @@ states/Wave/node = SubResource("AnimationNodeAnimation_q5p6k")
 states/Wave/position = Vector2(531, 18)
 transitions = ["Default", "Wave", SubResource("AnimationNodeStateMachineTransition_2gutm"), "Default", "Resting", SubResource("AnimationNodeStateMachineTransition_6la8a"), "Start", "Default", SubResource("AnimationNodeStateMachineTransition_m4lgo"), "Wave", "Default", SubResource("AnimationNodeStateMachineTransition_fggkm"), "Resting", "Default", SubResource("AnimationNodeStateMachineTransition_lb8gd")]
 
+[sub_resource type="Resource" id="Resource_see0k"]
+script = ExtResource("8_fggkm")
+text = "YIPPEE! It works."
+metadata/_custom_type_script = "uid://db2qca68nacs4"
+
+[sub_resource type="Resource" id="Resource_v06ya"]
+script = ExtResource("8_fggkm")
+text = "Second convo!"
+metadata/_custom_type_script = "uid://db2qca68nacs4"
+
+[sub_resource type="Resource" id="Resource_cspdg"]
+script = ExtResource("7_m4lgo")
+id = "Test"
+convos = Array[ExtResource("8_fggkm")]([SubResource("Resource_see0k"), SubResource("Resource_v06ya")])
+metadata/_custom_type_script = "uid://b660axry2e18c"
+
 [node name="ShopKeeper" type="Node2D" unique_id=2064473006]
 script = ExtResource("1_t5djk")
 
@@ -372,9 +427,12 @@ texture = ExtResource("1_nl1u1")
 [node name="HeadAnchor" type="Node2D" parent="Body" unique_id=696264170]
 position = Vector2(0, -4.5)
 
-[node name="Head" type="Sprite2D" parent="Body/HeadAnchor" unique_id=889660697]
+[node name="Head" type="AnimatedSprite2D" parent="Body/HeadAnchor" unique_id=1196317149]
 position = Vector2(0, -4.5)
-texture = ExtResource("2_t5djk")
+sprite_frames = SubResource("SpriteFrames_see0k")
+animation = &"talking"
+frame = 1
+frame_progress = 1.0
 
 [node name="LeftArm_1" type="Node2D" parent="Body" unique_id=1587604177]
 position = Vector2(-9.5, 0)
@@ -431,6 +489,39 @@ anim_player = NodePath("../AnimationPlayer")
 wait_time = 3.0
 one_shot = true
 
+[node name="Text" type="CanvasLayer" parent="." unique_id=1843041407]
+script = ExtResource("6_lrpm0")
+dialogue = Array[ExtResource("7_m4lgo")]([SubResource("Resource_cspdg")])
+
+[node name="VoiceAudioStreamPlayer" type="AudioStreamPlayer" parent="Text" unique_id=1861978791]
+bus = &"Voices"
+script = ExtResource("6_q5p6k")
+metadata/_custom_type_script = "uid://bb8l2eniq2s16"
+
+[node name="BG" type="ColorRect" parent="Text" unique_id=313495297]
+custom_minimum_size = Vector2(800, 200)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -20.0
+offset_top = -40.0
+offset_right = 20.0
+grow_horizontal = 2
+grow_vertical = 0
+color = Color(0.19607843, 0.19607843, 0.19607843, 0.5647059)
+
+[node name="Text" type="Label" parent="Text/BG" unique_id=1114468786]
+custom_minimum_size = Vector2(800, 200)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+autowrap_mode = 3
+
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
 [connection signal="timeout" from="Idle" to="." method="_on_idle_timeout"]
+[connection signal="finished" from="Text/VoiceAudioStreamPlayer" to="." method="_on_voice_audio_stream_player_finished"]
+[connection signal="finished_saying" from="Text/VoiceAudioStreamPlayer" to="." method="_on_voice_audio_stream_player_finished_saying"]
+[connection signal="saying_characters" from="Text/VoiceAudioStreamPlayer" to="." method="_on_voice_audio_stream_player_saying_characters"]
