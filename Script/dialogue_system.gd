@@ -18,6 +18,7 @@ var voiceTrigger : bool = false
 
 func stop() -> void:
 	currentDial = null
+	voice.stop_saying()
 
 func start(id: String) -> void:
 	var index = dialogue.find_custom(func(d): return d.id == id)
@@ -28,6 +29,7 @@ func start(id: String) -> void:
 	textLabel.text = ""
 	textIndex = 0
 	txtTime = 0
+	voiceTrigger = false
 
 func _process(delta: float) -> void:
 	if prevConvo != convoIndex:

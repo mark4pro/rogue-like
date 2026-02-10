@@ -90,12 +90,6 @@ func _process(delta: float) -> void:
 		if (not playing or get_playback_position() <= 0.0) and text_time >= charDelay:
 			if saying_word.word_parts.is_empty():
 				saying_words.remove_at(0)
-				
-				if saying_words.is_empty():
-					stop()
-					text_time = 0.0
-					emit_signal("finished_saying")
-					return
 			else:
 				emit_signal("saying_characters", saying_word.word_parts_positions[0])
 				
@@ -110,10 +104,16 @@ func _process(delta: float) -> void:
 				stop()
 				play()
 			text_time = 0
+	else:
+		stop_saying()
+		emit_signal("finished_saying")
 
 func stop_saying() -> void:
 	stop()
+	text_time = 0
 	saying_words = []
+	saying_text = ""
+	saying_word = null
 
 func say(text: String) -> void:
 	saying_words = []

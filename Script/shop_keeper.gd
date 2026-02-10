@@ -29,6 +29,7 @@ func _process(delta: float) -> void:
 		inDialogue = false
 		isShopOpen = false
 		dialogue.visible = false
+		dialogue.stop()
 		if idleTimer.is_stopped(): idleTimer.start()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
