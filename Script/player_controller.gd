@@ -205,7 +205,7 @@ func _process(delta: float) -> void:
 		if not health > 0:
 			deathScreen.visible = true
 			sprite.play("death")
-			freeze = true
+			
 	else:
 		sprite.pause()
 		roll_cooldown.paused = true
