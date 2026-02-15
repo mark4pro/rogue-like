@@ -23,6 +23,7 @@ buses/default_bus_layout="uid://c4oselt1ds0rx"
 
 Worldgen="*uid://dk61fmxhfrtqg"
 Global="*uid://b3lugf1qx08i4"
+EnemySpawner="*uid://q1u3yhfaxg0k"
 
 [display]
 

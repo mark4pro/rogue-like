@@ -105,6 +105,21 @@ func resetRunDays() -> void:
 	runDays = 0
 	timeOfDay = SUNRISE
 
+func getRandom(list: Array):
+	var total_weight : float = 0
+	for entry in list:
+		total_weight += max(entry.weight, 0)
+	
+	var roll : float = randf() * total_weight
+	var cumulative : float = 0
+	
+	for entry in list:
+		cumulative += entry.weight
+		if roll <= cumulative:
+			return entry.data
+	
+	return list.back().data
+
 func _process(delta: float) -> void:
 	var playerChk = get_tree().get_nodes_in_group("Player")
 	if not playerChk.is_empty(): player = playerChk[0]
