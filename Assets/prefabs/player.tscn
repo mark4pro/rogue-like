@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://dwmaslk0joqji" path="res://inventory_ui.gd" id="5_w0l5f"]
 [ext_resource type="Script" uid="uid://lad2fj3lc8w3" path="res://Script/pause_menu.gd" id="6_4312i"]
 [ext_resource type="Script" uid="uid://b6bwarcve0kkn" path="res://Script/death_screen.gd" id="7_4312i"]
-[ext_resource type="Script" uid="uid://q1u3yhfaxg0k" path="res://Assets/prefabs/spawner.gd" id="8_ev7rh"]
+[ext_resource type="Script" uid="uid://q1u3yhfaxg0k" path="res://Script/Res/spawner.gd" id="8_ev7rh"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mbpd7"]
 friction = 0.0
@@ -593,7 +593,6 @@ vertical_alignment = 1
 script = ExtResource("8_ev7rh")
 
 [node name="Timer" type="Timer" parent="Spawner" unique_id=1977106088]
-wait_time = 2.0
 autostart = true
 
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
