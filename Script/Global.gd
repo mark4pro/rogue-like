@@ -161,8 +161,8 @@ func _process(delta: float) -> void:
 				
 				c.pBar.visible = i == 0
 				
-				var t = (float(inverted_index) / float(maxMessages - 1))
-				c.modulate.a = clampf(1.0 - t, 0.1, 0.9)
+				var m_t = (float(inverted_index) / float(maxMessages - 1))
+				c.modulate.a = clampf(1.0 - m_t, 0.1, 0.9)
 	
 	var thisLoading = get_tree().root.get_node_or_null("loading")
 	
@@ -211,9 +211,9 @@ func _process(delta: float) -> void:
 		rollBloodMoon = true
 	
 	#Update lighting
-	var t : float = clampf(cos((timeOfDay - 0.5) * TAU) * 0.5 + 0.5, 0.0, 1.0)
+	var tod_t : float = clampf(cos((timeOfDay - 0.5) * TAU) * 0.5 + 0.5, 0.0, 1.0)
 	
-	ambientColor = nightColor.lerp(dayColor, t)
+	ambientColor = nightColor.lerp(dayColor, tod_t)
 	
 	var bloodMoon_t : float = 0.0
 	
@@ -228,7 +228,7 @@ func _process(delta: float) -> void:
 	
 	ambientColor = ambientColor.lerp(bloodMoonColor, bloodMoon_t * 1.0)
 	
-	var moonlight : float = lerp(0.3, 0.0, t)
+	var moonlight : float = lerp(0.3, 0.0, tod_t)
 	ambientColor += Color(moonlight, moonlight, moonlight)
 
 	

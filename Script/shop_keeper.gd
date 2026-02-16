@@ -17,7 +17,7 @@ func _ready() -> void:
 	head.animation = "sleeping"
 	dialogue.voice.set_sub_stream(load("res://addons/godot-voice-generator/sound/v1.ogg"))
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if inRange:
 		idleTimer.stop()
 		rest = false
@@ -58,6 +58,6 @@ func _on_area_2d_body_exited(body: Node2D) -> void:
 func _on_idle_timeout() -> void:
 	rest = true
 
-func _on_voice_audio_stream_player_saying_characters(position: int) -> void:
+func _on_voice_audio_stream_player_saying_characters(_position: int) -> void:
 	head.stop()
 	head.play("talking")

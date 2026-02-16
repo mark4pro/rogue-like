@@ -6,7 +6,7 @@ class_name ForestGenerator
 var noise = FastNoiseLite.new()
 
 func gen() -> void:
-	noise.seed = Worldgen.seed
+	noise.seed = Worldgen.currentSeed
 	noise.frequency = randf_range(frequency.x, frequency.y)
 	
 	for cy in range(Worldgen.chunkSize.y):

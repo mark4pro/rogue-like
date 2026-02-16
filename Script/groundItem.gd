@@ -11,7 +11,7 @@ func _ready() -> void:
 	item_sprite.texture = item.itemIcon
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if player_in_range and Input.is_action_just_pressed("interact") and not get_tree().paused:
 		pickup_item()
 

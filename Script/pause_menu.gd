@@ -14,7 +14,7 @@ func getChildCount() -> int:
 	
 	return count
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	bgChildren = bg.get_children()
 	
 	var bgCount : int = getChildCount()

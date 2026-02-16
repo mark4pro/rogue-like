@@ -4,13 +4,13 @@ class_name BiomeGenerator
 @export var frequency : Vector2 = Vector2(0.03, 0.5)
 
 @export var cave_val : float = -0.3
-@export var forest_val : float = 0.2
+#@export var forest_val : float = 0.2
 #@export var dungeon_val : float = -0.3
 
 var noise = FastNoiseLite.new()
 
 func gen() -> void:
-	noise.seed = Worldgen.seed
+	noise.seed = Worldgen.currentSeed
 	noise.frequency = randf_range(frequency.x, frequency.y)
 	
 	for cy in range(Worldgen.chunkSize.y):

@@ -4,14 +4,14 @@ var visionDebugColor : Color = Color(0.64, 0.0, 0.0, 0.118)
 
 var pos : Vector2 = Vector2.ZERO
 var dir : Vector2 = Vector2.ZERO
-var angle : float = 90
-var range : float = 100
+var vAngle : float = 90
+var vRange : float = 100
 
 func _draw() -> void:
 	if not Global.debugVision:
 		return
 	
-	var halfAngle : float = deg_to_rad(angle * 0.5)
+	var halfAngle : float = deg_to_rad(vAngle * 0.5)
 	var points : PackedVector2Array = []
 	
 	var localPos = to_local(pos)
@@ -23,6 +23,6 @@ func _draw() -> void:
 	for i in range(steps + 1):
 		var t : float = lerp(-halfAngle, halfAngle, float(i) / steps)
 		var dir_ : Vector2 = dir.rotated(t)
-		points.append(localPos + dir_ * range)
+		points.append(localPos + dir_ * vRange)
 	
 	draw_polygon(points, [visionDebugColor])

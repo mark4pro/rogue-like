@@ -13,7 +13,7 @@ func _ready() -> void:
 		$PanelContainer/VBoxContainer/equipBttn.visible = false
 		$PanelContainer/VBoxContainer/unequipBttn.visible = false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not touching:
 		queue_free()
 

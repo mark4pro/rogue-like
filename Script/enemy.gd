@@ -80,8 +80,8 @@ func _process(delta: float) -> void:
 	
 	cone.pos = eyePos
 	cone.dir = eyeDir
-	cone.angle = visionAngle
-	cone.range = visionRange
+	cone.vAngle = visionAngle
+	cone.vRange = visionRange
 	
 	if not Global.player:
 		currentState = state.WONDER

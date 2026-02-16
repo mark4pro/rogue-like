@@ -8,7 +8,7 @@ extends Node
 @export var chunkTiles : int = 30
 @export var tileSize : int = 32
 
-var seed : int = randi()
+var currentSeed : int = randi()
 
 var hasWorldNode : Node2D = null
 
@@ -169,13 +169,13 @@ func mapGen() -> void:
 
 
 func regen() -> void:
-	seed = randi()
-	seed(seed)
-	if not thisSeed == -1: seed = thisSeed
+	currentSeed = randi()
+	if not thisSeed == -1: currentSeed = thisSeed
+	seed(currentSeed)
 	if hasWorldNode: Global.currentScene.get_node("World").free()
 	EnemySpawner.clearEnemies()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if Global.player: Global.player.get_node("Camera2D").make_current()
 	
 	if Global.currentScene:

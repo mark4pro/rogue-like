@@ -8,7 +8,7 @@ func _ready() -> void:
 	if item: texture = item.itemIcon
 	else: $Amount.visible = false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	$BG.size = size
 	if item:
 		$Amount.text = str(item.quantitiy)
