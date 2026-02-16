@@ -25,6 +25,7 @@ var player : RigidBody2D = null
 var inventoryUI : Control = null
 
 @export_category("Testing")
+@export var debugVision : bool = true
 @export var addMs : bool = false
 
 @export_category("Scenes")
@@ -117,6 +118,8 @@ func getRandom(list: Array):
 		cumulative += entry.weight
 		if roll <= cumulative:
 			return entry.data
+	
+	if list.back() == null: return null
 	
 	return list.back().data
 

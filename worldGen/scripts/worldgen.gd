@@ -25,7 +25,6 @@ enum TileType {
 }
 
 enum Biome {
-	DUNGEON,
 	CAVE,
 	FOREST,
 	MIXED

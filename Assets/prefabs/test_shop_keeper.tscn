@@ -11,7 +11,7 @@ modification_stack = SubResource("SkeletonModificationStack2D_ysjw7")
 
 [node name="Right_Arm_1" type="Bone2D" parent="Skeleton2D" unique_id=1960890461]
 position = Vector2(9, -6.5)
-scale = Vector2(0.99999696, 0.99999696)
+scale = Vector2(0.9999951, 0.9999951)
 rest = Transform2D(0.99999696, 0, 0, 0.99999696, 9, -6.5)
 
 [node name="Right_Arm_2" type="Bone2D" parent="Skeleton2D/Right_Arm_1" unique_id=1949735790]

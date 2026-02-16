@@ -18,7 +18,5 @@ func gen() -> void:
 			var n = noise.get_noise_2d(cx, cy)
 			if n < cave_val:
 				Worldgen.biomeMap[cy][cx] = Worldgen.Biome.CAVE
-			elif n < forest_val:
-				Worldgen.biomeMap[cy][cx] = Worldgen.Biome.FOREST
 			else:
-				Worldgen.biomeMap[cy][cx] = Worldgen.Biome.DUNGEON
+				Worldgen.biomeMap[cy][cx] = Worldgen.Biome.FOREST

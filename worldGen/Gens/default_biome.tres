@@ -4,4 +4,5 @@
 
 [resource]
 script = ExtResource("1_cetdh")
+cave_val = -0.2
 metadata/_custom_type_script = "uid://kawcidclgko2"
