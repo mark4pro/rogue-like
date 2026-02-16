@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://ctrrswfhhu73y"]
+
+[ext_resource type="Texture2D" uid="uid://bbofvvd4rwy0v" path="res://Assets/imgs/weapons/over_grown.png" id="1_ai7fc"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_iqc8k"]
+
+[resource]
+script = ExtResource("1_iqc8k")
+id = 100
+name = "Over Grown"
+itemType = 1
+itemIcon = ExtResource("1_ai7fc")
+equippable = true
+stackable = false
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

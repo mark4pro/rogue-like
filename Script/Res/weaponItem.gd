@@ -1,8 +1,11 @@
 extends BaseItem
 class_name WeaponItem
 
-#@export var healthAmount : float = 100
+func use() -> void:
+	pass
 
-#func use() -> void:
-	#Global.player.health += healthAmount
-	#quantitiy -= 1
+func equip() -> void:
+	pass
+
+func unequip() -> void:
+	pass

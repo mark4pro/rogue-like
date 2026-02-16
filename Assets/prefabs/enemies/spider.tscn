@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bvbbpryyaf3xw"]
 
 [ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_56c4l"]
-[ext_resource type="Texture2D" uid="uid://dkfdrjtuto62c" path="res://Assets/imgs/spider.png" id="2_56c4l"]
+[ext_resource type="Texture2D" uid="uid://dkfdrjtuto62c" path="res://Assets/imgs/enemies/spider.png" id="2_56c4l"]
 [ext_resource type="Script" uid="uid://bv4dhcf7561la" path="res://Script/cone.gd" id="3_6e3jo"]
-[ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/shadow.png" id="3_ebah1"]
+[ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="3_ebah1"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_56c4l"]
 friction = 0.0

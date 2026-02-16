@@ -63,29 +63,45 @@ var ambientColor : Color = Color.WHITE
 
 func _ready() -> void:
 	#For testing
-	Inventory.append(load("res://Assets/items/health_1.tres"))
 	add_item(load("res://Assets/items/health_1.tres"))
+	add_item(load("res://Assets/items/over_grown.tres"))
+	add_item(load("res://Assets/items/over_grown.tres"))
 
 func hasSpace(item: BaseItem) -> bool:
 	if not item:
 		return Inventory.size() < MaxInventory
 	else:
-		var index = Inventory.find_custom(func(i): return i.id == item.id)
-		if not index == -1:
-			return true
+		if item.stackable:
+			var index = Inventory.find_custom(func(i): return i.id == item.id)
+			
+			if not index == -1:
+				return true
+			else:
+				return Inventory.size() < MaxInventory
 		else:
 			return Inventory.size() < MaxInventory
 
 func add_item(item: BaseItem) -> void:
-	var index = Inventory.find_custom(func(i): return i.id == item.id)
-	if not index == -1:
-		Inventory[index].quantitiy += item.quantitiy
+	if item.stackable:
+		var index = Inventory.find_custom(func(i): return i.id == item.id)
+		
+		if not index == -1:
+			Inventory[index].quantitiy += item.quantitiy
+		else:
+			Inventory.append(item.duplicate())
 	else:
-		Inventory.append(item)
+		Inventory.append(item.duplicate())
 
-func remove_items_by_id(id: int, amount: int) -> void:
+func remove_items(item: BaseItem, amount: int = 1) -> void:
+	var index = Inventory.find_custom(func(i): return i == item)
+	if not index == -1:
+		amount = clampi(amount, 1, Inventory[index].quantitiy)
+		Inventory[index].quantitiy -= amount
+
+func remove_items_by_id(id: int = 0, amount: int = 1) -> void:
 	var index = Inventory.find_custom(func(i): return i.id == id)
 	if not index == -1:
+		amount = clampi(amount, 1, Inventory[index].quantitiy)
 		Inventory[index].quantitiy -= amount
 
 func getKeyFromAction(action: String) -> String:

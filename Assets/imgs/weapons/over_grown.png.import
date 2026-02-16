@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkfdrjtuto62c"
-path="res://.godot/imported/spider.png-4b86d8f2dfa5ae893c86b01c3fb33c68.ctex"
+uid="uid://bbofvvd4rwy0v"
+path="res://.godot/imported/over_grown.png-46656c8a87ac14dd649a1d42baa853fa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/imgs/spider.png"
-dest_files=["res://.godot/imported/spider.png-4b86d8f2dfa5ae893c86b01c3fb33c68.ctex"]
+source_file="res://Assets/imgs/weapons/over_grown.png"
+dest_files=["res://.godot/imported/over_grown.png-46656c8a87ac14dd649a1d42baa853fa.ctex"]
 
 [params]
 

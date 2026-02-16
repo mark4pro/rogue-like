@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://biahn66yel13i"]
 
-[ext_resource type="Texture2D" uid="uid://d2t568c1wlucd" path="res://Assets/imgs/Tree_1.png" id="1_2xu35"]
+[ext_resource type="Texture2D" uid="uid://d2t568c1wlucd" path="res://Assets/imgs/objects/Tree_1.png" id="1_2xu35"]
 [ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="1_8f7x0"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jroq8"]

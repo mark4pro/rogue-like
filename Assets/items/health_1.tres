@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="HealthItem" format=3 uid="uid://dwu6vcmregnk8"]
 
-[ext_resource type="Texture2D" uid="uid://v515qo5ym2tk" path="res://Assets/imgs/snail_medicine.png" id="1_6wq8w"]
+[ext_resource type="Texture2D" uid="uid://v515qo5ym2tk" path="res://Assets/imgs/items/snail_medicine.png" id="1_6wq8w"]
 [ext_resource type="Script" uid="uid://bocek0w82g3h1" path="res://Script/Res/heathItem.gd" id="2_heevd"]
 
 [resource]

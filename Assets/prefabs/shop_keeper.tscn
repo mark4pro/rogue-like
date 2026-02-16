@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://mke1td7ku1lw" path="res://Script/shop_keeper.gd" id="1_t5djk"]
 [ext_resource type="Texture2D" uid="uid://qvttm23886uv" path="res://Assets/imgs/ShopKeeper/Head.png" id="2_t5djk"]
 [ext_resource type="Texture2D" uid="uid://c7t1l0a2hm5hh" path="res://Assets/imgs/ShopKeeper/Arm_1.png" id="3_q5p6k"]
-[ext_resource type="Texture2D" uid="uid://b77cj81hwvam0" path="res://Assets/imgs/zzz.png" id="4_lb8gd"]
+[ext_resource type="Texture2D" uid="uid://b77cj81hwvam0" path="res://Assets/imgs/effects/zzz.png" id="4_lb8gd"]
 [ext_resource type="Texture2D" uid="uid://cusp8t62tk8wj" path="res://Assets/imgs/ShopKeeper/Arm_2.png" id="4_lrpm0"]
 [ext_resource type="Script" uid="uid://bsnvihgwkkh1j" path="res://Script/dialogue_system.gd" id="6_lrpm0"]
 [ext_resource type="Script" uid="uid://bb8l2eniq2s16" path="res://addons/godot-voice-generator/voice_audio_stream_player.gd" id="6_q5p6k"]
