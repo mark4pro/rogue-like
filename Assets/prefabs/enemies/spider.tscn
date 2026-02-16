@@ -1,20 +1,44 @@
 [gd_scene format=3 uid="uid://bvbbpryyaf3xw"]
 
 [ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_56c4l"]
-[ext_resource type="Texture2D" uid="uid://c1b0lqgge7och" path="res://Assets/imgs/enemenies.png" id="2_ebah1"]
+[ext_resource type="Texture2D" uid="uid://dkfdrjtuto62c" path="res://Assets/imgs/spider.png" id="2_56c4l"]
+[ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/shadow.png" id="3_ebah1"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_56c4l"]
+friction = 0.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xl01c"]
-size = Vector2(16, 16)
+size = Vector2(30, 16)
 
 [node name="enemy" type="RigidBody2D" unique_id=764826255]
+z_index = 3
+collision_layer = 4
+physics_material_override = SubResource("PhysicsMaterial_56c4l")
+lock_rotation = true
 script = ExtResource("1_56c4l")
 metadata/_edit_group_ = true
 
-[node name="spider_enemy" type="Sprite2D" parent="." unique_id=17540074]
-scale = Vector2(1.4696969, 1.2500001)
-texture = ExtResource("2_ebah1")
-region_enabled = true
+[node name="sprite2D" type="Sprite2D" parent="." unique_id=17540074]
+texture = ExtResource("2_56c4l")
 region_rect = Rect2(0, 14, 33, 32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=457998798]
+position = Vector2(1, -5)
 shape = SubResource("RectangleShape2D_xl01c")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1658699989]
+path_postprocessing = 1
+path_search_max_distance = 50.0
+avoidance_enabled = true
+radius = 15.0
+neighbor_distance = 100.0
+max_neighbors = 3
+
+[node name="Shadow" type="Sprite2D" parent="." unique_id=1678263220]
+modulate = Color(1, 1, 1, 0.39215687)
+show_behind_parent = true
+position = Vector2(-4, 13.000001)
+scale = Vector2(1.1459994, 0.29499996)
+texture = ExtResource("3_ebah1")
+
+[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]

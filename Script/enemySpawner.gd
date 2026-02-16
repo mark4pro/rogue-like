@@ -2,6 +2,8 @@ extends Node
 
 @export var enemies : Array[EnemyWeighted] = []
 
+@export var targetFPS : int = 60
+@export var updateSlots : int = 10
 @export var maxEnemies : int = 10
 @export var enemyCount : int = 0
 @export var spawnTime : float = 2
@@ -31,14 +33,14 @@ func isWalkable(pos: Vector2) -> bool:
 		return true
 	return not wallTileData.get_collision_polygons_count(0) > 0
 
-func getSpawn(center: Vector2, radius: float, maxAtt: int = 50) -> Vector2:
+func getSpawn(center: Vector2, radius: float, chkCamera: bool = true, maxAtt: int = 50) -> Vector2:
 	var cam_rect = getCameraRect()
 	for i in maxAtt:
 		var angle = randf() * TAU
 		var dist = randf_range(960, 960 + radius)
 		var pos = center + Vector2.RIGHT.rotated(angle) * dist
 		
-		if cam_rect.has_point(pos):
+		if cam_rect.has_point(pos) and chkCamera:
 			continue
 		if not isWalkable(pos):
 			continue
@@ -53,6 +55,7 @@ func _process(delta: float) -> void:
 		
 		if enemyNodeChk:
 			enemyCount = enemyNodeChk.get_child_count()
+			updateSlots = max(10, ceili(max(1, enemyCount) / (float(targetFPS) / 100)))
 			if oldDay == Global.runDays:
 				if enemyCount < maxEnemies:
 					time += delta
@@ -62,11 +65,12 @@ func _process(delta: float) -> void:
 						
 						var enemy : PackedScene = Global.getRandom(validEnemies)
 						
-						var newEnemy = enemy.instantiate()
-						newEnemy.name = "Enemy_" + str(enemyCount + 1)
-						newEnemy.position = getSpawn(Global.player.position, 30)
-						
-						enemyNodeChk.add_child(newEnemy)
+						if enemy:
+							var newEnemy = enemy.instantiate()
+							newEnemy.name = "Enemy_" + str(enemyCount + 1)
+							newEnemy.position = getSpawn(Global.player.position, 30)
+							
+							enemyNodeChk.add_child(newEnemy)
 				else:
 					time = 0
 			else:
@@ -79,5 +83,6 @@ func _process(delta: float) -> void:
 						validEnemies.append(entry)
 		else:
 			var newNode : Node2D = Node2D.new()
+			newNode.y_sort_enabled = true
 			newNode.name = "Enemies"
 			currentScene.add_child(newNode)

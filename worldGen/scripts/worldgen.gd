@@ -185,6 +185,7 @@ func _process(delta: float) -> void:
 	
 	#Create world node
 	if not hasWorldNode and Global.scenes[Global.sceneIndex].worldGen:
+		if get_tree().current_scene: get_tree().current_scene.y_sort_enabled = true
 		var newWorldNode : Node2D = Node2D.new()
 		get_tree().current_scene.add_child(newWorldNode)
 		worldNode = newWorldNode
@@ -205,6 +206,6 @@ func _process(delta: float) -> void:
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not Global.player:
 			var newPlayer : RigidBody2D = Global.playerRes.instantiate()
 			newPlayer.position = freeCam.get_global_mouse_position()
-			worldNode.add_child(newPlayer)
+			get_tree().current_scene.add_child(newPlayer)
 		if Input.is_action_just_pressed("free_cam") and not Global.player == null:
 			Global.player.queue_free()

@@ -530,6 +530,7 @@ flip_v = true
 
 [node name="Area2D" type="Area2D" parent="." unique_id=1600077363]
 position = Vector2(0, 12)
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=863616415]
 position = Vector2(0, 16)

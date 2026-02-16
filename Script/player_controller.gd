@@ -89,6 +89,7 @@ func take_damage(amount: float):
 		health -= amount
 
 func _process(delta: float) -> void:
+	$UI/FPS.text = "FPS: " + str(Engine.get_frames_per_second())
 	anim = sprite.animation
 	
 	#Clamp health

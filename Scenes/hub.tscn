@@ -199,6 +199,7 @@ z_index = 4
 texture = SubResource("GradientTexture2D_y6p6t")
 
 [node name="Area2D" type="Area2D" parent="Exit" unique_id=1427889116]
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Exit/Area2D" unique_id=372835585]
 position = Vector2(0, 64)
