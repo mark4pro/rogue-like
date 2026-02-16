@@ -119,7 +119,7 @@ func getRandom(list: Array):
 		if roll <= cumulative:
 			return entry.data
 	
-	if list.back() == null: return null
+	if list.is_empty(): return null
 	
 	return list.back().data
 

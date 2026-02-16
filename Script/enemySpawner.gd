@@ -61,6 +61,15 @@ func getSpawn(center: Vector2, radius: float, chkCamera: bool = false, inFrontOf
 		return pos
 	return Vector2.ZERO
 
+func getValid() -> Array[EnemyWeighted]:
+	var newArr : Array[EnemyWeighted] = []
+	
+	for entry in enemies:
+		if Global.runDays <= entry.day:
+			newArr.append(entry)
+	
+	return newArr
+
 func _process(delta: float) -> void:
 	var currentScene : Node2D = get_tree().current_scene
 	if not Global.sceneIndex == 0 and currentScene and Global.player:
@@ -89,11 +98,8 @@ func _process(delta: float) -> void:
 			else:
 				oldDay = Global.runDays
 				
-				validEnemies = []
-				
-				for entry in enemies:
-					if Global.runDays <= entry.day:
-						validEnemies.append(entry)
+				var newValid : Array[EnemyWeighted] = getValid()
+				if not newValid.is_empty(): validEnemies = newValid
 		else:
 			var newNode : Node2D = Node2D.new()
 			newNode.y_sort_enabled = true
