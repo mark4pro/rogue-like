@@ -24,12 +24,13 @@ func equip() -> void:
 func unequip() -> void:
 	pass
 
-func drop() -> void:
+func drop(amount: int = 1) -> void:
+	amount = clampi(amount, 1, quantitiy)
 	var newGroundItem : Node2D = Global.groundItem.instantiate()
 	newGroundItem.name = name
 	newGroundItem.position = Global.player.position
 	var newItem : BaseItem = self.duplicate()
-	newItem.quantitiy = 1
+	newItem.quantitiy = amount
 	newGroundItem.item = newItem
-	quantitiy -= 1
-	Global.player.get_node("..").add_child(newGroundItem)
+	quantitiy -= amount
+	Global.currentScene.add_child(newGroundItem)

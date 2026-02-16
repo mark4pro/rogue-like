@@ -11,6 +11,7 @@ script = ExtResource("1_1y6tu")
 [node name="Icon" type="Sprite2D" parent="." unique_id=248005377]
 
 [node name="Area2D" type="Area2D" parent="." unique_id=78477572]
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1662891822]
 shape = SubResource("RectangleShape2D_dul41")

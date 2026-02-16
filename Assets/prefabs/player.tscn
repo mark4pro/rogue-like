@@ -487,6 +487,7 @@ theme_override_constants/v_separation = 2
 columns = 8
 
 [node name="pauseMenu" type="CanvasLayer" parent="." unique_id=732976117]
+layer = 6
 
 [node name="pauseMenu" type="Control" parent="pauseMenu" unique_id=403354627]
 layout_mode = 3

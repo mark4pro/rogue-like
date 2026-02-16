@@ -49,6 +49,8 @@ func take_damage(amount: float):
 		health -= amount
 
 func canSeePlayer() -> bool:
+	if not Global.player: return false
+	
 	if eyeDir == Vector2.ZERO: return false
 	
 	var dirToPlayer = Global.player.position - eyePos
@@ -81,83 +83,85 @@ func _process(delta: float) -> void:
 	cone.angle = visionAngle
 	cone.range = visionRange
 	
-	if Global.player:
-		if position.distance_to(Global.player.position) > 1000:
-			queue_free()
-			print("Despawned")
-		
-		if linear_velocity.x < 0:
-			$sprite2D.flip_h = true
-			$CollisionShape2D.position.x = -1
-			$Shadow.position.x = 4
-			$Marker2D.position.x = -13
-		if linear_velocity.x > 0:
-			$sprite2D.flip_h = false
-			$CollisionShape2D.position.x = 1
-			$Shadow.position.x = -4
-			$Marker2D.position.x = 13
-		
-		if Global.debugVision: cone.queue_redraw()
-		
+	if not Global.player:
+		currentState = state.WONDER
+	
+	if Global.player and position.distance_to(Global.player.position) > 1000:
+		queue_free()
+		print("Despawned")
+	
+	if linear_velocity.x < 0:
+		$sprite2D.flip_h = true
+		$CollisionShape2D.position.x = -1
+		$Shadow.position.x = 4
+		$Marker2D.position.x = -13
+	if linear_velocity.x > 0:
+		$sprite2D.flip_h = false
+		$CollisionShape2D.position.x = 1
+		$Shadow.position.x = -4
+		$Marker2D.position.x = 13
+	
+	if Global.debugVision: cone.queue_redraw()
+	
+	match currentState:
+		state.WONDER:
+			endChaseTime = 0
+			
+			wonderTime += delta
+			retarget = wonderTime >= wonderUpdate
+			
+			if canSeePlayer():
+				inSiteTime += delta
+				
+				if inSiteTime >= timeUntilChase:
+					currentState = state.CHASE
+				
+				if not gotoLastKnownPos:
+					gotoLastKnownPos = true
+					nav.target_position = Global.player.position
+					nav.set_velocity(Vector2.ZERO)
+				
+				cone.visionDebugColor = inVisionDebugColor
+			else:
+				inSiteTime = 0
+				cone.visionDebugColor = normVisionDebugColor
+				if gotoLastKnownPos and not pathing:
+					gotoLastKnownPos = false
+		state.CHASE:
+			retarget = true
+			wonderTime = 0
+			inSiteTime = 0
+			gotoLastKnownPos = false
+			
+			if not canSeePlayer():
+				endChaseTime += delta
+				
+				if endChaseTime >= timeUntilChaseEnd:
+					currentState = state.WONDER
+				
+				cone.visionDebugColor = outVisionDebugColor
+			else:
+				endChaseTime = 0
+				cone.visionDebugColor = chaseVisionDebugColor
+	
+	if Engine.get_physics_frames() % EnemySpawner.updateSlots == id and retarget:
 		match currentState:
 			state.WONDER:
-				endChaseTime = 0
-				
-				wonderTime += delta
-				retarget = wonderTime >= wonderUpdate
-				
-				if canSeePlayer():
-					inSiteTime += delta
-					
-					if inSiteTime >= timeUntilChase:
-						currentState = state.CHASE
-					
-					if not gotoLastKnownPos:
-						gotoLastKnownPos = true
-						nav.target_position = Global.player.position
-						nav.set_velocity(Vector2.ZERO)
-					
-					cone.visionDebugColor = inVisionDebugColor
-				else:
-					inSiteTime = 0
-					cone.visionDebugColor = normVisionDebugColor
-					if gotoLastKnownPos and not pathing:
-						gotoLastKnownPos = false
-			state.CHASE:
-				retarget = true
 				wonderTime = 0
-				inSiteTime = 0
-				gotoLastKnownPos = false
-				
-				if not canSeePlayer():
-					endChaseTime += delta
-					
-					if endChaseTime >= timeUntilChaseEnd:
-						currentState = state.WONDER
-					
-					cone.visionDebugColor = outVisionDebugColor
-				else:
-					endChaseTime = 0
-					cone.visionDebugColor = chaseVisionDebugColor
+				if not gotoLastKnownPos:
+					nav.target_position = EnemySpawner.getSpawn(position, 30)
+			state.CHASE:
+				nav.target_position = Global.player.position
+		nav.set_velocity(Vector2.ZERO)
+	
+	pathing = not nav.is_navigation_finished()
+	
+	if pathing:
+		target = nav.get_next_path_position()
+		dir = (target - position).normalized()
 		
-		if Engine.get_physics_frames() % EnemySpawner.updateSlots == id and retarget:
-			match currentState:
-				state.WONDER:
-					wonderTime = 0
-					if not gotoLastKnownPos:
-						nav.target_position = EnemySpawner.getSpawn(position, 30)
-				state.CHASE:
-					nav.target_position = Global.player.position
-			nav.set_velocity(Vector2.ZERO)
-		
-		pathing = not nav.is_navigation_finished()
-		
-		if pathing:
-			target = nav.get_next_path_position()
-			dir = (target - position).normalized()
-			
-			nav.set_velocity(dir * speed * 1000 * delta)
-		else:
+		nav.set_velocity(dir * speed * 1000 * delta)
+	else:
 			nav.set_velocity(Vector2.ZERO)
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:

@@ -8,6 +8,8 @@ extends Node
 @export var enemyCount : int = 0
 @export var spawnTime : float = 0.5
 
+var enemyNode : Node2D = null
+
 var time = 0
 var oldDay = -1
 var validEnemies : Array[EnemyWeighted] = []
@@ -16,7 +18,7 @@ func _ready() -> void:
 	enemies.append(preload("res://Assets/enemies/spider_1.tres"))
 
 func getCameraRect() -> Rect2:
-	var camera : Camera2D = Global.player.camera
+	var camera : Camera2D = get_viewport().get_camera_2d()
 	var viewport_size = camera.get_viewport_rect().size
 	var half_size = (viewport_size * 0.5) / camera.zoom
 	return Rect2(camera.global_position - half_size, half_size * 2.0)
@@ -67,16 +69,17 @@ func getValid() -> Array[EnemyWeighted]:
 	for entry in enemies:
 		if Global.runDays <= entry.day:
 			newArr.append(entry)
-	
 	return newArr
 
+func clearEnemies() -> void:
+	if enemyNode: enemyNode.queue_free()
+
 func _process(delta: float) -> void:
-	var currentScene : Node2D = get_tree().current_scene
-	if not Global.sceneIndex == 0 and currentScene and Global.player:
-		var enemyNodeChk : Node2D = currentScene.get_node_or_null("Enemies")
+	if not Global.sceneIndex == 0 and Global.currentScene and Global.player:
+		enemyNode = Global.currentScene.get_node_or_null("Enemies")
 		
-		if enemyNodeChk:
-			enemyCount = enemyNodeChk.get_child_count()
+		if enemyNode:
+			enemyCount = enemyNode.get_child_count()
 			updateSlots = max(10, ceili(max(1, enemyCount) / (float(targetFPS) / 100)))
 			if oldDay == Global.runDays:
 				if enemyCount < maxEnemies:
@@ -92,7 +95,7 @@ func _process(delta: float) -> void:
 							newEnemy.name = "Enemy_" + str(enemyCount + 1)
 							newEnemy.position = getSpawn(Global.player.position, 0, true, true)
 							
-							enemyNodeChk.add_child(newEnemy)
+							enemyNode.add_child(newEnemy)
 				else:
 					time = 0
 			else:
@@ -104,4 +107,4 @@ func _process(delta: float) -> void:
 			var newNode : Node2D = Node2D.new()
 			newNode.y_sort_enabled = true
 			newNode.name = "Enemies"
-			currentScene.add_child(newNode)
+			Global.currentScene.add_child(newNode)

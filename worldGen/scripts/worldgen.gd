@@ -14,6 +14,8 @@ var hasWorldNode : Node2D = null
 
 var player : RigidBody2D = null
 
+var loaded : bool = false
+
 enum TileType {
 	EMPTY,
 	FLOOR,
@@ -162,49 +164,51 @@ func mapGen() -> void:
 	newCollisionPoly.polygon = points
 	newCollisionPoly.build_mode = CollisionPolygon2D.BUILD_SEGMENTS
 	
-	get_tree().current_scene.get_node("World").add_child(newStaticBody)
-	get_tree().current_scene.get_node("World/Bounds").add_child(newCollisionPoly)
+	Global.currentScene.get_node("World").add_child(newStaticBody)
+	Global.currentScene.get_node("World/Bounds").add_child(newCollisionPoly)
 
 
 func regen() -> void:
 	seed = randi()
 	seed(seed)
 	if not thisSeed == -1: seed = thisSeed
-	if hasWorldNode: get_tree().current_scene.get_node("World").free()
+	if hasWorldNode: Global.currentScene.get_node("World").free()
+	EnemySpawner.clearEnemies()
 
 func _process(delta: float) -> void:
 	if Global.player: Global.player.get_node("Camera2D").make_current()
 	
-	freeCam = get_tree().current_scene.get_node_or_null("FreeCam")
-	hasWorldNode = get_tree().current_scene.get_node_or_null("World")
-	
-	#Enable/Disable free cam
-	if not Global.player and freeCam:
-		freeCam.make_current()
-	
-	#Create world node
-	if not hasWorldNode and Global.scenes[Global.sceneIndex].worldGen:
-		if get_tree().current_scene: get_tree().current_scene.y_sort_enabled = true
-		var newWorldNode : Node2D = Node2D.new()
-		get_tree().current_scene.add_child(newWorldNode)
-		worldNode = newWorldNode
-		newWorldNode.name = "World"
-		layers = genLayers(newWorldNode)
-		#Generate map
-		initArrays()
-		worldData.biomeGenerator.gen()
-		for s in worldData.generators:
-			s.gen()
-		mapGen()
-	
-	#Engine only
-	#regen map
-	if OS.has_feature("editor") and freeCam:
-		if Input.is_action_just_pressed("regen_map") and not Global.player:
-			regen()
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not Global.player:
-			var newPlayer : RigidBody2D = Global.playerRes.instantiate()
-			newPlayer.position = freeCam.get_global_mouse_position()
-			get_tree().current_scene.add_child(newPlayer)
-		if Input.is_action_just_pressed("free_cam") and not Global.player == null:
-			Global.player.queue_free()
+	if Global.currentScene:
+		freeCam = Global.currentScene.get_node_or_null("FreeCam")
+		hasWorldNode = Global.currentScene.get_node_or_null("World")
+		
+		#Enable/Disable free cam
+		if not Global.player and freeCam:
+			freeCam.make_current()
+		
+		#Create world node
+		if not hasWorldNode and Global.scenes[Global.sceneIndex].worldGen:
+			if Global.currentScene: Global.currentScene.y_sort_enabled = true
+			var newWorldNode : Node2D = Node2D.new()
+			Global.currentScene.add_child(newWorldNode)
+			worldNode = newWorldNode
+			newWorldNode.name = "World"
+			layers = genLayers(newWorldNode)
+			#Generate map
+			initArrays()
+			worldData.biomeGenerator.gen()
+			for s in worldData.generators:
+				s.gen()
+			mapGen()
+		
+		#Engine only
+		#regen map
+		if OS.has_feature("editor") and freeCam:
+			if Input.is_action_just_pressed("regen_map") and not Global.player:
+				regen()
+			if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not Global.player:
+				var newPlayer : RigidBody2D = Global.playerRes.instantiate()
+				newPlayer.position = freeCam.get_global_mouse_position()
+				Global.currentScene.add_child(newPlayer)
+			if Input.is_action_just_pressed("free_cam") and not Global.player == null:
+				Global.player.queue_free()

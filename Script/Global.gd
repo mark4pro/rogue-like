@@ -5,6 +5,7 @@ var groundItem : PackedScene = preload("res://Assets/prefabs/groundItem.tscn")
 var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.tscn")
 var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")
 var massageUI : PackedScene = preload("res://Assets/prefabs/message.tscn")
+var loading : PackedScene = preload("res://Assets/prefabs/loading.tscn")
 
 @export_category("Inventory")
 @export var Inventory : Array[BaseItem] = []
@@ -23,6 +24,7 @@ var messages : Array[Node] = []
 
 var player : RigidBody2D = null
 var inventoryUI : Control = null
+var currentScene : Node = null
 
 @export_category("Testing")
 @export var debugVision : bool = true
@@ -124,6 +126,9 @@ func getRandom(list: Array):
 	return list.back().data
 
 func _process(delta: float) -> void:
+	if not currentScene:
+		currentScene = get_tree().current_scene
+	
 	var playerChk = get_tree().get_nodes_in_group("Player")
 	if not playerChk.is_empty(): player = playerChk[0]
 	
@@ -159,10 +164,27 @@ func _process(delta: float) -> void:
 				var t = (float(inverted_index) / float(maxMessages - 1))
 				c.modulate.a = clampf(1.0 - t, 0.1, 0.9)
 	
+	var thisLoading = get_tree().root.get_node_or_null("loading")
+	
 	#Scene manager
 	sceneIndex = clamp(sceneIndex, 0, scenes.keys().size() - 1)
 	if get_tree().current_scene.name != scenes[sceneIndex].rootNode:
+		if not thisLoading:
+			var newLoading : CanvasLayer = loading.instantiate()
+			newLoading.name = "loading"
+			get_tree().root.add_child(newLoading)
+		
 		get_tree().change_scene_to_file(scenes[sceneIndex].path)
+	
+	if thisLoading:
+		match sceneIndex:
+			0:
+				if player:
+					thisLoading.queue_free()
+			_:
+				if Global.currentScene and Global.currentScene.get_node_or_null("World"):
+					thisLoading.queue_free()
+	
 	
 	#Clear items with no quanitity
 	for i in Inventory:
