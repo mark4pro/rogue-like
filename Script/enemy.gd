@@ -45,7 +45,6 @@ var endChaseTime : float = 0
 var dir : Vector2 = Vector2.ZERO
 
 func take_damage(data: Dictionary):
-	print("test")
 	if not get_tree().paused:
 		health -= data.value
 		
@@ -100,7 +99,6 @@ func _process(delta: float) -> void:
 	
 	if Global.player and position.distance_to(Global.player.position) > 1000:
 		queue_free()
-		print("Despawned")
 	
 	if linear_velocity.x < 0:
 		$sprite2D.flip_h = true
