@@ -9,7 +9,7 @@ class_name WeaponItem
 @export var damageVar : float = 0.2
 
 @export_category("Rolled Stats")
-@export var damage : float
+@export var damage : Vector2
 @export var critChance : float
 @export var critMulti : float
 @export var rarity : int
@@ -37,19 +37,30 @@ func rollStats() -> void:
 	var progMult : float = 1.0 + curve * 0.01
 	
 	var variance : float = baseDamage * damageVar
-	damage = rng.randf_range(baseDamage - variance, baseDamage + variance)
-	damage *= rarityMult * progMult
+	damage.x = (baseDamage - variance) * rarityMult * progMult
+	damage.y = (baseDamage + variance) * rarityMult * progMult
 	
-	critChance = rng.randf_range(0.05, 0.15)
-	critChance *= rarityMult * progMult
+	critChance = rng.randf_range(0.05, 0.15) * rarityMult * progMult
 	critMulti = rng.randf_range(1.5, 2.5)
 	
 	var costVariance : float = cost * costVar
-	cost = rng.randf_range(cost - costVariance, cost + costVariance)
-	cost *= rarityMult * progMult
+	cost = rng.randf_range(cost - costVariance, cost + costVariance) * rarityMult * progMult
 	
 	Global.rng = randi()
 	rolled = true
+
+func genDamage() -> Dictionary:
+	var rng : RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = Global.rng
+	
+	var dmg : float = rng.randf_range(damage.x, damage.y)
+	var isCrit : bool = rng.randf() < critChance
+	
+	if isCrit:
+		dmg *= critMulti
+	
+	Global.rng = randi()
+	return {"value": dmg, "isCrit": isCrit}
 
 func use() -> void:
 	pass

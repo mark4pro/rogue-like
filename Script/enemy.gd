@@ -44,9 +44,16 @@ var endChaseTime : float = 0
 
 var dir : Vector2 = Vector2.ZERO
 
-func take_damage(amount: float):
+func take_damage(data: Dictionary):
+	print("test")
 	if not get_tree().paused:
-		health -= amount
+		health -= data.value
+		
+		var label = Global.damNum.instantiate()
+		label.text = str(roundi(data.value))
+		
+		label.position = global_position
+		get_tree().current_scene.add_child(label)
 
 func canSeePlayer() -> bool:
 	if not Global.player: return false
@@ -77,6 +84,11 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	eyePos = $Marker2D.global_position
 	eyeDir = (target - eyePos).normalized()
+	
+	health = clamp(health, 0, maxHealth)
+	$UI/healthBar.value = (health / maxHealth) * 100
+	
+	if health <= 0: queue_free()
 	
 	cone.pos = eyePos
 	cone.dir = eyeDir

@@ -13,6 +13,8 @@ extends RigidBody2D
 @onready var pauseMenu : CanvasLayer = $pauseMenu
 @onready var deathScreen : CanvasLayer = $deathMenu
 @onready var weaponPivot : Node2D = $RotPoint/WeaponRotPoint/WeaponPivot
+@onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
+@onready var weaponAnim : AnimationPlayer = $Weapon
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -88,9 +90,9 @@ func _ready():
 		camera.limit_right = int(bottomRight.x)
 		camera.limit_bottom = int(bottomRight.y)
 
-func take_damage(amount: float):
+func take_damage(data: Dictionary):
 	if not is_rolling and not get_tree().paused:
-		health -= amount
+		health -= data.value
 
 func _process(delta: float) -> void:
 	$UI/FPS.text = "FPS: " + str(Engine.get_frames_per_second())
@@ -230,16 +232,32 @@ func _process(delta: float) -> void:
 		Global.messageTimer.paused = true
 	
 	#Weapon stuff
+	var hasWeapon = weaponPivot.get_child_count() > 0
+	
 	if not oldWeapon == Global.weapon:
 		oldWeapon = Global.weapon
-		if weaponPivot.get_child_count() > 0: weaponPivot.get_children()[0].queue_free()
+		if hasWeapon: weaponPivot.get_children()[0].queue_free()
 		
 		var newWeapon : Node2D = Global.weapon.weaponScene.instantiate()
 		newWeapon.name = "weapon"
 		newWeapon.animPlayer = $Weapon
 		newWeapon.sprite = sprite
+		newWeapon.entity = self
+		newWeapon.weapon = Global.weapon
 		
 		weaponPivot.add_child(newWeapon)
+	
+	if hasWeapon:
+		var wAngle : float = (get_global_mouse_position() - global_position).angle()
+		weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
+		
+		var atEnd : bool = weaponAnim.current_animation_position == weaponAnim.current_animation_length
+		
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
+			if not atEnd:
+				weaponAnim.play("swing")
+			else:
+				weaponAnim.play_backwards("swing")
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5

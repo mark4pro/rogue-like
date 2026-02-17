@@ -5,6 +5,7 @@ var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.ts
 var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")
 var massageUI : PackedScene = preload("res://Assets/prefabs/message.tscn")
 var loading : PackedScene = preload("res://Assets/prefabs/loading.tscn")
+var damNum : PackedScene = preload("res://Assets/prefabs/damage_label.tscn/")
 
 @export_category("Inventory")
 @export var Inventory : Array[BaseItem] = []

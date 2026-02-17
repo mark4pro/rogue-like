@@ -1,16 +1,14 @@
 extends Node2D
 
-var damage : String = "100"
+var damage : float = 100
 
-var show_damage = preload("res://Assets/prefabs/damage_label.tscn/")
-
-
-func _on_area_2d_body_entered(body: Node2D) -> void:
-	var damage = 100
-	damage = 100
-	var label = show_damage.instantiate()
-	label.text = str(damage)
-	# Position it at the enemy's location
-	label.position = global_position
-	get_tree().current_scene.add_child(label)
-	
+#data has value which is the damage and isCrit which is if the attack was a critical hit
+#make it say "crit: " before the damage number then change color if it's a crit
+func take_damage(data: Dictionary):
+	if not get_tree().paused:
+		var label = Global.damNum.instantiate()
+		label.text = str(roundi(data.value))
+		
+		# Position it at the enemy's location
+		label.position = global_position
+		get_tree().current_scene.add_child(label)
