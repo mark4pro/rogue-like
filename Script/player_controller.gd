@@ -12,7 +12,7 @@ extends RigidBody2D
 @onready var camera : Camera2D = $Camera2D
 @onready var pauseMenu : CanvasLayer = $pauseMenu
 @onready var deathScreen : CanvasLayer = $deathMenu
-@onready var weaponPivot : Node2D = $RotPoint/WeaponPivot
+@onready var weaponPivot : Node2D = $RotPoint/WeaponRotPoint/WeaponPivot
 
 @export_category("Stats")
 @export var max_health : float = 100
