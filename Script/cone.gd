@@ -7,6 +7,9 @@ var dir : Vector2 = Vector2.ZERO
 var vAngle : float = 90
 var vRange : float = 100
 
+func _process(_delta: float) -> void:
+	if not Global.debugVision: queue_redraw()
+
 func _draw() -> void:
 	if not Global.debugVision:
 		return

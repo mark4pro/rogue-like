@@ -12,6 +12,7 @@ extends RigidBody2D
 @onready var camera : Camera2D = $Camera2D
 @onready var pauseMenu : CanvasLayer = $pauseMenu
 @onready var deathScreen : CanvasLayer = $deathMenu
+@onready var weaponPivot : Node2D = $RotPoint/WeaponPivot
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -55,7 +56,10 @@ var roll_dir : Vector2 = Vector2.ZERO
 
 var bounds : CollisionPolygon2D = null
 
+var oldWeapon : WeaponItem = null
+
 func _ready():
+	$UI.visible = true
 	Inventory_UI.visible = false
 	pauseMenu.visible = false
 	deathScreen.visible = false
@@ -180,20 +184,20 @@ func _process(delta: float) -> void:
 		
 		#Flip sprite and rotation based on movement direction
 		if linear_velocity.x < 0:
-			sprite.flip_h = true
+			rot_point.scale.x = -1
 		elif linear_velocity.x > 0:
-			sprite.flip_h = false
+			rot_point.scale.x = 1
 		
 		#Flip sprite and rotation based on roll direction
 		if is_rolling:
 			if roll_dir.x < 0:
-				sprite.flip_h = true
 				rspeed = -roll_rot_speed
+				rot_point.scale.x = -1
 			elif roll_dir.x > 0:
-				sprite.flip_h = false
 				rspeed = roll_rot_speed
+				rot_point.scale.x = 1
 		
-		if sprite.flip_h:
+		if rot_point.scale.x == -1:
 			$CollisionShape2D.position.x = 1.5
 		else:
 			$CollisionShape2D.position.x = -1.5
@@ -209,10 +213,10 @@ func _process(delta: float) -> void:
 		
 		#Particles
 		if is_moving and not is_rolling:
-			left_grass.emitting = not sprite.flip_h
-			right_grass.emitting = sprite.flip_h
-			left_grass.visible = not sprite.flip_h
-			right_grass.visible = sprite.flip_h
+			left_grass.emitting = not rot_point.scale.x == -1
+			right_grass.emitting = rot_point.scale.x == -1
+			left_grass.visible = not rot_point.scale.x == -1
+			right_grass.visible = rot_point.scale.x == -1
 		else:
 			left_grass.emitting = false
 			right_grass.emitting = false
@@ -224,6 +228,18 @@ func _process(delta: float) -> void:
 		left_grass.visible = false
 		right_grass.visible = false
 		Global.messageTimer.paused = true
+	
+	#Weapon stuff
+	if not oldWeapon == Global.weapon:
+		oldWeapon = Global.weapon
+		if weaponPivot.get_child_count() > 0: weaponPivot.get_children()[0].queue_free()
+		
+		var newWeapon : Node2D = Global.weapon.weaponScene.instantiate()
+		newWeapon.name = "weapon"
+		newWeapon.animPlayer = $Weapon
+		newWeapon.sprite = sprite
+		
+		weaponPivot.add_child(newWeapon)
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5

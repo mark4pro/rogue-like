@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://blrmnsogahhbg"]
+
+[ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_g0nmt"]
+[ext_resource type="Texture2D" uid="uid://bbofvvd4rwy0v" path="res://Assets/imgs/weapons/over_grown.png" id="2_3hxgh"]
+[ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="2_u4v2o"]
+[ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="4_u4v2o"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_peu7m"]
+shader = ExtResource("2_u4v2o")
+shader_parameter/debug = false
+shader_parameter/border_scale = 1.0
+shader_parameter/shadow_offset = Vector2(5, -5)
+shader_parameter/color = Color(0, 0, 0, 0.23529412)
+shader_parameter/blur_amount = 1.0000000475
+shader_parameter/shadow_scale = 1.5
+shader_parameter/disable_rotating = false
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vmpkx"]
+size = Vector2(7.9999995, 42)
+
+[sub_resource type="Gradient" id="Gradient_peu7m"]
+offsets = PackedFloat32Array(0, 0.53583616, 1)
+colors = PackedColorArray(0.867113, 0.51446253, 0.53261954, 1, 0.65722454, 0.39925683, 0.6709437, 1, 0.60980207, 0.3732271, 0.70219684, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_p1xr3"]
+gradient = SubResource("Gradient_peu7m")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ecq8s"]
+particle_flag_disable_z = true
+direction = Vector3(1, -1, 0)
+spread = 20.0
+initial_velocity_min = 10.0
+initial_velocity_max = 100.0
+gravity = Vector3(0, 50, 0)
+scale_min = 0.01
+scale_max = 0.03
+color_ramp = SubResource("GradientTexture1D_p1xr3")
+hue_variation_min = -0.010000022
+hue_variation_max = 0.009999977
+
+[node name="Sword" type="Node2D" unique_id=1825071353]
+script = ExtResource("1_g0nmt")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1548151299]
+material = SubResource("ShaderMaterial_peu7m")
+position = Vector2(0, -15)
+rotation = -0.7853982
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_3hxgh")
+
+[node name="Col" type="Area2D" parent="Sprite2D" unique_id=1039468138]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Col" unique_id=574013284]
+visible = false
+position = Vector2(3.535534, -3.535534)
+rotation = 0.7853982
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("RectangleShape2D_vmpkx")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D" unique_id=666892474]
+position = Vector2(25.455849, -25.455849)
+amount = 30
+amount_ratio = 0.1
+texture = ExtResource("4_u4v2o")
+process_material = SubResource("ParticleProcessMaterial_ecq8s")
+
+[connection signal="body_entered" from="Sprite2D/Col" to="Sprite2D" method="_on_col_body_entered"]

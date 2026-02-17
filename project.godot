@@ -21,8 +21,8 @@ buses/default_bus_layout="uid://c4oselt1ds0rx"
 
 [autoload]
 
-Worldgen="*uid://dk61fmxhfrtqg"
 Global="*uid://b3lugf1qx08i4"
+Worldgen="*uid://dk61fmxhfrtqg"
 EnemySpawner="*uid://q1u3yhfaxg0k"
 
 [display]
@@ -41,6 +41,7 @@ enabled=PackedStringArray("res://addons/godot-voice-generator/plugin.cfg")
 Player=""
 items=""
 Bounds=""
+Enemy=""
 
 [input]
 
@@ -114,6 +115,8 @@ pause={
 
 2d_physics/layer_2="player"
 2d_physics/layer_3="enemy"
+2d_physics/layer_4="good_guy_weapon"
+2d_physics/layer_5="bad_guy_weapon"
 
 [physics]
 

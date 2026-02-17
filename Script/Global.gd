@@ -1,7 +1,6 @@
 extends Node
 
 var playerRes : PackedScene = preload("res://Assets/prefabs/player.tscn")
-var groundItem : PackedScene = preload("res://Assets/prefabs/groundItem.tscn")
 var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.tscn")
 var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")
 var massageUI : PackedScene = preload("res://Assets/prefabs/message.tscn")
@@ -10,6 +9,8 @@ var loading : PackedScene = preload("res://Assets/prefabs/loading.tscn")
 @export_category("Inventory")
 @export var Inventory : Array[BaseItem] = []
 @export var MaxInventory : int = 32
+@export var weapon : WeaponItem = null
+#@export var armor : ArmorItem = null
 
 @export_category("Player stats")
 @export var armor : float = 0
@@ -42,6 +43,8 @@ var currentScene : Node = null
 @export_range(0.0, 1.0, 0.001) var timeOfDay : float = 0.0
 @export var totalDays : int = 0 #Total amount of days past
 @export var runDays : int = 0 #Amount of days past during run
+@export var lastRunDays : int = 0
+@export var longestRun : int = 0
 @export_category("Colors")
 @export var nightColor : Color = Color(0.08, 0.08, 0.15)
 @export var dayColor : Color = Color(1, 1, 1)
@@ -50,6 +53,11 @@ var currentScene : Node = null
 @export var bloodMoons : bool = true
 @export var bloodMoonChance : float = 0.1
 @export var isBloodMoon : bool = false
+
+@export_category("RNG")
+@export var rng : int = randi()
+@export var meta : float = totalDays * 0.6
+@export var performance : float = 1
 
 const MIDNIGHT : float = 0.0
 const SUNRISE : float = 0.25
@@ -63,6 +71,7 @@ var ambientColor : Color = Color.WHITE
 
 func _ready() -> void:
 	#For testing
+	add_item(load("res://Assets/items/health_1.tres"))
 	add_item(load("res://Assets/items/health_1.tres"))
 	add_item(load("res://Assets/items/over_grown.tres"))
 	add_item(load("res://Assets/items/over_grown.tres"))
@@ -88,9 +97,15 @@ func add_item(item: BaseItem) -> void:
 		if not index == -1:
 			Inventory[index].quantitiy += item.quantitiy
 		else:
-			Inventory.append(item.duplicate())
+			var newItem : BaseItem = item.duplicate(true)
+			if not newItem.rolled: newItem.rollStats()
+			
+			Inventory.append(newItem)
 	else:
-		Inventory.append(item.duplicate())
+		var newItem : BaseItem = item.duplicate(true)
+		if not newItem.rolled: newItem.rollStats()
+		
+		Inventory.append(newItem)
 
 func remove_items(item: BaseItem, amount: int = 1) -> void:
 	var index = Inventory.find_custom(func(i): return i == item)
@@ -120,6 +135,8 @@ func sendMessage(ms: String, time: float = 2.0, c: Color = Color.WHITE, bg: Colo
 
 func resetRunDays() -> void:
 	isBloodMoon = false
+	lastRunDays = runDays
+	if runDays > longestRun: longestRun = runDays
 	totalDays += runDays + 1
 	runDays = 0
 	timeOfDay = SUNRISE
@@ -142,6 +159,10 @@ func getRandom(list: Array):
 	return list.back().data
 
 func _process(delta: float) -> void:
+	meta = totalDays * 0.6
+	if longestRun > 0:
+		performance = float(lastRunDays) / float(longestRun)
+	
 	if not currentScene:
 		currentScene = get_tree().current_scene
 	

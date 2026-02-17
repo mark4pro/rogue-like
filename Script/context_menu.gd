@@ -8,8 +8,8 @@ func _ready() -> void:
 	if item.equippable:
 		#$PanelContainer/VBoxContainer/useBttn.visible = true
 		$PanelContainer/VBoxContainer/dropBttn.visible = true
-		#$PanelContainer/VBoxContainer/equipBttn.visible = false
-		#$PanelContainer/VBoxContainer/unequipBttn.visible = false
+		$PanelContainer/VBoxContainer/equipBttn.visible = false
+		$PanelContainer/VBoxContainer/unequipBttn.visible = false
 	else:
 		$PanelContainer/VBoxContainer/useBttn.visible = true
 		$PanelContainer/VBoxContainer/dropBttn.visible = true
@@ -17,6 +17,15 @@ func _ready() -> void:
 		$PanelContainer/VBoxContainer/unequipBttn.visible = false
 
 func _process(_delta: float) -> void:
+	if item.equippable:
+		if item.itemType == BaseItem.item_type.WEAPON:
+			if Global.weapon == item:
+				$PanelContainer/VBoxContainer/equipBttn.visible = false
+				$PanelContainer/VBoxContainer/unequipBttn.visible = true
+			else:
+				$PanelContainer/VBoxContainer/equipBttn.visible = true
+				$PanelContainer/VBoxContainer/unequipBttn.visible = false
+	
 	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not touching:
 		queue_free()
 

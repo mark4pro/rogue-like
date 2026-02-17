@@ -2,13 +2,16 @@
 
 [ext_resource type="Texture2D" uid="uid://bbofvvd4rwy0v" path="res://Assets/imgs/weapons/over_grown.png" id="1_ai7fc"]
 [ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_iqc8k"]
+[ext_resource type="PackedScene" uid="uid://blrmnsogahhbg" path="res://Assets/prefabs/weapons/over_grown.tscn" id="3_es8wj"]
 
 [resource]
 script = ExtResource("1_iqc8k")
-id = 100
+weaponScene = ExtResource("3_es8wj")
+id = 35
 name = "Over Grown"
 itemType = 1
 itemIcon = ExtResource("1_ai7fc")
 equippable = true
 stackable = false
+cost = 50
 metadata/_custom_type_script = "uid://8d6fyj0lrxpo"
