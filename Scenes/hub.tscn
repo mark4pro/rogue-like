@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://cwrhpbdwyem68" path="res://Assets/imgs/objects/Path_end.png" id="9_72fsv"]
 [ext_resource type="PackedScene" uid="uid://biahn66yel13i" path="res://Assets/prefabs/tree.tscn" id="9_f11wv"]
 [ext_resource type="Script" uid="uid://vrbdmd6n1uor" path="res://Script/Hub_exit.gd" id="9_y6p6t"]
+[ext_resource type="PackedScene" uid="uid://csunnqftn32r0" path="res://Assets/prefabs/dummy.tscn" id="11_3du0j"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
 shader = ExtResource("4_vkujn")
@@ -157,6 +158,9 @@ shadow_enabled = true
 texture = ExtResource("6_f11wv")
 texture_scale = 7.0
 height = 100.0
+
+[node name="Dummy" parent="House" unique_id=350363775 instance=ExtResource("11_3du0j")]
+position = Vector2(-134, -36)
 
 [node name="Path" type="Line2D" parent="." unique_id=923425707]
 z_index = 1

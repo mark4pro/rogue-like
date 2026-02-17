@@ -1,10 +1,16 @@
 extends Node2D
 
-@export var damage : float = 0.5
+var damage : String = "100"
 
-var touching : bool = false
+var show_damage = preload("res://Assets/prefabs/damage_label.tscn/")
 
-func _process(delta: float) -> void:
-	var bodies = $Area2D.get_overlapping_bodies()
-	for b in bodies:
-		if b.has_method("take_damage"): b.take_damage(damage)
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	var damage = 100
+	damage = 100
+	var label = show_damage.instantiate()
+	label.text = str(damage)
+	# Position it at the enemy's location
+	label.position = global_position
+	get_tree().current_scene.add_child(label)
+	
