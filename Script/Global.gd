@@ -66,6 +66,8 @@ var currentScene : Node = null
 @export var damNumberSizeRangeCrit : Vector2i = Vector2i(10, 14)
 @export var damNumberNormColor : Color = Color.WHITE
 @export var damNumberCritColor : Color = Color.DARK_RED
+@export_category("Damage Animation")
+@export var damAnimRotEnable : bool = true
 
 const MIDNIGHT : float = 0.0
 const SUNRISE : float = 0.25
@@ -197,7 +199,6 @@ func getRandomPosFromColShap(colShape) -> Vector2:
 	return randomPos
 
 #data has value which is the damage and isCrit which is if the attack was a critical hit
-#make it say "crit: " before the damage number then change color if it's a crit
 #Supports rect and circle collision shapes and collision polys
 func damNumbers(colShape, data: Dictionary) -> void:
 	if damNumberEnable:
@@ -215,6 +216,26 @@ func damNumbers(colShape, data: Dictionary) -> void:
 		
 		newLabel.position = randomPos
 		Global.currentScene.add_child(newLabel)
+
+func damageAnim(node: Node2D, damage: float = 10) -> void:
+	var intensity = clamp(sqrt(damage) * 0.02, 0.05, 0.4)
+	
+	var squash = 1.0 - intensity
+	var stretch = 1.0 + intensity
+	
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	
+	tween.tween_property(node, "scale", Vector2(stretch, squash), 0.08)
+	tween.tween_property(node, "scale", Vector2(1.05, 0.95), 0.06)
+	tween.tween_property(node, "scale", Vector2.ONE, 0.06)
+	
+	if damAnimRotEnable:
+		var rot = randf_range(-intensity, intensity)
+		
+		tween.tween_property(node, "rotation", rot, 0.05)
+		tween.tween_property(node, "rotation", 0.0, 0.1)
 
 func _process(delta: float) -> void:
 	meta = totalDays * 0.6

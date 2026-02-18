@@ -47,6 +47,7 @@ var dir : Vector2 = Vector2.ZERO
 func take_damage(data: Dictionary):
 	if not get_tree().paused:
 		health -= data.value
+		Global.damageAnim($sprite2D, data.value)
 		Global.damNumbers($CollisionShape2D, data)
 
 func canSeePlayer() -> bool:
