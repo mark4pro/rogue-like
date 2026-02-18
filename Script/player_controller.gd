@@ -234,6 +234,7 @@ func _process(delta: float) -> void:
 	#Weapon stuff
 	var hasWeapon = weaponPivot.get_child_count() > 0
 	
+	#Equip weapon
 	if Global.weapon and not oldWeapon == Global.weapon:
 		oldWeapon = Global.weapon
 		if hasWeapon: weaponPivot.get_children()[0].queue_free()
@@ -247,6 +248,7 @@ func _process(delta: float) -> void:
 		
 		weaponPivot.add_child(newWeapon)
 	
+	#Unequip weapon
 	if not Global.weapon and hasWeapon:
 		weaponPivot.get_children()[0].queue_free()
 		oldWeapon = null
