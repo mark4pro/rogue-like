@@ -26,6 +26,10 @@ func _ready() -> void:
 	gpuPart = get_node_or_null("Sprite2D/GPUParticles2D")
 
 func _process(_delta: float) -> void:
+	for c in $Sprite2D.get_children():
+		if c is PointLight2D:
+			c.range_z_max = get_parent().z_index + 3
+	
 	if sprite.get_parent().scale.x == -1:
 		scale.x = -1
 	else:
