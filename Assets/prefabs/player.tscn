@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
 [ext_resource type="Texture2D" uid="uid://bcetjsof4a06x" path="res://Assets/imgs/UI/heart.png" id="3_g621r"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="4_gmoaq"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="5_ev7rh"]
 [ext_resource type="Script" uid="uid://dwmaslk0joqji" path="res://Script/inventory_ui.gd" id="5_w0l5f"]
 [ext_resource type="Script" uid="uid://lad2fj3lc8w3" path="res://Script/pause_menu.gd" id="6_4312i"]
 [ext_resource type="Script" uid="uid://b6bwarcve0kkn" path="res://Script/death_screen.gd" id="7_4312i"]
@@ -472,6 +473,7 @@ speed_scale = 0.5
 process_material = SubResource("ParticleProcessMaterial_gmoaq")
 
 [node name="leftGrass" type="GPUParticles2D" parent="." unique_id=1876608386]
+visible = false
 z_index = -1
 position = Vector2(-11, 9)
 emitting = false
@@ -500,6 +502,8 @@ anchor_bottom = 1.0
 offset_top = -50.0
 offset_right = 400.0
 grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 36
 theme_override_styles/background = SubResource("StyleBoxFlat_g621r")
 theme_override_styles/fill = SubResource("StyleBoxFlat_gmoaq")
 value = 100.0
@@ -512,6 +516,7 @@ offset_top = -75.0
 offset_right = 200.0
 offset_bottom = -50.0
 grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
 theme_override_styles/background = SubResource("StyleBoxFlat_w0l5f")
 theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
@@ -540,6 +545,7 @@ offset_top = -133.0
 offset_right = 83.0
 offset_bottom = -75.0
 grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
 theme_override_font_sizes/font_size = 42
 text = "FPS:"
 
@@ -566,7 +572,8 @@ layout_mode = 0
 offset_right = 1920.0
 offset_bottom = 69.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 50
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 64
 text = "Inventory"
 horizontal_alignment = 1
 
@@ -610,21 +617,11 @@ offset_left = 10.0
 offset_top = 10.0
 offset_right = 590.0
 offset_bottom = 110.0
-text = "
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 42
+text = "Resume
 "
 metadata/_edit_group_ = true
-
-[node name="Label" type="Label" parent="pauseMenu/pauseMenu/ColorRect/Resume" unique_id=527838027]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 35
-text = "Resume"
-horizontal_alignment = 1
-vertical_alignment = 1
 
 [node name="backToHub" type="Button" parent="pauseMenu/pauseMenu/ColorRect" unique_id=1232013853]
 custom_minimum_size = Vector2(580, 100)
@@ -633,18 +630,9 @@ offset_left = 10.0
 offset_top = 120.0
 offset_right = 590.0
 offset_bottom = 220.0
-
-[node name="Label" type="Label" parent="pauseMenu/pauseMenu/ColorRect/backToHub" unique_id=1768137557]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 35
-text = "Back to hub world"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 42
+text = "Back to hub"
 
 [node name="exitGame" type="Button" parent="pauseMenu/pauseMenu/ColorRect" unique_id=251820944]
 custom_minimum_size = Vector2(580, 100)
@@ -653,19 +641,10 @@ offset_left = 10.0
 offset_top = 230.0
 offset_right = 590.0
 offset_bottom = 330.0
-metadata/_edit_group_ = true
-
-[node name="Label" type="Label" parent="pauseMenu/pauseMenu/ColorRect/exitGame" unique_id=589077677]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 35
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 42
 text = "Exit"
-horizontal_alignment = 1
-vertical_alignment = 1
+metadata/_edit_group_ = true
 
 [node name="deathMenu" type="CanvasLayer" parent="." unique_id=133084291]
 visible = false
@@ -683,18 +662,9 @@ offset_left = 710.0
 offset_top = 950.0
 offset_right = 1210.0
 offset_bottom = 1050.0
-
-[node name="Label" type="Label" parent="deathMenu/deathScreen/backToHub" unique_id=1413778075]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 35
-text = "Back to hub world"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 42
+text = "Back to hub"
 
 [node name="Weapon" type="AnimationPlayer" parent="." unique_id=1254558574]
 libraries/ = SubResource("AnimationLibrary_i87ed")

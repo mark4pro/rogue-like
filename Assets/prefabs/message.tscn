@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ckm4t02r3wbh6"]
 
 [ext_resource type="Script" uid="uid://c6wksibnsu274" path="res://Script/message.gd" id="1_pfm2h"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_s8wia"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pfm2h"]
 bg_color = Color(1, 1, 1, 1)
@@ -19,6 +20,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_s8wia")
+theme_override_font_sizes/font_size = 18
 text = "Test"
 horizontal_alignment = 1
 vertical_alignment = 1

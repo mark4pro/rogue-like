@@ -47,20 +47,7 @@ var dir : Vector2 = Vector2.ZERO
 func take_damage(data: Dictionary):
 	if not get_tree().paused:
 		health -= data.value
-		
-		var label = Global.damNum.instantiate()
-		label.text = str(roundi(data.value))
-		
-		var radius = randf_range(20, 15)
-		var angle = randf_range(0, 5 * PI)
-	
-		var spawn_pos = Vector2(
-		cos(angle) * radius,
-		sin(angle) * radius
-		)
-		
-		label.position = global_position + spawn_pos
-		get_tree().current_scene.add_child(label)
+		Global.damNumbers($CollisionShape2D, data)
 
 func canSeePlayer() -> bool:
 	if not Global.player: return false

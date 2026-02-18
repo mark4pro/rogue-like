@@ -60,6 +60,13 @@ var currentScene : Node = null
 @export var meta : float = totalDays * 0.6
 @export var performance : float = 1
 
+@export_category("Damage Numbers")
+@export var damNumberEnable : bool = true
+@export var damNumberSizeRange : Vector2i = Vector2i(8, 12)
+@export var damNumberSizeRangeCrit : Vector2i = Vector2i(10, 14)
+@export var damNumberNormColor : Color = Color.WHITE
+@export var damNumberCritColor : Color = Color.DARK_RED
+
 const MIDNIGHT : float = 0.0
 const SUNRISE : float = 0.25
 const NOON : float = 0.5
@@ -158,6 +165,56 @@ func getRandom(list: Array):
 	if list.is_empty(): return null
 	
 	return list.back().data
+
+func getRandomPosFromColShap(colShape) -> Vector2:
+	var randomPos : Vector2 = colShape.global_position
+	
+	if colShape is CollisionShape2D:
+		var shape : Shape2D = colShape.shape
+		
+		if shape is RectangleShape2D:
+			var extents = shape.size * 0.5
+			var local_pos = Vector2(
+				randf_range(-extents.x, extents.x),
+				randf_range(-extents.y, extents.y)
+			)
+			randomPos = colShape.to_global(local_pos)
+		elif shape is CircleShape2D:
+			var r = shape.radius
+			var angle = randf() * TAU
+			var dist = sqrt(randf()) * r
+			var local_pos = Vector2(cos(angle), sin(angle)) * dist
+			randomPos = colShape.to_global(local_pos)
+	elif colShape is CollisionPolygon2D:
+		var points = colShape.polygon
+		if not points.size() == 0:
+			var index = randi() % points.size()
+			var next_index = (index + 1) % points.size()
+			var t = randf()
+			var local_pos = points[index].lerp(points[next_index], t)
+			randomPos = colShape.to_global(local_pos)
+	
+	return randomPos
+
+#data has value which is the damage and isCrit which is if the attack was a critical hit
+#make it say "crit: " before the damage number then change color if it's a crit
+#Supports rect and circle collision shapes and collision polys
+func damNumbers(colShape, data: Dictionary) -> void:
+	if damNumberEnable:
+		var newLabel : Label = damNum.instantiate()
+		newLabel.text = str(roundi(data.value))
+		
+		if data.isCrit:
+			newLabel.add_theme_font_size_override("font_size", randi_range(damNumberSizeRangeCrit.x, damNumberSizeRangeCrit.y))
+			newLabel.add_theme_color_override("font_color", damNumberCritColor)
+		else:
+			newLabel.add_theme_font_size_override("font_size", randi_range(damNumberSizeRange.x, damNumberSizeRange.y))
+			newLabel.add_theme_color_override("font_color", damNumberNormColor)
+		
+		var randomPos : Vector2 = getRandomPosFromColShap(colShape)
+		
+		newLabel.position = randomPos
+		Global.currentScene.add_child(newLabel)
 
 func _process(delta: float) -> void:
 	meta = totalDays * 0.6

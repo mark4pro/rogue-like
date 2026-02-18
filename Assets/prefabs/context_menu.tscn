@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cl2m3dpyfhdty"]
 
 [ext_resource type="Script" uid="uid://dghtvdfwbkc3c" path="res://Script/context_menu.gd" id="1_mtgmi"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_1a0vn"]
 
 [node name="ContextMenu" type="Control" unique_id=473995532]
 z_index = 2
@@ -25,21 +26,25 @@ theme_override_constants/separation = 0
 [node name="equipBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1809940055]
 visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Equip"
 
 [node name="unequipBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1070392595]
 visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Unequip"
 
 [node name="useBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=382146567]
 visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Use"
 
 [node name="dropBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=2061061854]
 visible = false
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Drop"
 
 [connection signal="mouse_entered" from="PanelContainer" to="." method="_on_panel_container_mouse_entered"]

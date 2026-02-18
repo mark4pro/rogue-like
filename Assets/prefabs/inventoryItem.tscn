@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://tlobv0bfa6bo"]
 
 [ext_resource type="Script" uid="uid://cjdp0wyd8ewvv" path="res://Script/inventoryItem.gd" id="1_y7bcj"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_jn7ii"]
 
 [sub_resource type="Gradient" id="Gradient_y7bcj"]
 colors = PackedColorArray(0.21, 0.21, 0.21, 1, 0.21176471, 0.21176471, 0.21176471, 1)
@@ -21,8 +22,10 @@ texture = SubResource("GradientTexture2D_jn7ii")
 
 [node name="Amount" type="Label" parent="." unique_id=750925871]
 layout_mode = 0
-offset_right = 18.0
+offset_left = 7.0
+offset_right = 25.0
 offset_bottom = 93.0
+theme_override_fonts/font = ExtResource("2_jn7ii")
 theme_override_font_sizes/font_size = 32
 text = "1"
 
