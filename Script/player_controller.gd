@@ -254,10 +254,13 @@ func _process(delta: float) -> void:
 		var atEnd : bool = weaponAnim.current_animation_position == weaponAnim.current_animation_length
 		
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
-			if not atEnd:
-				weaponAnim.play("swing")
+			if Global.weapon.animString == "swing":
+				if not atEnd:
+					weaponAnim.play(Global.weapon.animString)
+				else:
+					weaponAnim.play_backwards(Global.weapon.animString)
 			else:
-				weaponAnim.play_backwards("swing")
+				weaponAnim.play(Global.weapon.animString)
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5

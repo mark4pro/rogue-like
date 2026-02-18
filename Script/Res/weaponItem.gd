@@ -3,6 +3,7 @@ class_name WeaponItem
 
 @export_category("Weapon")
 @export var weaponScene : PackedScene = null
+@export var animString : String = "swing"
 
 @export_category("Weapon Stats")
 @export var baseDamage : float = 100
