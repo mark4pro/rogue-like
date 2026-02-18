@@ -51,7 +51,15 @@ func take_damage(data: Dictionary):
 		var label = Global.damNum.instantiate()
 		label.text = str(roundi(data.value))
 		
-		label.position = global_position
+		var radius = randf_range(20, 15)
+		var angle = randf_range(0, 5 * PI)
+	
+		var spawn_pos = Vector2(
+		cos(angle) * radius,
+		sin(angle) * radius
+		)
+		
+		label.position = global_position + spawn_pos
 		get_tree().current_scene.add_child(label)
 
 func canSeePlayer() -> bool:
