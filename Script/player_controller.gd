@@ -234,7 +234,7 @@ func _process(delta: float) -> void:
 	#Weapon stuff
 	var hasWeapon = weaponPivot.get_child_count() > 0
 	
-	if not oldWeapon == Global.weapon:
+	if Global.weapon and not oldWeapon == Global.weapon:
 		oldWeapon = Global.weapon
 		if hasWeapon: weaponPivot.get_children()[0].queue_free()
 		
@@ -246,6 +246,10 @@ func _process(delta: float) -> void:
 		newWeapon.weapon = Global.weapon
 		
 		weaponPivot.add_child(newWeapon)
+	
+	if not Global.weapon and hasWeapon:
+		weaponPivot.get_children()[0].queue_free()
+		oldWeapon = null
 	
 	if hasWeapon and not get_tree().paused:
 		var wAngle : float = (get_global_mouse_position() - global_position).angle()
