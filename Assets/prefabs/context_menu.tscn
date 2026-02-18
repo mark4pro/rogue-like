@@ -47,8 +47,6 @@ layout_mode = 2
 theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Drop"
 
-[connection signal="mouse_entered" from="PanelContainer" to="." method="_on_panel_container_mouse_entered"]
-[connection signal="mouse_exited" from="PanelContainer" to="." method="_on_panel_container_mouse_exited"]
 [connection signal="button_down" from="PanelContainer/VBoxContainer/equipBttn" to="." method="_on_equip_bttn_button_down"]
 [connection signal="button_down" from="PanelContainer/VBoxContainer/unequipBttn" to="." method="_on_unequip_bttn_button_down"]
 [connection signal="button_down" from="PanelContainer/VBoxContainer/useBttn" to="." method="_on_use_bttn_button_down"]

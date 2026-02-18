@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://bdiwb0lraqgm1"]
+
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="1_nhl2d"]
+[ext_resource type="Script" uid="uid://cfor4ght3n814" path="res://Script/compare.gd" id="1_ux8o1"]
+
+[node name="Compare" type="Control" unique_id=2026593654]
+z_index = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ux8o1")
+
+[node name="BG" type="ColorRect" parent="." unique_id=426819515]
+custom_minimum_size = Vector2(300, 30)
+layout_mode = 0
+offset_right = 300.0
+offset_bottom = 30.0
+color = Color(0.26657522, 0.2665752, 0.2665752, 1)
+
+[node name="Name" type="Label" parent="BG" unique_id=648893760]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 27.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_nhl2d")
+theme_override_font_sizes/font_size = 24
+text = "Name:"
+vertical_alignment = 1
+clip_text = true
+text_overrun_behavior = 6
+
+[node name="Stats" type="VBoxContainer" parent="BG" unique_id=1106847262]
+layout_mode = 0
+offset_top = 30.0
+offset_right = 300.0
+offset_bottom = 30.0
+theme_override_constants/separation = 0

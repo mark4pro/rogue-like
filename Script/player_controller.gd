@@ -247,7 +247,7 @@ func _process(delta: float) -> void:
 		
 		weaponPivot.add_child(newWeapon)
 	
-	if hasWeapon:
+	if hasWeapon and not get_tree().paused:
 		var wAngle : float = (get_global_mouse_position() - global_position).angle()
 		weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
 		

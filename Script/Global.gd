@@ -5,7 +5,8 @@ var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.ts
 var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")
 var massageUI : PackedScene = preload("res://Assets/prefabs/message.tscn")
 var loading : PackedScene = preload("res://Assets/prefabs/loading.tscn")
-var damNum : PackedScene = preload("res://Assets/prefabs/damage_label.tscn/")
+var damNum : PackedScene = preload("res://Assets/prefabs/damage_label.tscn")
+var compareUI : PackedScene = preload("res://Assets/prefabs/compare.tscn")
 
 @export_category("Inventory")
 @export var Inventory : Array[BaseItem] = []
@@ -167,6 +168,12 @@ func getRandom(list: Array):
 	if list.is_empty(): return null
 	
 	return list.back().data
+
+func formatFloat(num: float, per: int = 2):
+	if num == int(num): return int(num)
+	else:
+		var step = 1.0 / pow(10.0, per)
+		return snapped(num, step)
 
 func getRandomPosFromColShap(colShape) -> Vector2:
 	var randomPos : Vector2 = colShape.global_position
