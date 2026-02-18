@@ -17,6 +17,7 @@ func _ready() -> void:
 		var fontFile = load("res://Assets/fonts/tiny5/Tiny5-Regular.ttf") as FontFile
 		newLabel.add_theme_font_override("normal_font", fontFile)
 		newLabel.add_theme_font_size_override("font_size", 18)
+		newLabel.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 		newLabel.custom_minimum_size = Vector2(300, 30)
 		
 		if item is HealthItem:
