@@ -8,14 +8,10 @@ var loading : PackedScene = preload("res://Assets/prefabs/loading.tscn")
 var damNum : PackedScene = preload("res://Assets/prefabs/damage_label.tscn")
 var compareUI : PackedScene = preload("res://Assets/prefabs/compare.tscn")
 
-@export_category("Inventory")
-@export var Inventory : Array[BaseItem] = []
-@export var InventoryGrid : Vector2 = Vector2(8, 4)
-@export var MaxInventory : int = 32
+@export_category("Player")
+@export var inventory : Inventory = preload("res://Player_Data/playerInventory.tres")
 @export var weapon : WeaponItem = null
 #@export var armor : ArmorItem = null
-
-@export_category("Player stats")
 @export var armor : float = 0
 
 var messageTimer : Timer = null
@@ -83,53 +79,10 @@ var ambientColor : Color = Color.WHITE
 
 func _ready() -> void:
 	#For testing
-	add_item(load("res://Assets/items/health_1.tres"))
-	add_item(load("res://Assets/items/health_1.tres"))
-	add_item(load("res://Assets/items/over_grown.tres"))
-	add_item(load("res://Assets/items/over_grown.tres"))
-
-func hasSpace(item: BaseItem) -> bool:
-	if not item:
-		return Inventory.size() < MaxInventory
-	else:
-		if item.stackable:
-			var index = Inventory.find_custom(func(i): return i.id == item.id)
-			
-			if not index == -1:
-				return true
-			else:
-				return Inventory.size() < MaxInventory
-		else:
-			return Inventory.size() < MaxInventory
-
-func add_item(item: BaseItem) -> void:
-	if item.stackable:
-		var index = Inventory.find_custom(func(i): return i.id == item.id)
-		
-		if not index == -1:
-			Inventory[index].quantitiy += item.quantitiy
-		else:
-			var newItem : BaseItem = item.duplicate(true)
-			if not newItem.rolled: newItem.rollStats()
-			
-			Inventory.append(newItem)
-	else:
-		var newItem : BaseItem = item.duplicate(true)
-		if not newItem.rolled: newItem.rollStats()
-		
-		Inventory.append(newItem)
-
-func remove_items(item: BaseItem, amount: int = 1) -> void:
-	var index = Inventory.find_custom(func(i): return i == item)
-	if not index == -1:
-		amount = clampi(amount, 1, Inventory[index].quantitiy)
-		Inventory[index].quantitiy -= amount
-
-func remove_items_by_id(id: int = 0, amount: int = 1) -> void:
-	var index = Inventory.find_custom(func(i): return i.id == id)
-	if not index == -1:
-		amount = clampi(amount, 1, Inventory[index].quantitiy)
-		Inventory[index].quantitiy -= amount
+	inventory.add_item(load("res://Assets/items/health_1.tres"))
+	inventory.add_item(load("res://Assets/items/health_1.tres"))
+	inventory.add_item(load("res://Assets/items/over_grown.tres"))
+	inventory.add_item(load("res://Assets/items/over_grown.tres"))
 
 func getKeyFromAction(action: String) -> String:
 	return InputMap.action_get_events(action)[0].as_text().split(" ")[0]
@@ -246,7 +199,7 @@ func damageAnim(node: Node2D, damage: float = 10) -> void:
 		tween.tween_property(node, "rotation", 0.0, 0.1)
 
 func _process(delta: float) -> void:
-	MaxInventory = InventoryGrid.x * InventoryGrid.y
+	Global.inventory.update()
 	
 	meta = totalDays * 0.6
 	if longestRun > 0:
@@ -310,11 +263,6 @@ func _process(delta: float) -> void:
 			_:
 				if Global.currentScene and Global.currentScene.get_node_or_null("World"):
 					thisLoading.queue_free()
-	
-	
-	#Clear items with no quanitity
-	for i in Inventory:
-		if i.quantitiy <= 0: Inventory.erase(i)
 	
 	#Time of day and light calc
 	timeOfDay += delta / dayLengthSeconds

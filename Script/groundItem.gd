@@ -19,8 +19,8 @@ func _process(_delta: float) -> void:
 		pickup_item()
 
 func pickup_item():
-	if Global.player and Global.hasSpace(item):
-		Global.add_item(item)
+	if Global.player and Global.inventory.hasSpace(item):
+		Global.inventory.add_item(item)
 		queue_free()
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
