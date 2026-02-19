@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://brneu732dbaro"]
+
+[ext_resource type="Texture2D" uid="uid://ck6s1mhsqx76d" path="res://Assets/imgs/torch_stick.png" id="1_ra3ar"]
+
+[sub_resource type="Curve" id="Curve_muvid"]
+_data = [Vector2(0.06796117, 0), 0.0, 0.8416753, 0, 0, Vector2(1, 0.44943827), -4.6935077, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_i55e6"]
+curve = SubResource("Curve_muvid")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3eir3"]
+particle_flag_disable_z = true
+emission_shape = 2
+emission_sphere_radius = 6.94
+gravity = Vector3(0, -9, 0)
+linear_accel_min = -2.2351742e-06
+linear_accel_max = 7.089998
+linear_accel_curve = SubResource("CurveTexture_i55e6")
+color = Color(0.9525494, 0.43147653, 0.40506643, 1)
+hue_variation_min = -2.2351742e-08
+hue_variation_max = 0.15999997
+
+[node name="torch" type="Node2D" unique_id=954540505]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=173790757]
+texture = ExtResource("1_ra3ar")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D" unique_id=1992466797]
+position = Vector2(0, -22)
+amount = 100
+process_material = SubResource("ParticleProcessMaterial_3eir3")
