@@ -8,13 +8,16 @@ var redraw : bool = false
 var latch : bool = false
 
 func _ready() -> void:
-	if item: texture = item.itemIcon
+	if item:
+		$InventoryItem.texture = item.itemIcon
+		$InventoryItem.scale.x = item.iconScale
+		$InventoryItem.scale.y = item.iconScale
 	else: $Amount.visible = false
 
 func _process(_delta: float) -> void:
 	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): latch = false
 	
-	$BG.size = size
+	$InventoryItem.size = size
 	
 	if item:
 		var mousePos : Vector2 = get_viewport().get_mouse_position()
@@ -25,7 +28,7 @@ func _process(_delta: float) -> void:
 		$Amount.text = str(item.quantitiy)
 		if item.quantitiy <= 0:
 			item = null
-			texture = null
+			$InventoryItem.texture = null
 		
 		var comp : Control = Global.player.Inventory_UI.get_node_or_null("Compare")
 		var contextMenu : Control = Global.player.Inventory_UI.get_node_or_null("ContextMenu")

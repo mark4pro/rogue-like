@@ -10,6 +10,7 @@ var compareUI : PackedScene = preload("res://Assets/prefabs/compare.tscn")
 
 @export_category("Inventory")
 @export var Inventory : Array[BaseItem] = []
+@export var InventoryGrid : Vector2 = Vector2(8, 4)
 @export var MaxInventory : int = 32
 @export var weapon : WeaponItem = null
 #@export var armor : ArmorItem = null
@@ -245,6 +246,8 @@ func damageAnim(node: Node2D, damage: float = 10) -> void:
 		tween.tween_property(node, "rotation", 0.0, 0.1)
 
 func _process(delta: float) -> void:
+	MaxInventory = InventoryGrid.x * InventoryGrid.y
+	
 	meta = totalDays * 0.6
 	if longestRun > 0:
 		performance = float(lastRunDays) / float(longestRun)

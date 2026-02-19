@@ -11,6 +11,8 @@ enum item_type {
 @export var name : String = ""
 @export var itemType : item_type = item_type.USABLE
 @export var itemIcon : Texture2D
+@export var iconScale : float = 1
+@export var groundScale : float = 1
 @export var equippable : bool = false
 @export var stackable : bool = true
 @export var weight : float = 1.0
@@ -39,7 +41,7 @@ func drop(amount: int = 1) -> void:
 	if not stackable: amount = 1
 	amount = clampi(amount, 1, quantitiy)
 	unequip()
-	var newGroundItem : Node2D = preload("res://Assets/prefabs/groundItem.tscn").instantiate()
+	var newGroundItem : Node2D = load("res://Assets/prefabs/groundItem.tscn").instantiate()
 	newGroundItem.name = name
 	newGroundItem.position = Global.player.position
 	var newItem : BaseItem = self.duplicate()

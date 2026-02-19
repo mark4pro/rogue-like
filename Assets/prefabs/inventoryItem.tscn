@@ -9,18 +9,18 @@ colors = PackedColorArray(0.21, 0.21, 0.21, 1, 0.21176471, 0.21176471, 0.2117647
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_jn7ii"]
 gradient = SubResource("Gradient_y7bcj")
 
-[node name="InventoryItem" type="TextureRect" unique_id=691380142]
-z_index = 1
-size_flags_horizontal = 3
-size_flags_vertical = 3
+[node name="BG" type="TextureRect" unique_id=1142438980]
+texture = SubResource("GradientTexture2D_jn7ii")
 script = ExtResource("1_y7bcj")
 
-[node name="BG" type="TextureRect" parent="." unique_id=1142438980]
-z_index = -1
+[node name="InventoryItem" type="TextureRect" parent="." unique_id=691380142]
+z_index = 1
 layout_mode = 0
-texture = SubResource("GradientTexture2D_jn7ii")
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Amount" type="Label" parent="." unique_id=750925871]
+z_index = 1
 layout_mode = 0
 offset_left = 7.0
 offset_right = 25.0

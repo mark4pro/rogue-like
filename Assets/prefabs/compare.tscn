@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://cfor4ght3n814" path="res://Script/compare.gd" id="1_ux8o1"]
 
 [node name="Compare" type="Control" unique_id=2026593654]
+modulate = Color(1, 1, 1, 0.5647059)
 z_index = 1
 layout_mode = 3
 anchors_preset = 15
