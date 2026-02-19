@@ -7,9 +7,6 @@ extends Control
 var item : BaseItem = null
 
 func _ready() -> void:
-	nameTxt.size.x = bg.size.x
-	stats.size.x = bg.size.x
-	
 	if item:
 		nameTxt.text = " Name: " + item.name
 		
@@ -129,3 +126,5 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	position = get_viewport().get_mouse_position()
 	bg.size.y = stats.size.y + 30
+	nameTxt.size.x = bg.size.x
+	stats.size.x = bg.size.x

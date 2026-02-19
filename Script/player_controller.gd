@@ -59,6 +59,7 @@ var roll_dir : Vector2 = Vector2.ZERO
 var bounds : CollisionPolygon2D = null
 
 var oldWeapon : WeaponItem = null
+var reverseSwing : bool = false
 
 func _ready():
 	$UI.visible = true
@@ -257,11 +258,10 @@ func _process(delta: float) -> void:
 		var wAngle : float = (get_global_mouse_position() - global_position).angle()
 		weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
 		
-		var atEnd : bool = weaponAnim.current_animation_position == weaponAnim.current_animation_length
-		
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
 			if Global.weapon.animString == "swing":
-				if not atEnd:
+				reverseSwing = weaponAnim.current_animation_position == weaponAnim.current_animation_length
+				if not reverseSwing:
 					weaponAnim.play(Global.weapon.animString)
 				else:
 					weaponAnim.play_backwards(Global.weapon.animString)
@@ -280,6 +280,11 @@ func _process(delta: float) -> void:
 	roll_cooldown_bar.value = (1 - (roll_cooldown.time_left / roll_cooldown.wait_time)) * 100
 	roll_cooldown_bar.visible = roll_cooldown.time_left > 0
 	
+	if Global.sceneIndex == 0:
+		$UI/Days.text = "Days: " + str(Global.totalDays)
+	else:
+		$UI/Days.text = "Days: " + str(Global.runDays)
+	
 	if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not is_dead:
 		Global.inventoryUI.gen_inventory()
 		Inventory_UI.visible = !Inventory_UI.visible
@@ -288,7 +293,10 @@ func _process(delta: float) -> void:
 	#pause menu 
 	if Input.is_action_just_pressed("pause"):
 		get_tree().paused = !get_tree().paused
-		pauseMenu.visible = !pauseMenu.visible
+		if not Inventory_UI.visible:
+			pauseMenu.visible = !pauseMenu.visible
+		else:
+			Inventory_UI.visible = false
 
 func _physics_process(delta: float) -> void:
 	if not get_tree().paused:

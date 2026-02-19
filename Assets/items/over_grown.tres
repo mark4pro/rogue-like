@@ -12,6 +12,7 @@ id = 35
 name = "Over Grown"
 itemType = 1
 itemIcon = ExtResource("1_ai7fc")
+groundScale = 0.5
 equippable = true
 stackable = false
 cost = 50

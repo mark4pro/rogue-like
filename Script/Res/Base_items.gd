@@ -19,8 +19,8 @@ enum item_type {
 @export var cost : int = 0
 @export var costVar : float = 0.2
 
-var rolled : bool = false
-var quantitiy : int = 1
+@export var rolled : bool = false
+@export var quantitiy : int = 1
 
 func rollStats() -> void:
 	rolled = true

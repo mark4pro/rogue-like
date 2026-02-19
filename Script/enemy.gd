@@ -49,6 +49,7 @@ func take_damage(data: Dictionary):
 		health -= data.value
 		Global.damageAnim($sprite2D, data.value)
 		Global.damNumbers($CollisionShape2D, data)
+		currentState = state.CHASE
 
 func canSeePlayer() -> bool:
 	if not Global.player: return false

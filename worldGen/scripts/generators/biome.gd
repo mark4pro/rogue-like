@@ -4,8 +4,6 @@ class_name BiomeGenerator
 @export var frequency : Vector2 = Vector2(0.03, 0.5)
 
 @export var cave_val : float = -0.3
-#@export var forest_val : float = 0.2
-#@export var dungeon_val : float = -0.3
 
 var noise = FastNoiseLite.new()
 

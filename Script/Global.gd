@@ -9,10 +9,10 @@ var damNum : PackedScene = preload("res://Assets/prefabs/damage_label.tscn")
 var compareUI : PackedScene = preload("res://Assets/prefabs/compare.tscn")
 
 @export_category("Player")
-@export var inventory : Inventory = preload("res://Player_Data/playerInventory.tres")
+@export var inventory : Inventory = Inventory.new()
 @export var weapon : WeaponItem = null
 #@export var armor : ArmorItem = null
-@export var armor : float = 0
+@export var money : int = 0
 
 var messageTimer : Timer = null
 var messageBox : VBoxContainer = null
@@ -77,12 +77,60 @@ var rollBloodMoon : bool = true
 var ambientLight : CanvasModulate = null
 var ambientColor : Color = Color.WHITE
 
+var savePath : String = "user://saves/"
+
+func saveGame() -> void:
+	if sceneIndex == 0:
+		if not DirAccess.dir_exists_absolute(savePath):
+			DirAccess.make_dir_recursive_absolute(savePath)
+		
+		var save_data : SaveData = SaveData.new()
+		save_data.inventory = inventory
+		save_data.weapon = weapon
+		save_data.timeOfDay = timeOfDay
+		save_data.totalDays = totalDays
+		save_data.lastRunDays = lastRunDays
+		save_data.longestRun = longestRun
+		save_data.bloodMoons = bloodMoons
+		save_data.damNumberEnable = damNumberEnable
+		save_data.damAnimRotEnable = damAnimRotEnable
+		save_data.debugVision = debugVision
+		
+		var err = ResourceSaver.save(save_data, savePath + "save_data.tres")
+		
+		if err == OK:
+			sendMessage("SAVED GAME", 3, Color.YELLOW)
+			print("Saved successfully")
+		else:
+			sendMessage("SAVE FAILED", 10, Color.RED)
+			print("Save failed:", err)
+
+func loadGame():
+	if ResourceLoader.exists(savePath + "save_data.tres"):
+		var save_data : SaveData = ResourceLoader.load(savePath + "save_data.tres")
+		inventory = save_data.inventory
+		weapon = save_data.weapon
+		money = save_data.money
+		timeOfDay = save_data.timeOfDay
+		totalDays = save_data.totalDays
+		lastRunDays = save_data.lastRunDays
+		longestRun = save_data.longestRun
+		bloodMoons = save_data.bloodMoons
+		damNumberEnable = save_data.damNumberEnable
+		damAnimRotEnable = save_data.damAnimRotEnable
+		debugVision = save_data.debugVision
+	else:
+		print("No save file found")
+		saveGame()
+
 func _ready() -> void:
 	#For testing
-	inventory.add_item(load("res://Assets/items/health_1.tres"))
-	inventory.add_item(load("res://Assets/items/health_1.tres"))
-	inventory.add_item(load("res://Assets/items/over_grown.tres"))
-	inventory.add_item(load("res://Assets/items/over_grown.tres"))
+	if not ResourceLoader.exists(savePath + "save_data.tres"):
+		inventory.add_item(load("res://Assets/items/health_1.tres"))
+		inventory.add_item(load("res://Assets/items/health_1.tres"))
+		inventory.add_item(load("res://Assets/items/over_grown.tres"))
+		inventory.add_item(load("res://Assets/items/over_grown.tres"))
+	loadGame()
 
 func getKeyFromAction(action: String) -> String:
 	return InputMap.action_get_events(action)[0].as_text().split(" ")[0]

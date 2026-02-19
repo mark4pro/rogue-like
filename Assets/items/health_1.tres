@@ -8,4 +8,5 @@ script = ExtResource("2_heevd")
 healthAmount = 25.0
 name = "Snail Meds"
 itemIcon = ExtResource("1_6wq8w")
+groundScale = 0.1
 metadata/_custom_type_script = "uid://bocek0w82g3h1"
