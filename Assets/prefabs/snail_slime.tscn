@@ -7,8 +7,8 @@
 texture = ExtResource("1_a55lq")
 script = ExtResource("2_8s87p")
 
-[node name="Timer" type="Timer" parent="." unique_id=799006]
+[node name="TrailTimer" type="Timer" parent="." unique_id=799006]
 wait_time = 6.0
 autostart = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="TrailTimer" to="." method="_on_trail_timer_timeout"]

@@ -9,5 +9,7 @@ func _ready():
 	
 	
 
-func _on_timer_timeout() -> void:
+
+
+func _on_trail_timer_timeout() -> void:
 	queue_free()

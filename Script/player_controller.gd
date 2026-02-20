@@ -17,6 +17,9 @@ extends RigidBody2D
 @onready var weaponAnim : AnimationPlayer = $Weapon
 #started working on snail trail
 @onready var slime_sprite: Sprite2D = $Sprite2D
+@onready var trail_timer: Timer = $TrailTimer
+
+
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -74,6 +77,8 @@ func _ready():
 	deathScreen.visible = false
 	Global.inventoryUI = $inventoryUI/inventory
 	
+	
+
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
 	
