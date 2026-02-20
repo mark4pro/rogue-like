@@ -15,6 +15,8 @@ extends RigidBody2D
 @onready var weaponPivot : Node2D = $RotPoint/WeaponRotPoint/WeaponPivot
 @onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
 @onready var weaponAnim : AnimationPlayer = $Weapon
+#started working on snail trail
+@onready var slime_sprite: Sprite2D = $Sprite2D
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -60,6 +62,10 @@ var bounds : CollisionPolygon2D = null
 
 var oldWeapon : WeaponItem = null
 var reverseSwing : bool = false
+#started working on snail trail
+var snail_trail = preload("res://Assets/prefabs/snail_slime.tscn")
+
+
 
 func _ready():
 	$UI.visible = true
@@ -90,6 +96,7 @@ func _ready():
 		camera.limit_top = int(topLeft.y)
 		camera.limit_right = int(bottomRight.x)
 		camera.limit_bottom = int(bottomRight.y)
+
 
 func take_damage(data: Dictionary):
 	if not is_rolling and not get_tree().paused:
