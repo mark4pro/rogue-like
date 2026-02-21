@@ -1,5 +1,6 @@
 extends Sprite2D
-
+@onready var sprite = $Sprite2D
+@onready var timer = $Timer
 
 func _ready():
 	# Fades the sprite out using a Tween
@@ -8,8 +9,3 @@ func _ready():
 	fade.finished.connect(queue_free) # Delete node after fade
 	
 	
-
-
-
-func _on_trail_timer_timeout() -> void:
-	queue_free()

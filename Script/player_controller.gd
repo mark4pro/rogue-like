@@ -16,10 +16,9 @@ extends RigidBody2D
 @onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
 @onready var weaponAnim : AnimationPlayer = $Weapon
 #started working on snail trail
-@onready var slime_sprite: Sprite2D = $snail_slime
+
 @onready var trail_timer: Timer = $TrailTimer
-
-
+@onready var snail_slime = preload("res://Assets/prefabs/snail_slime.tscn")
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -65,9 +64,8 @@ var bounds : CollisionPolygon2D = null
 
 var oldWeapon : WeaponItem = null
 var reverseSwing : bool = false
-#started working on snail trail
-var snail_trail = preload("res://Assets/prefabs/snail_slime.tscn")
 
+ 
 
 
 func _ready():
@@ -76,8 +74,8 @@ func _ready():
 	pauseMenu.visible = false
 	deathScreen.visible = false
 	Global.inventoryUI = $inventoryUI/inventory
-	if linear_velocity.x > 0:
-			spawn_trail()
+
+
 	
 
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
@@ -324,17 +322,24 @@ func _physics_process(delta: float) -> void:
 		if is_rolling and roll_state != 1:
 			rot_point.rotation += rspeed * delta
 			apply_impulse(roll_dir * roll_speed * 1000 * delta)
+	
 
-func spawn_trail():
-	var trail = snail_trail.instantiate()
-	
-	trail.global_position = global_position
-	
-	trail.texture = $snail_slime.texture
-	
-	get_tree().current_scene.add_child(snail_trail)
-	print("worm")
-
+func _on_trail_timer_timeout() -> void:
+	if is_moving:
+		
+		var trail = snail_slime.instantiate()
+		# Add to the main scene, not as a child of the player,
+		# so it doesn't move with the player.
+		get_tree().current_scene.add_child(trail)
+		
+		# Position it behind the player
+		trail.global_position = global_position
+		
+		# Match the player's current sprite/texture
+		trail.get_node("snail_slime").texture = $snail_slime.texture
+		
+		
+		trail_timer.start()
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
 
