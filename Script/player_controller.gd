@@ -16,7 +16,7 @@ extends RigidBody2D
 @onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
 @onready var weaponAnim : AnimationPlayer = $Weapon
 #started working on snail trail
-@onready var slime_sprite: Sprite2D = $Sprite2D
+@onready var slime_sprite: Sprite2D = $snail_slime
 @onready var trail_timer: Timer = $TrailTimer
 
 
@@ -76,7 +76,8 @@ func _ready():
 	pauseMenu.visible = false
 	deathScreen.visible = false
 	Global.inventoryUI = $inventoryUI/inventory
-	
+	if linear_velocity.x > 0:
+			spawn_trail()
 	
 
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
@@ -196,7 +197,7 @@ func _process(delta: float) -> void:
 			is_rolling = true
 			can_roll = false
 			roll_state += 1
-		
+	
 		#Flip sprite and rotation based on movement direction
 		if linear_velocity.x < 0:
 			rot_point.scale.x = -1
@@ -323,6 +324,16 @@ func _physics_process(delta: float) -> void:
 		if is_rolling and roll_state != 1:
 			rot_point.rotation += rspeed * delta
 			apply_impulse(roll_dir * roll_speed * 1000 * delta)
+
+func spawn_trail():
+	var trail = snail_trail.instantiate()
+	
+	trail.global_position = global_position
+	
+	trail.texture = $snail_slime.texture
+	
+	get_tree().current_scene.add_child(snail_trail)
+
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
