@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://3qww1gtvx4rc" path="res://snail_slime.gd" id="2_8s87p"]
 
 [node name="snail_slime" type="Sprite2D" unique_id=996801747]
+top_level = true
 texture = ExtResource("1_a55lq")
 script = ExtResource("2_8s87p")
 

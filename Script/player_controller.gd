@@ -333,7 +333,7 @@ func spawn_trail():
 	trail.texture = $snail_slime.texture
 	
 	get_tree().current_scene.add_child(snail_trail)
-
+	print("worm")
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
