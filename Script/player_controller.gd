@@ -18,7 +18,7 @@ extends RigidBody2D
 #started working on snail trail
 
 @onready var trail_timer: Timer = $TrailTimer
-@onready var snail_slime = preload("res://Assets/prefabs/snail_slime.tscn")
+
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -64,8 +64,7 @@ var bounds : CollisionPolygon2D = null
 
 var oldWeapon : WeaponItem = null
 var reverseSwing : bool = false
-
- 
+const snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 
 
 func _ready():
