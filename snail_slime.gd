@@ -1,6 +1,5 @@
 extends Sprite2D
-@onready var sprite = $Sprite2D
-@onready var timer = $Timer
+
 
 func _ready():
 	# Fades the sprite out using a Tween

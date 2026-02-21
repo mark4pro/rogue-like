@@ -3,15 +3,9 @@
 [ext_resource type="Texture2D" uid="uid://beivjjv6q5crw" path="res://Assets/imgs/snail_slime.png" id="1_a55lq"]
 [ext_resource type="Script" uid="uid://3qww1gtvx4rc" path="res://snail_slime.gd" id="2_8s87p"]
 
-[node name="Node2D" type="Node2D" unique_id=1964312798]
-
-[node name="snail_slime" type="Sprite2D" parent="." unique_id=996801747]
+[node name="snail_slime" type="Sprite2D" unique_id=996801747]
+modulate = Color(1, 1, 1, 0.39215687)
 top_level = true
+scale = Vector2(0.2, 0.2)
 texture = ExtResource("1_a55lq")
 script = ExtResource("2_8s87p")
-
-[node name="TrailTimer" type="Timer" parent="snail_slime" unique_id=799006]
-wait_time = 6.0
-autostart = true
-
-[connection signal="timeout" from="snail_slime/TrailTimer" to="snail_slime" method="_on_trail_timer_timeout"]

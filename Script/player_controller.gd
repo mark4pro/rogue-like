@@ -226,6 +226,8 @@ func _process(delta: float) -> void:
 		
 		#Particles
 		if is_moving and not is_rolling:
+			if trail_timer.is_stopped():
+				trail_timer.start()
 			left_grass.emitting = not rot_point.scale.x == -1
 			right_grass.emitting = rot_point.scale.x == -1
 			left_grass.visible = not rot_point.scale.x == -1
@@ -324,21 +326,13 @@ func _physics_process(delta: float) -> void:
 	
 
 func _on_trail_timer_timeout() -> void:
-	if is_moving:
+	var trail : Sprite2D = snail_slime.instantiate()
+	# so it doesn't move with the player.
+	get_tree().current_scene.add_child(trail)
 		
-		var trail = snail_slime.instantiate()
-		# Add to the main scene, not as a child of the player,
-		# so it doesn't move with the player.
-		get_tree().current_scene.add_child(trail)
-		
-		# Position it behind the player
-		trail.global_position = global_position
-		
-		# Match the player's current sprite/texture
-		trail.get_node("snail_slime").texture = $snail_slime.texture
-		
-		
-		trail_timer.start()
+	# Position it behind the player
+	trail.global_position = global_position + Vector2(0, 10)
+	trail.rotation = dir.angle()
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
 
