@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b605708lngswf"]
 
-[ext_resource type="Texture2D" uid="uid://ck6s1mhsqx76d" path="res://Assets/imgs/torch_stick.png" id="1_ra3ar"]
+[ext_resource type="Texture2D" uid="uid://ck6s1mhsqx76d" path="res://Assets/imgs/weapons/torch_stick.png" id="1_m7atl"]
 
 [sub_resource type="Curve" id="Curve_muvid"]
 _data = [Vector2(0.06796117, 0), 0.0, 0.8416753, 0, 0, Vector2(1, 0.44943827), -4.6935077, 0.0, 0, 0]
@@ -24,7 +24,7 @@ hue_variation_max = 0.15999997
 [node name="torch" type="Node2D" unique_id=954540505]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=173790757]
-texture = ExtResource("1_ra3ar")
+texture = ExtResource("1_m7atl")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="Sprite2D" unique_id=1992466797]
 position = Vector2(0, -22)

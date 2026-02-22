@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://c8mdvjtqahwjq"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_2vyih"]
+[ext_resource type="Texture2D" uid="uid://cvsjnnt4gtiu4" path="res://Assets/imgs/weapons/torch.png" id="1_8kup2"]
+[ext_resource type="PackedScene" uid="uid://b0t7fmubfcyj7" path="res://Assets/prefabs/weapons/torch.tscn" id="3_6ykqe"]
+
+[resource]
+script = ExtResource("1_2vyih")
+weaponScene = ExtResource("3_6ykqe")
+baseDamage = 2.0
+id = 100
+name = "Torch"
+itemType = 1
+itemIcon = ExtResource("1_8kup2")
+equippable = true
+throwable = true
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

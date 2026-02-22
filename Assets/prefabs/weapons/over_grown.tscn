@@ -38,8 +38,10 @@ color_ramp = SubResource("GradientTexture1D_p1xr3")
 hue_variation_min = -0.010000022
 hue_variation_max = 0.009999977
 
-[node name="Sword" type="Node2D" unique_id=1825071353]
+[node name="Sword" type="Node2D" unique_id=1825071353 node_paths=PackedStringArray("col", "sprite")]
 script = ExtResource("1_g0nmt")
+col = NodePath("Sprite2D/Col")
+sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1548151299]
 material = SubResource("ShaderMaterial_peu7m")
@@ -92,5 +94,3 @@ energy = 1.8
 blend_mode = 2
 texture = ExtResource("4_u4v2o")
 texture_scale = 0.1
-
-[connection signal="area_entered" from="Sprite2D/Col" to="." method="_on_col_area_entered"]

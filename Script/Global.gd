@@ -131,6 +131,7 @@ func _ready() -> void:
 		inventory.add_item(load("res://Assets/items/over_grown.tres"))
 		inventory.add_item(load("res://Assets/items/over_grown.tres"))
 	loadGame()
+	inventory.add_item(load("res://Assets/items/torch.tres"))
 
 func getKeyFromAction(action: String) -> String:
 	return InputMap.action_get_events(action)[0].as_text().split(" ")[0]

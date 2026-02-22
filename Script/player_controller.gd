@@ -242,10 +242,10 @@ func _process(delta: float) -> void:
 		
 		var newWeapon : Node2D = Global.weapon.weaponScene.instantiate()
 		newWeapon.name = "weapon"
-		newWeapon.animPlayer = $Weapon
-		newWeapon.sprite = sprite
-		newWeapon.entity = self
-		newWeapon.weapon = Global.weapon
+		if "animPlayer" in newWeapon: newWeapon.animPlayer = $Weapon
+		if "playerSpritePivot" in newWeapon: newWeapon.playerSpritePivot = sprite.get_parent()
+		if "entity" in newWeapon: newWeapon.entity = self
+		if "weapon" in newWeapon: newWeapon.weapon = Global.weapon
 		
 		weaponPivot.add_child(newWeapon)
 	

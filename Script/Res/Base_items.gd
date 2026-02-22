@@ -15,6 +15,7 @@ enum item_type {
 @export var groundScale : float = 1
 @export var equippable : bool = false
 @export var stackable : bool = true
+@export var throwable : bool = false
 @export var weight : float = 1.0
 @export var cost : int = 0
 @export var costVar : float = 0.2

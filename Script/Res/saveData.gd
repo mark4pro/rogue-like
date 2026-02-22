@@ -4,8 +4,7 @@ class_name SaveData
 @export var save_version : int = 1
 
 @export_category("Player Data")
-@export var inventory : Inventory = Inventory.new()#Array[BaseItem] = []
-#@export var inventory_grid : Vector2 = 
+@export var inventory : Inventory = Inventory.new()
 @export var weapon : WeaponItem = null
 @export var money : int = 0
 

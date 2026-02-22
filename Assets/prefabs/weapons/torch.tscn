@@ -1,0 +1,88 @@
+[gd_scene format=3 uid="uid://b0t7fmubfcyj7"]
+
+[ext_resource type="Texture2D" uid="uid://cvsjnnt4gtiu4" path="res://Assets/imgs/weapons/torch.png" id="1_ofet6"]
+[ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_qh0re"]
+[ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="2_qh0re"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n0738"]
+
+[sub_resource type="Curve" id="Curve_wjeal"]
+_data = [Vector2(0, 0.5), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_axplh"]
+curve = SubResource("Curve_wjeal")
+
+[sub_resource type="Gradient" id="Gradient_a1hai"]
+colors = PackedColorArray(0.9259829, 0.15953767, 3.85046e-07, 1, 0.888742, 0.7238654, 7.70092e-07, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_xr0l5"]
+gradient = SubResource("Gradient_a1hai")
+
+[sub_resource type="Curve" id="Curve_nesm3"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.5), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_axsc2"]
+curve = SubResource("Curve_nesm3")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hq3js"]
+lifetime_randomness = 0.5
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 6.0
+angle_min = -89.99999
+angle_max = 90.000015
+direction = Vector3(0, -1, 0)
+spread = 10.0
+initial_velocity_max = 30.0
+gravity = Vector3(0, -10, 0)
+linear_accel_min = -2.2351742e-06
+linear_accel_max = 49.999996
+radial_accel_min = -10.000002
+radial_accel_max = 9.999997
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_max = 3.0
+scale_curve = SubResource("CurveTexture_axsc2")
+color_ramp = SubResource("GradientTexture1D_xr0l5")
+alpha_curve = SubResource("CurveTexture_axplh")
+hue_variation_min = -2.2351742e-08
+hue_variation_max = -2.2351742e-08
+sub_emitter_keep_velocity = true
+
+[node name="torch" type="Node2D" unique_id=309199670 node_paths=PackedStringArray("col", "sprite")]
+scale = Vector2(0.4, 0.4)
+script = ExtResource("1_qh0re")
+col = NodePath("rotPoint/Sprite2D/Col")
+sprite = NodePath("rotPoint/Sprite2D")
+
+[node name="rotPoint" type="Node2D" parent="." unique_id=839185064]
+position = Vector2(0, -33)
+
+[node name="Sprite2D" type="Sprite2D" parent="rotPoint" unique_id=568704368]
+position = Vector2(1, 2)
+texture = ExtResource("1_ofet6")
+
+[node name="Col" type="Area2D" parent="rotPoint/Sprite2D" unique_id=715220409]
+visible = false
+position = Vector2(3, -37)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="rotPoint/Sprite2D/Col" unique_id=1702116861]
+shape = SubResource("CircleShape2D_n0738")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="rotPoint/Sprite2D" unique_id=661013448]
+position = Vector2(3, -36)
+amount = 50
+trail_lifetime = 0.01
+trail_sections = 10
+trail_section_subdivisions = 10
+process_material = SubResource("ParticleProcessMaterial_hq3js")
+
+[node name="PointLight2D" type="PointLight2D" parent="rotPoint/Sprite2D" unique_id=1471975605]
+position = Vector2(3, -36)
+color = Color(1, 0.36862746, 0, 1)
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 0.23529412)
+texture = ExtResource("2_qh0re")
+texture_scale = 1.25
