@@ -297,27 +297,6 @@ animations = [{
 "speed": 8.0
 }]
 
-[sub_resource type="Curve" id="Curve_4312i"]
-_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.38513517, 0.4044944), -1.3983657, -1.3983657, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 3
-
-[sub_resource type="CurveTexture" id="CurveTexture_ev7rh"]
-curve = SubResource("Curve_4312i")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gmoaq"]
-particle_flag_disable_z = true
-emission_shape = 1
-emission_sphere_radius = 2.5
-angle_min = -720.0
-angle_max = -720.0
-inherit_velocity_ratio = 0.892
-gravity = Vector3(0, 98, 0)
-scale_min = 0.5
-scale_max = 1.1999999
-color = Color(0.13999999, 1, 0.18299997, 0.4745098)
-alpha_curve = SubResource("CurveTexture_ev7rh")
-collision_use_scale = true
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g621r"]
 bg_color = Color(0.029605996, 0.11629819, 3.008172e-08, 1)
 
@@ -462,25 +441,6 @@ z_index = -1
 position = Vector2(0, 10.895)
 scale = Vector2(0.746, 0.095)
 texture = ExtResource("4_gmoaq")
-
-[node name="rightGrass" type="GPUParticles2D" parent="." unique_id=682299537]
-z_index = -1
-position = Vector2(11, 9)
-emitting = false
-amount = 6
-lifetime = 0.05
-speed_scale = 0.5
-process_material = SubResource("ParticleProcessMaterial_gmoaq")
-
-[node name="leftGrass" type="GPUParticles2D" parent="." unique_id=1876608386]
-visible = false
-z_index = -1
-position = Vector2(-11, 9)
-emitting = false
-amount = 6
-lifetime = 0.05
-speed_scale = 0.5
-process_material = SubResource("ParticleProcessMaterial_gmoaq")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=963694637]
 
@@ -691,10 +651,6 @@ text = "Back to hub"
 [node name="Weapon" type="AnimationPlayer" parent="." unique_id=1254558574]
 libraries/ = SubResource("AnimationLibrary_i87ed")
 
-[node name="TrailTimer" type="Timer" parent="." unique_id=74396240]
-wait_time = 0.001
-one_shot = true
-
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
 [connection signal="timeout" from="UI/MessageTimer" to="." method="_on_message_timer_timeout"]
@@ -702,4 +658,3 @@ one_shot = true
 [connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/backToHub" to="pauseMenu/pauseMenu" method="_on_back_to_hub_button_down"]
 [connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/exitGame" to="pauseMenu/pauseMenu" method="_on_exit_game_button_down"]
 [connection signal="button_down" from="deathMenu/deathScreen/backToHub" to="deathMenu/deathScreen" method="_on_back_to_hub_button_down"]
-[connection signal="timeout" from="TrailTimer" to="." method="_on_trail_timer_timeout"]

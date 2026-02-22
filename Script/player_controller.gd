@@ -1,13 +1,13 @@
 extends RigidBody2D
 
+var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
+
 @onready var sprite : AnimatedSprite2D = $RotPoint/Sprite2D
 @onready var rot_point : Node2D = $RotPoint
 @onready var health_bar : TextureRect = $UI/HealthBar
 @onready var stamina_bar : ProgressBar = $UI/StaminaBar
 @onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
 @onready var roll_cooldown : Timer = $roll_cooldown
-@onready var left_grass : GPUParticles2D = $leftGrass
-@onready var right_grass : GPUParticles2D = $rightGrass
 @onready var Inventory_UI : CanvasLayer = $inventoryUI
 @onready var camera : Camera2D = $Camera2D
 @onready var pauseMenu : CanvasLayer = $pauseMenu
@@ -15,10 +15,6 @@ extends RigidBody2D
 @onready var weaponPivot : Node2D = $RotPoint/WeaponRotPoint/WeaponPivot
 @onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
 @onready var weaponAnim : AnimationPlayer = $Weapon
-#started working on snail trail
-
-@onready var trail_timer: Timer = $TrailTimer
-
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -64,8 +60,6 @@ var bounds : CollisionPolygon2D = null
 
 var oldWeapon : WeaponItem = null
 var reverseSwing : bool = false
-const snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
-
 
 func _ready():
 	$UI.visible = true
@@ -225,23 +219,15 @@ func _process(delta: float) -> void:
 			roll_state += 1
 		
 		#Particles
-		if is_moving and not is_rolling:
-			if trail_timer.is_stopped():
-				trail_timer.start()
-			left_grass.emitting = not rot_point.scale.x == -1
-			right_grass.emitting = rot_point.scale.x == -1
-			left_grass.visible = not rot_point.scale.x == -1
-			right_grass.visible = rot_point.scale.x == -1
-		else:
-			left_grass.emitting = false
-			right_grass.emitting = false
-			left_grass.visible = false
-			right_grass.visible = false
+		if is_moving:
+			var trail : Sprite2D = snail_slime.instantiate()
+			Global.currentScene.add_child(trail)
+			
+			trail.global_position = global_position + Vector2(0, 10)
+			trail.rotation = dir.angle()
 	else:
 		sprite.pause()
 		roll_cooldown.paused = true
-		left_grass.visible = false
-		right_grass.visible = false
 		Global.messageTimer.paused = true
 	
 	#Weapon stuff
@@ -323,16 +309,7 @@ func _physics_process(delta: float) -> void:
 		if is_rolling and roll_state != 1:
 			rot_point.rotation += rspeed * delta
 			apply_impulse(roll_dir * roll_speed * 1000 * delta)
-	
 
-func _on_trail_timer_timeout() -> void:
-	var trail : Sprite2D = snail_slime.instantiate()
-	# so it doesn't move with the player.
-	get_tree().current_scene.add_child(trail)
-		
-	# Position it behind the player
-	trail.global_position = global_position + Vector2(0, 10)
-	trail.rotation = dir.angle()
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
 
