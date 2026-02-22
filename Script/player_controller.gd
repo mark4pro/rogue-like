@@ -222,9 +222,7 @@ func _process(delta: float) -> void:
 		if is_moving:
 			var trail : Sprite2D = snail_slime.instantiate()
 			Global.currentScene.add_child(trail)
-			
 			trail.global_position = global_position + Vector2(0, 10)
-			trail.rotation = dir.angle()
 	else:
 		sprite.pause()
 		roll_cooldown.paused = true
@@ -241,7 +239,7 @@ func _process(delta: float) -> void:
 		var newWeapon : Node2D = Global.weapon.weaponScene.instantiate()
 		newWeapon.name = "weapon"
 		if "animPlayer" in newWeapon: newWeapon.animPlayer = $Weapon
-		if "playerSpritePivot" in newWeapon: newWeapon.playerSpritePivot = sprite.get_parent()
+		if "playerSpritePivot" in newWeapon: newWeapon.playerSpritePivot = rot_point
 		if "entity" in newWeapon: newWeapon.entity = self
 		if "weapon" in newWeapon: newWeapon.weapon = Global.weapon
 		
