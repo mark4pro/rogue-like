@@ -691,6 +691,10 @@ text = "Back to hub"
 [node name="Weapon" type="AnimationPlayer" parent="." unique_id=1254558574]
 libraries/ = SubResource("AnimationLibrary_i87ed")
 
+[node name="TrailTimer" type="Timer" parent="." unique_id=74396240]
+wait_time = 0.001
+one_shot = true
+
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
 [connection signal="timeout" from="UI/MessageTimer" to="." method="_on_message_timer_timeout"]
@@ -698,3 +702,4 @@ libraries/ = SubResource("AnimationLibrary_i87ed")
 [connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/backToHub" to="pauseMenu/pauseMenu" method="_on_back_to_hub_button_down"]
 [connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/exitGame" to="pauseMenu/pauseMenu" method="_on_exit_game_button_down"]
 [connection signal="button_down" from="deathMenu/deathScreen/backToHub" to="deathMenu/deathScreen" method="_on_back_to_hub_button_down"]
+[connection signal="timeout" from="TrailTimer" to="." method="_on_trail_timer_timeout"]
