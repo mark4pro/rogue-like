@@ -6,6 +6,7 @@
 [node name="snail_slime" type="Sprite2D" unique_id=996801747]
 modulate = Color(1, 1, 1, 0.39215687)
 top_level = true
+z_index = 1
 scale = Vector2(0.2, 0.2)
 texture = ExtResource("1_a55lq")
 script = ExtResource("2_8s87p")
