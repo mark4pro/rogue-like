@@ -255,6 +255,7 @@ func _process(delta: float) -> void:
 		weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
 		
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
+			if weaponAnim.current_animation_length == 0: weaponAnim.current_animation = Global.weapon.animString
 			if Global.weapon.animString == "swing":
 				reverseSwing = weaponAnim.current_animation_position == weaponAnim.current_animation_length
 				if not reverseSwing:
