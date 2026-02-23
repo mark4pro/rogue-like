@@ -221,7 +221,7 @@ func _process(delta: float) -> void:
 		#Particles
 		if is_moving:
 			var trail : Sprite2D = snail_slime.instantiate()
-			Global.currentScene.add_child(trail)
+			Global.currentScene.add_child(trail) 
 			trail.global_position = global_position + Vector2(0, 10)
 	else:
 		sprite.pause()
