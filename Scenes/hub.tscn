@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://c85grcryitbld" path="res://Assets/imgs/Hub/Hub_Shop_Desk_Top.png" id="4_7gm0b"]
 [ext_resource type="TileSet" uid="uid://b42gidbr1gvoe" path="res://Assets/tilesets/forest_test.tres" id="4_imdk4"]
 [ext_resource type="Texture2D" uid="uid://ci6y80ar5gr7y" path="res://Assets/imgs/Hub/Hub_Shop_Desk.png" id="4_kud3j"]
-[ext_resource type="Shader" uid="uid://o3kdvw704xr4" path="res://drop_shadow_no_texture.gdshader" id="4_vkujn"]
+[ext_resource type="Shader" uid="uid://o3kdvw704xr4" path="res://Assets/shaders/drop_shadow_no_texture.gdshader" id="4_vkujn"]
 [ext_resource type="Texture2D" uid="uid://ck5ur4lqomjcd" path="res://Assets/imgs/Hub/Hub_Door_Top.png" id="5_4vksb"]
 [ext_resource type="Script" uid="uid://dqsqfmr74cyoj" path="res://Script/tree_tool.gd" id="5_ourlr"]
 [ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="6_f11wv"]
