@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ds4tpuewve0rd"
-path="res://.godot/imported/dark_shell.png-4879da3d735e1b7a195f7d0da8bca56a.ctex"
+path="res://.godot/imported/dark_shell.png-aac73989dd5ee37cbb044db55862a33e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/imgs/dark_shell.png"
-dest_files=["res://.godot/imported/dark_shell.png-4879da3d735e1b7a195f7d0da8bca56a.ctex"]
+source_file="res://Assets/imgs/ideas/armor/dark_shell.png"
+dest_files=["res://.godot/imported/dark_shell.png-aac73989dd5ee37cbb044db55862a33e.ctex"]
 
 [params]
 

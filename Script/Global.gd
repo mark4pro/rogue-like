@@ -1,12 +1,12 @@
 extends Node
 
 var playerRes : PackedScene = preload("res://Assets/prefabs/player.tscn")
-var inventoryItem : PackedScene = preload("res://Assets/prefabs/inventoryItem.tscn")
-var contextMenu : PackedScene = preload("res://Assets/prefabs/context_menu.tscn")
-var massageUI : PackedScene = preload("res://Assets/prefabs/message.tscn")
-var loading : PackedScene = preload("res://Assets/prefabs/loading.tscn")
-var damNum : PackedScene = preload("res://Assets/prefabs/damage_label.tscn")
-var compareUI : PackedScene = preload("res://Assets/prefabs/compare.tscn")
+var inventoryItem : PackedScene = preload("res://Assets/prefabs/ui/inventoryItem.tscn")
+var contextMenu : PackedScene = preload("res://Assets/prefabs/ui/context_menu.tscn")
+var massageUI : PackedScene = preload("res://Assets/prefabs/ui/message.tscn")
+var loading : PackedScene = preload("res://Assets/prefabs/ui/loading.tscn")
+var damNum : PackedScene = preload("res://Assets/prefabs/ui/damage_label.tscn")
+var compareUI : PackedScene = preload("res://Assets/prefabs/ui/compare.tscn")
 
 @export_category("Player")
 @export var inventory : Inventory = Inventory.new()

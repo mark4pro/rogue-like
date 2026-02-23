@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b1x8ag21v3fnf"
-path="res://.godot/imported/skin_shell.png-43bc9171c87d591e40d7530d23d7b4a8.ctex"
+path="res://.godot/imported/skin_shell.png-f4e022201d9ce103e694c9aae6b5dc93.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/imgs/skin_shell.png"
-dest_files=["res://.godot/imported/skin_shell.png-43bc9171c87d591e40d7530d23d7b4a8.ctex"]
+source_file="res://Assets/imgs/ideas/armor/skin_shell.png"
+dest_files=["res://.godot/imported/skin_shell.png-f4e022201d9ce103e694c9aae6b5dc93.ctex"]
 
 [params]
 

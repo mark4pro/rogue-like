@@ -59,7 +59,7 @@ var roll_dir : Vector2 = Vector2.ZERO
 var bounds : CollisionPolygon2D = null
 
 var oldWeapon : WeaponItem = null
-var reverseSwing : bool = false
+var reverseSwing : int = 0
 
 func _ready():
 	$UI.visible = true
@@ -255,15 +255,17 @@ func _process(delta: float) -> void:
 		weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
 		
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
-			if weaponAnim.current_animation_length == 0: weaponAnim.current_animation = Global.weapon.animString
+			reverseSwing = reverseSwing % 2
+			
 			if Global.weapon.animString == "swing":
-				reverseSwing = weaponAnim.current_animation_position == weaponAnim.current_animation_length
-				if not reverseSwing:
+				if reverseSwing == 0:
 					weaponAnim.play(Global.weapon.animString)
 				else:
 					weaponAnim.play_backwards(Global.weapon.animString)
 			else:
 				weaponAnim.play(Global.weapon.animString)
+			
+			reverseSwing += 1
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5

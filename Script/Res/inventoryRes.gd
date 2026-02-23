@@ -49,7 +49,7 @@ func remove_items_by_id(id: int = 0, amount: int = 1) -> void:
 		data[index].quantitiy -= amount
 
 func update() -> void:
-	maxSlots = grid.x * grid.y
+	maxSlots = roundi(grid.x) * roundi(grid.y)
 	
 	#Clear items with no quanitity
 	for i in data:

@@ -23,7 +23,7 @@ enum item_type {
 @export var throwable : bool = false
 @export_category("Base Item Data")
 @export var weight : float = 1.0
-@export var cost : int = 0
+@export var cost : float = 0
 @export var costVar : float = 0.2
 @export var rolled : bool = false
 @export var quantitiy : int = 1
@@ -47,7 +47,7 @@ func drop(amount: int = 1) -> void:
 	if not stackable: amount = 1
 	amount = clampi(amount, 1, quantitiy)
 	unequip()
-	var newGroundItem : Node2D = load("res://Assets/prefabs/groundItem.tscn").instantiate()
+	var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
 	newGroundItem.name = name
 	newGroundItem.position = Global.player.position
 	var newItem : BaseItem = self.duplicate()

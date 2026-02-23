@@ -1,6 +1,6 @@
 extends Node
 
-@onready var treeRes : PackedScene = preload("res://Assets/prefabs/tree.tscn")
+@onready var treeRes : PackedScene = preload("res://Assets/prefabs/objects/tree.tscn")
 @onready var worldData : World = preload("res://worldGen/Worlds/default.tres").duplicate(true)
 
 @export var thisSeed : int = -1 # -1 use random seed
@@ -176,15 +176,16 @@ func regen() -> void:
 	EnemySpawner.clearEnemies()
 
 func _process(_delta: float) -> void:
-	if Global.player: Global.player.get_node("Camera2D").make_current()
+	if Global.player:
+		var playerCamera : Camera2D = Global.player.get_node_or_null("Camera2D")
+		if playerCamera and playerCamera.is_inside_tree(): playerCamera.make_current()
 	
 	if Global.currentScene:
 		freeCam = Global.currentScene.get_node_or_null("FreeCam")
 		hasWorldNode = Global.currentScene.get_node_or_null("World")
 		
 		#Enable/Disable free cam
-		if not Global.player and freeCam:
-			freeCam.make_current()
+		if not Global.player and freeCam and freeCam.is_inside_tree(): freeCam.make_current()
 		
 		#Create world node
 		if not hasWorldNode and Global.scenes[Global.sceneIndex].worldGen:

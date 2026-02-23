@@ -45,7 +45,7 @@ func rollStats() -> void:
 	critMulti = rng.randf_range(1.5, 2.5)
 	
 	var costVariance : float = cost * costVar
-	cost = rng.randf_range(cost - costVariance, cost + costVariance) * rarityMult * progMult
+	cost = roundi(rng.randf_range(cost - costVariance, cost + costVariance) * rarityMult * progMult)
 	
 	Global.rng = randi()
 	rolled = true

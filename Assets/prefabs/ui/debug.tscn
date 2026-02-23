@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://vuvv7u5owupe"]
+
+[ext_resource type="Script" uid="uid://bekdh1gyji8n7" path="res://Script/debug_menu.gd" id="1_6swca"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_t7ki4"]
+
+[node name="Debug" type="CanvasLayer" unique_id=188881192]
+script = ExtResource("1_6swca")
+
+[node name="SpawnMenu" type="Control" parent="." unique_id=879096677]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BG" type="ColorRect" parent="SpawnMenu" unique_id=1067855587]
+custom_minimum_size = Vector2(800, 600)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_right = 400.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.3137255, 0.3137255, 0.3137255, 0.5647059)
+
+[node name="Title" type="Label" parent="SpawnMenu/BG" unique_id=982056284]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_t7ki4")
+theme_override_font_sizes/font_size = 36
+text = "Spawn"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SpawnMenu/BG" unique_id=1278794485]
+layout_mode = 0
+offset_top = 50.0
+offset_right = 800.0
+offset_bottom = 600.0
