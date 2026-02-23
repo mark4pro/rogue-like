@@ -7,19 +7,24 @@ enum item_type {
 	ARMOR
 }
 
+@export_category("Base Item")
 @export var id : int = 0
 @export var name : String = ""
-@export var itemType : item_type = item_type.USABLE
+@export_category("Icon")
 @export var itemIcon : Texture2D
-@export var iconScale : float = 1
+@export var iconScale : float = 1.3
+@export_range(0, 360, 0.1) var iconRotOffset : float = 0
+@export_category("Ground")
 @export var groundScale : float = 1
+@export_category("Base Item Descriptors")
+@export var itemType : item_type = item_type.USABLE
 @export var equippable : bool = false
 @export var stackable : bool = true
 @export var throwable : bool = false
+@export_category("Base Item Data")
 @export var weight : float = 1.0
 @export var cost : int = 0
 @export var costVar : float = 0.2
-
 @export var rolled : bool = false
 @export var quantitiy : int = 1
 

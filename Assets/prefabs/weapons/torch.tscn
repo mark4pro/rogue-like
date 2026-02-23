@@ -52,6 +52,7 @@ hue_variation_max = -2.2351742e-08
 sub_emitter_keep_velocity = true
 
 [node name="torch" type="Node2D" unique_id=309199670 node_paths=PackedStringArray("col", "sprite")]
+rotation = 0.7853982
 scale = Vector2(0.4, 0.4)
 script = ExtResource("1_qh0re")
 col = NodePath("rotPoint/Sprite2D/Col")

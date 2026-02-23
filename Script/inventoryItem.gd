@@ -1,5 +1,8 @@
 extends TextureRect
 
+@onready var icon : TextureRect = $InventoryItem
+@onready var amountTxt : Label = $Amount
+
 @export var equippedColor : Color = Color.RED
 @export var item : BaseItem = null
 
@@ -9,15 +12,13 @@ var latch : bool = false
 
 func _ready() -> void:
 	if item:
-		$InventoryItem.texture = item.itemIcon
-		$InventoryItem.scale.x = item.iconScale
-		$InventoryItem.scale.y = item.iconScale
-	else: $Amount.visible = false
+		icon.texture = item.itemIcon
+		icon.scale = Vector2.ONE * item.iconScale
+		icon.rotation_degrees = item.iconRotOffset
+	else: amountTxt.visible = false
 
 func _process(_delta: float) -> void:
 	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): latch = false
-	
-	$InventoryItem.size = size
 	
 	if item:
 		var mousePos : Vector2 = get_viewport().get_mouse_position()
@@ -25,10 +26,13 @@ func _process(_delta: float) -> void:
 		touching = mousePos.x >= global_position.x and mousePos.x <= global_position.x + size.x \
 		and mousePos.y >= global_position.y and mousePos.y <= global_position.y + size.y
 		
-		$Amount.text = str(item.quantitiy)
+		amountTxt.text = str(item.quantitiy)
 		if item.quantitiy <= 0:
 			item = null
-			$InventoryItem.texture = null
+			icon.texture = null
+		
+		icon.position = (size / 2) - (icon.size / 2)
+		icon.pivot_offset = (icon.size / 2)
 		
 		var comp : Control = Global.player.Inventory_UI.get_node_or_null("Compare")
 		var contextMenu : Control = Global.player.Inventory_UI.get_node_or_null("ContextMenu")
@@ -61,7 +65,7 @@ func _process(_delta: float) -> void:
 			queue_redraw()
 			redraw = false
 	else:
-		$Amount.visible = false
+		amountTxt.visible = false
 
 func _draw() -> void:
 	if item and item.equippable:
