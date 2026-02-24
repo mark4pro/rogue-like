@@ -65,4 +65,4 @@ func place(pos: Vector2) -> void:
 		newPlacedScene.name = name
 		newPlacedScene.global_position = pos
 		Global.currentScene.add_child(newPlacedScene)
-		print("banan")
+		quantitiy -= 1
