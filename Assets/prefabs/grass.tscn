@@ -7,6 +7,8 @@
 script = ExtResource("1_s3ogv")
 
 [node name="Area2D" type="Area2D" parent="." unique_id=235042182]
+collision_layer = 4
+collision_mask = 8
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D" unique_id=1515735072]
 position = Vector2(1, 1)
