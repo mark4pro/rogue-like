@@ -266,7 +266,7 @@ func _process(delta: float) -> void:
 				weaponAnim.play(Global.weapon.animString)
 			
 			reverseSwing += 1
-	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_action_pressed("place"):
+	if Global.weapon and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_action_pressed("place"):
 		Global.weapon.place(get_global_mouse_position())
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5
