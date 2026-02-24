@@ -53,4 +53,6 @@ func update() -> void:
 	
 	#Clear items with no quanitity
 	for i in data:
-		if i.quantitiy <= 0: data.erase(i)
+		if i.quantitiy <= 0: 
+			if Global.weapon == i: Global.weapon = null
+			data.erase(i)

@@ -32,6 +32,7 @@ func genList() -> void:
 	
 	for g in items:
 		var newItemUI : ColorRect = itemUI.instantiate()
+		newItemUI.item = g
 		
 
 func _ready() -> void:
