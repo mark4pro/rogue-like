@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://vuvv7u5owupe"]
 
-[ext_resource type="Script" uid="uid://bekdh1gyji8n7" path="res://Script/debug_menu.gd" id="1_6swca"]
-[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_t7ki4"]
+[ext_resource type="Script" uid="uid://bekdh1gyji8n7" path="res://Script/debug_menu.gd" id="1_v8gm5"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_ddlju"]
 
 [node name="Debug" type="CanvasLayer" unique_id=188881192]
-script = ExtResource("1_6swca")
+script = ExtResource("1_v8gm5")
 
 [node name="SpawnMenu" type="Control" parent="." unique_id=879096677]
 layout_mode = 3
@@ -37,7 +37,7 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 23.0
 grow_horizontal = 2
-theme_override_fonts/font = ExtResource("2_t7ki4")
+theme_override_fonts/font = ExtResource("2_ddlju")
 theme_override_font_sizes/font_size = 36
 text = "Spawn"
 horizontal_alignment = 1

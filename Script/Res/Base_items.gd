@@ -21,6 +21,7 @@ enum item_type {
 @export var equippable : bool = false
 @export var stackable : bool = true
 @export var throwable : bool = false
+@export var placable : bool = false
 @export_category("Base Item Data")
 @export var weight : float = 1.0
 @export var cost : float = 0
@@ -55,3 +56,7 @@ func drop(amount: int = 1) -> void:
 	newGroundItem.item = newItem
 	quantitiy -= amount
 	Global.currentScene.add_child(newGroundItem)
+
+func place(pos: Vector2) -> void:
+	if placable and equippable:
+		pass
