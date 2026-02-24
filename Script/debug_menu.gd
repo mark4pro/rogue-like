@@ -41,4 +41,4 @@ func _ready() -> void:
 	genList()
 
 func _process(delta: float) -> void:
-	pass
+	if Global.player.is_dead: queue_free()

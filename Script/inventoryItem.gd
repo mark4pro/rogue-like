@@ -20,6 +20,9 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): latch = false
 	
+	var comp : Control = Global.player.Inventory_UI.get_node_or_null("Compare")
+	var contextMenu : Control = Global.player.Inventory_UI.get_node_or_null("ContextMenu")
+	
 	if item:
 		var mousePos : Vector2 = get_viewport().get_mouse_position()
 		
@@ -33,9 +36,6 @@ func _process(_delta: float) -> void:
 		
 		icon.position = (size / 2) - (icon.size / 2)
 		icon.pivot_offset = (icon.size / 2)
-		
-		var comp : Control = Global.player.Inventory_UI.get_node_or_null("Compare")
-		var contextMenu : Control = Global.player.Inventory_UI.get_node_or_null("ContextMenu")
 		
 		if touching:
 			if not contextMenu:
@@ -66,6 +66,8 @@ func _process(_delta: float) -> void:
 			redraw = false
 	else:
 		amountTxt.visible = false
+		if comp and comp.item == item: comp.queue_free()
+		if contextMenu and contextMenu.item == item: contextMenu.queue_free()
 
 func _draw() -> void:
 	if item and item.equippable:

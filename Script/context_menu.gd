@@ -5,16 +5,17 @@ var item : BaseItem
 var touching : bool = true
 
 func _ready() -> void:
-	if item.equippable:
-		#$PanelContainer/VBoxContainer/useBttn.visible = true
-		$PanelContainer/VBoxContainer/dropBttn.visible = true
-		$PanelContainer/VBoxContainer/equipBttn.visible = false
-		$PanelContainer/VBoxContainer/unequipBttn.visible = false
-	else:
-		$PanelContainer/VBoxContainer/useBttn.visible = true
-		$PanelContainer/VBoxContainer/dropBttn.visible = true
-		$PanelContainer/VBoxContainer/equipBttn.visible = false
-		$PanelContainer/VBoxContainer/unequipBttn.visible = false
+	if item:
+		if item.equippable:
+			#$PanelContainer/VBoxContainer/useBttn.visible = true
+			$PanelContainer/VBoxContainer/dropBttn.visible = true
+			$PanelContainer/VBoxContainer/equipBttn.visible = false
+			$PanelContainer/VBoxContainer/unequipBttn.visible = false
+		else:
+			$PanelContainer/VBoxContainer/useBttn.visible = true
+			$PanelContainer/VBoxContainer/dropBttn.visible = true
+			$PanelContainer/VBoxContainer/equipBttn.visible = false
+			$PanelContainer/VBoxContainer/unequipBttn.visible = false
 
 func _process(_delta: float) -> void:
 	var mousePos : Vector2 = get_viewport().get_mouse_position()
@@ -36,6 +37,7 @@ func _on_use_bttn_button_down() -> void:
 
 func _on_drop_bttn_button_down() -> void:
 	item.drop()
+	if item.quantitiy - 1 <= 0: queue_free()
 
 func _on_unequip_bttn_button_down() -> void:
 	item.unequip()

@@ -85,7 +85,7 @@ func _ready() -> void:
 				
 				stats.add_child(newLabel.duplicate())
 				
-				newLabel.text = "\t\tCrit Chance: (%s)" % [
+				newLabel.text = "\t\tCrit Multiplier: (%s)" % [
 					str(Global.formatFloat(item.critMulti))
 				]
 				

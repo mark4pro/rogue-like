@@ -15,11 +15,12 @@ func _process(delta: float) -> void:
 	if touching:
 		color = hoverColor
 		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not latch:
-			var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
-			newGroundItem.name = name
-			newGroundItem.position = Global.player.position
-			newGroundItem.item = item.duplicate()
-			Global.currentScene.add_child(newGroundItem)
+			#var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
+			#newGroundItem.name = name
+			#newGroundItem.position = Global.player.position
+			#newGroundItem.item = item.duplicate()
+			#Global.currentScene.add_child(newGroundItem)
+			item.drop(1, false)
 			latch = true
 	else:
 		color = normColor

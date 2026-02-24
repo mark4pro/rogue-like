@@ -67,10 +67,7 @@ func _ready():
 	pauseMenu.visible = false
 	deathScreen.visible = false
 	Global.inventoryUI = $inventoryUI/inventory
-
-
 	
-
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
 	
@@ -288,30 +285,33 @@ func _process(delta: float) -> void:
 	else:
 		$UI/Days.text = "Days: " + str(Global.runDays)
 	
-	if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not is_dead:
-		Global.inventoryUI.gen_inventory()
-		Inventory_UI.visible = !Inventory_UI.visible
-		get_tree().paused = !get_tree().paused
+	var dbck : CanvasLayer = get_node_or_null("debugMenu")
 	
 	#pause menu 
 	if Input.is_action_just_pressed("pause"):
 		get_tree().paused = !get_tree().paused
-		if not Inventory_UI.visible:
+		if not Inventory_UI.visible and not dbck:
 			pauseMenu.visible = !pauseMenu.visible
 		else:
 			Inventory_UI.visible = false
+			if dbck: dbck.queue_free()
 	
-	#debug menu
-	var dbck : CanvasLayer = get_node_or_null("debugMenu")
-	
-	if Input.is_action_just_pressed("debug"):
-		if not dbck:
-			var dbmenu : CanvasLayer = load("res://Assets/prefabs/ui/debug.tscn").instantiate()
-			dbmenu.name = "debugMenu"
-			add_child(dbmenu)
-		else:
-			dbck.queue_free()
-		get_tree().paused = !get_tree().paused
+	if not is_dead:
+		#inventory menu
+		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck:
+			Global.inventoryUI.gen_inventory()
+			Inventory_UI.visible = !Inventory_UI.visible
+			get_tree().paused = !get_tree().paused
+		
+		#debug menu
+		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible:
+			if not dbck:
+				var dbmenu : CanvasLayer = load("res://Assets/prefabs/ui/debug.tscn").instantiate()
+				dbmenu.name = "debugMenu"
+				add_child(dbmenu)
+			else:
+				dbck.queue_free()
+			get_tree().paused = !get_tree().paused
 
 func _physics_process(delta: float) -> void:
 	if not get_tree().paused:

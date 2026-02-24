@@ -46,17 +46,32 @@ func unequip() -> void:
 func throw() -> void:
 	pass
 
-func drop(amount: int = 1) -> void:
+func drop(amount: int = 1, decrement: bool = true) -> void:
 	if not stackable: amount = 1
 	amount = clampi(amount, 1, quantitiy)
 	unequip()
+	
+	if stackable:
+		var groundItems : Array[Node] = Global.getGroundItems()
+		
+		if groundItems.size() != 0:
+			for i in groundItems:
+				var base : Node2D = i
+				
+				if Global.player.global_position.distance_to(base.global_position) > Global.pickupRange: continue
+				
+				if base.item.id == id:
+					base.item.quantitiy += amount
+					if decrement: quantitiy -= amount
+					return
+	
 	var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
 	newGroundItem.name = name
 	newGroundItem.position = Global.player.position
 	var newItem : BaseItem = self.duplicate()
 	newItem.quantitiy = amount
 	newGroundItem.item = newItem
-	quantitiy -= amount
+	if decrement: quantitiy -= amount
 	Global.currentScene.add_child(newGroundItem)
 
 func place(pos: Vector2) -> void:

@@ -13,6 +13,7 @@ var compareUI : PackedScene = preload("res://Assets/prefabs/ui/compare.tscn")
 @export var weapon : WeaponItem = null
 #@export var armor : ArmorItem = null
 @export var money : int = 0
+@export var pickupRange : float = 50
 
 var messageTimer : Timer = null
 var messageBox : VBoxContainer = null
@@ -87,6 +88,7 @@ func saveGame() -> void:
 		var save_data : SaveData = SaveData.new()
 		save_data.inventory = inventory
 		save_data.weapon = weapon
+		save_data.money = money
 		save_data.timeOfDay = timeOfDay
 		save_data.totalDays = totalDays
 		save_data.lastRunDays = lastRunDays
@@ -246,6 +248,9 @@ func damageAnim(node: Node2D, damage: float = 10) -> void:
 		
 		tween.tween_property(node, "rotation", rot, 0.05)
 		tween.tween_property(node, "rotation", 0.0, 0.1)
+
+func getGroundItems() -> Array[Node]:
+	return get_tree().get_nodes_in_group("items")
 
 func _process(delta: float) -> void:
 	Global.inventory.update()
