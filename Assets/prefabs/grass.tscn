@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cglxhp67imaqr"]
+
+[ext_resource type="Script" uid="uid://gwelc7p1srv7" path="res://grass.gd" id="1_s3ogv"]
+[ext_resource type="Texture2D" uid="uid://bre07aypqooa3" path="res://Assets/imgs/grass.png" id="2_1nykx"]
+
+[node name="Grass" type="Node2D" unique_id=1803708025]
+script = ExtResource("1_s3ogv")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=235042182]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D" unique_id=1515735072]
+position = Vector2(1, 1)
+polygon = PackedVector2Array(-9, -25, -17, 30, 15, 30)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2000564036]
+texture = ExtResource("2_1nykx")
