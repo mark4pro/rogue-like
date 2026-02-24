@@ -28,7 +28,8 @@ func getItems() -> void:
 	dir.list_dir_end()
 
 func genList() -> void:
-	for i in listContainer: i.queue_free()
+	for i in listContainer.get_children(): 
+		i.queue_free()
 	
 	for g in items:
 		var newItemUI : ColorRect = itemUI.instantiate()
@@ -37,6 +38,7 @@ func genList() -> void:
 
 func _ready() -> void:
 	getItems()
+	genList()
 
 func _process(delta: float) -> void:
 	pass

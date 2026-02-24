@@ -61,8 +61,9 @@ func drop(amount: int = 1) -> void:
 
 func place(pos: Vector2) -> void:
 	if placable and equippable:
-		var newPlacedScene = placedScene.instantiate()
+		var newPlacedScene : Node2D = placedScene.instantiate()
 		newPlacedScene.name = name
 		newPlacedScene.global_position = pos
 		Global.currentScene.add_child(newPlacedScene)
+		newPlacedScene.z_index = 3
 		quantitiy -= 1

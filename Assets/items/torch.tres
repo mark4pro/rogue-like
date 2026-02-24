@@ -13,6 +13,7 @@ name = "Torch"
 itemIcon = ExtResource("1_8kup2")
 iconScale = 1.2
 iconRotOffset = 45.0
+groundScale = 0.4
 placedScene = ExtResource("3_6ykqe")
 itemType = 1
 equippable = true

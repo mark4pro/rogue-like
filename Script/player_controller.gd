@@ -300,6 +300,18 @@ func _process(delta: float) -> void:
 			pauseMenu.visible = !pauseMenu.visible
 		else:
 			Inventory_UI.visible = false
+	
+	#debug menu
+	var dbck : CanvasLayer = get_node_or_null("debugMenu")
+	
+	if Input.is_action_just_pressed("debug"):
+		if not dbck:
+			var dbmenu : CanvasLayer = load("res://Assets/prefabs/ui/debug.tscn").instantiate()
+			dbmenu.name = "debugMenu"
+			add_child(dbmenu)
+		else:
+			dbck.queue_free()
+		get_tree().paused = !get_tree().paused
 
 func _physics_process(delta: float) -> void:
 	if not get_tree().paused:

@@ -80,6 +80,7 @@ shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
 
 [node name="Hub" type="Node2D" unique_id=1948641179]
+y_sort_enabled = true
 
 [node name="House" type="Node2D" parent="." unique_id=573323539]
 script = ExtResource("1_ourlr")
@@ -159,9 +160,6 @@ texture = ExtResource("6_f11wv")
 texture_scale = 7.0
 height = 100.0
 
-[node name="Dummy" parent="House" unique_id=350363775 instance=ExtResource("11_3du0j")]
-position = Vector2(-134, -36)
-
 [node name="Path" type="Line2D" parent="." unique_id=923425707]
 z_index = 1
 texture_repeat = 2
@@ -208,6 +206,10 @@ collision_mask = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Exit/Area2D" unique_id=372835585]
 position = Vector2(0, 64)
 shape = SubResource("CircleShape2D_4vksb")
+
+[node name="Dummy" parent="." unique_id=350363775 instance=ExtResource("11_3du0j")]
+z_index = 3
+position = Vector2(-134, -36)
 
 [node name="Bounds" type="Sprite2D" parent="." unique_id=1784180589]
 modulate = Color(1, 1, 1, 0.9411765)

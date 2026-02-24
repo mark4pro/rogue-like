@@ -4,8 +4,9 @@
 [ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="1_n5cux"]
 
 [node name="itemSpawn" type="ColorRect" unique_id=1784761731]
+modulate = Color(1, 1, 1, 0.39215687)
 custom_minimum_size = Vector2(800, 50)
-color = Color(0.42745098, 0.42745098, 0.42745098, 0.39215687)
+color = Color(0.51718444, 0.5171845, 0.5171844, 1)
 script = ExtResource("1_657rg")
 
 [node name="title" type="Label" parent="." unique_id=970985554]
@@ -19,3 +20,6 @@ theme_override_fonts/font = ExtResource("1_n5cux")
 theme_override_font_sizes/font_size = 42
 text = "Test"
 vertical_alignment = 1
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]
