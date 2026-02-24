@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://biahn66yel13i" path="res://Assets/prefabs/objects/tree.tscn" id="9_f11wv"]
 [ext_resource type="Script" uid="uid://vrbdmd6n1uor" path="res://Script/Hub_exit.gd" id="9_y6p6t"]
 [ext_resource type="PackedScene" uid="uid://csunnqftn32r0" path="res://Assets/prefabs/objects/dummy.tscn" id="11_3du0j"]
+[ext_resource type="PackedScene" uid="uid://cglxhp67imaqr" path="res://Assets/prefabs/grass.tscn" id="20_hy0h5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
 shader = ExtResource("4_vkujn")
@@ -261,6 +262,10 @@ rotation = -3.73675
 
 [node name="Ambient" type="CanvasModulate" parent="." unique_id=1210830975]
 color = Color(0.34407556, 0.3440758, 0.34407565, 1)
+
+[node name="Grass" parent="." unique_id=1803708025 instance=ExtResource("20_hy0h5")]
+position = Vector2(-102, 228)
+scale = Vector2(0.3, 0.3)
 
 [connection signal="body_entered" from="Exit/Area2D" to="Exit" method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Exit/Area2D" to="Exit" method="_on_area_2d_body_exited"]
