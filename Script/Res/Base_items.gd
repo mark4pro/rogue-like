@@ -16,6 +16,8 @@ enum item_type {
 @export_range(0, 360, 0.1) var iconRotOffset : float = 0
 @export_category("Ground")
 @export var groundScale : float = 1
+@export_category("Placed")
+@export var placedScene : PackedScene = null
 @export_category("Base Item Descriptors")
 @export var itemType : item_type = item_type.USABLE
 @export var equippable : bool = false
@@ -59,4 +61,4 @@ func drop(amount: int = 1) -> void:
 
 func place(pos: Vector2) -> void:
 	if placable and equippable:
-		pass
+		

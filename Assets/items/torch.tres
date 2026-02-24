@@ -16,4 +16,5 @@ iconRotOffset = 45.0
 itemType = 1
 equippable = true
 throwable = true
+placable = true
 metadata/_custom_type_script = "uid://8d6fyj0lrxpo"
