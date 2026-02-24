@@ -61,4 +61,8 @@ func drop(amount: int = 1) -> void:
 
 func place(pos: Vector2) -> void:
 	if placable and equippable:
-		
+		var newPlacedScene = placedScene.instantiate()
+		newPlacedScene.name = name
+		newPlacedScene.global_position = pos
+		Global.currentScene.add_child(newPlacedScene)
+		print("banan")

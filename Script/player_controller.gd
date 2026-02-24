@@ -254,7 +254,7 @@ func _process(delta: float) -> void:
 		var wAngle : float = (get_global_mouse_position() - global_position).angle()
 		weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
 		
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
+		if not Input.is_action_pressed("place") and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
 			reverseSwing = reverseSwing % 2
 			
 			if Global.weapon.animString == "swing":
@@ -266,7 +266,8 @@ func _process(delta: float) -> void:
 				weaponAnim.play(Global.weapon.animString)
 			
 			reverseSwing += 1
-	
+	if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_action_pressed("place"):
+		Global.weapon.place(get_global_mouse_position())
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5
 	health_bar.size.x = (health / max_health) * maxHBSize
