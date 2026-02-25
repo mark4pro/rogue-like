@@ -1,4 +1,4 @@
-[gd_resource type="Resource" format=3 uid="uid://df3l0m0m8iygs"]
+[gd_resource type="Resource" script_class="SpeedItem" format=3 uid="uid://df3l0m0m8iygs"]
 
 [ext_resource type="Texture2D" uid="uid://nlftx3o4vcoo" path="res://Assets/imgs/items/speed_boost.png" id="1_is218"]
 [ext_resource type="Script" uid="uid://vovdn3ev27hx" path="res://Script/Res/speed_boost.gd" id="2_cdlgm"]
