@@ -1,8 +1,0 @@
-[gd_scene format=3 uid="uid://c6e4d52r2s2or"]
-
-[ext_resource type="Texture2D" uid="uid://nlftx3o4vcoo" path="res://Assets/imgs/items/speed_boost.png" id="1_1ewcj"]
-
-[node name="speed_boost" type="Node2D" unique_id=892871718]
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=419845686]
-texture = ExtResource("1_1ewcj")
