@@ -1,0 +1,10 @@
+[gd_resource type="Resource" format=3 uid="uid://bc6666f3sfclt"]
+
+[ext_resource type="Texture2D" uid="uid://c8wahtcopr2yf" path="res://Assets/imgs/items/More_health.png" id="1_wvpmx"]
+[ext_resource type="Script" uid="uid://62myr4f3nbp7" path="res://Script/Res/extraHealthItem.gd" id="2_o3jtb"]
+
+[resource]
+script = ExtResource("2_o3jtb")
+id = 16
+name = "More Health"
+itemIcon = ExtResource("1_wvpmx")
