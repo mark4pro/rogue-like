@@ -15,6 +15,7 @@ var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 @onready var weaponPivot : Node2D = $RotPoint/WeaponRotPoint/WeaponPivot
 @onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
 @onready var weaponAnim : AnimationPlayer = $Weapon
+@onready var speed_boost_timer : Timer = $speed_boost
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -177,7 +178,7 @@ func _process(delta: float) -> void:
 			3:
 				if anim != "end_roll": sprite.play("end_roll")
 				if not sprite.is_playing(): sprite.play("end_roll")
-		
+	
 		#Activate roll
 		if Input.is_action_just_pressed("roll") and not is_rolling and can_roll and not is_dead:
 			roll_target = camera.get_global_mouse_position()
@@ -335,7 +336,7 @@ func _physics_process(delta: float) -> void:
 		if is_rolling and roll_state != 1:
 			rot_point.rotation += rspeed * delta
 			apply_impulse(roll_dir * roll_speed * 1000 * delta)
-
+			
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
 
