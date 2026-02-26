@@ -58,8 +58,9 @@ var roll_dir : Vector2 = Vector2.ZERO
 
 var bounds : CollisionPolygon2D = null
 
-var oldWeapon : WeaponItem = null
-var reverseSwing : int = 0
+#var oldWeapon : WeaponItem = null
+#var reverseSwing : int = 0
+var weapSys : WeaponSys = WeaponSys.new()
 
 func _ready():
 	$UI.visible = true
@@ -225,44 +226,52 @@ func _process(delta: float) -> void:
 		roll_cooldown.paused = true
 		Global.messageTimer.paused = true
 	
-	#Weapon stuff
-	var hasWeapon = weaponPivot.get_child_count() > 0
+	##Weapon stuff
+	#var hasWeapon = weaponPivot.get_child_count() > 0
+	#
+	##Equip weapon
+	#if Global.weapon and not oldWeapon == Global.weapon:
+		#oldWeapon = Global.weapon
+		#if hasWeapon: weaponPivot.get_children()[0].queue_free()
+		#
+		#var newWeapon : Node2D = Global.weapon.weaponScene.instantiate()
+		#newWeapon.name = "weapon"
+		#if "animPlayer" in newWeapon: newWeapon.animPlayer = $Weapon
+		#if "playerSpritePivot" in newWeapon: newWeapon.playerSpritePivot = rot_point
+		#if "entity" in newWeapon: newWeapon.entity = self
+		#if "weapon" in newWeapon: newWeapon.weapon = Global.weapon
+		#
+		#weaponPivot.add_child(newWeapon)
+	#
+	##Unequip weapon
+	#if not Global.weapon and hasWeapon:
+		#weaponPivot.get_children()[0].queue_free()
+		#oldWeapon = null
+	#
+	#if hasWeapon and not get_tree().paused:
+		#var wAngle : float = (get_global_mouse_position() - global_position).angle()
+		#weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
+		#
+		#if not Input.is_action_pressed("place") and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
+			#reverseSwing = reverseSwing % 2
+			#
+			#if Global.weapon.animString == "swing":
+				#if reverseSwing == 0:
+					#weaponAnim.play(Global.weapon.animString)
+				#else:
+					#weaponAnim.play_backwards(Global.weapon.animString)
+			#else:
+				#weaponAnim.play(Global.weapon.animString)
+			#
+			#reverseSwing += 1
 	
-	#Equip weapon
-	if Global.weapon and not oldWeapon == Global.weapon:
-		oldWeapon = Global.weapon
-		if hasWeapon: weaponPivot.get_children()[0].queue_free()
-		
-		var newWeapon : Node2D = Global.weapon.weaponScene.instantiate()
-		newWeapon.name = "weapon"
-		if "animPlayer" in newWeapon: newWeapon.animPlayer = $Weapon
-		if "playerSpritePivot" in newWeapon: newWeapon.playerSpritePivot = rot_point
-		if "entity" in newWeapon: newWeapon.entity = self
-		if "weapon" in newWeapon: newWeapon.weapon = Global.weapon
-		
-		weaponPivot.add_child(newWeapon)
-	
-	#Unequip weapon
-	if not Global.weapon and hasWeapon:
-		weaponPivot.get_children()[0].queue_free()
-		oldWeapon = null
-	
-	if hasWeapon and not get_tree().paused:
-		var wAngle : float = (get_global_mouse_position() - global_position).angle()
-		weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
-		
-		if not Input.is_action_pressed("place") and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
-			reverseSwing = reverseSwing % 2
-			
-			if Global.weapon.animString == "swing":
-				if reverseSwing == 0:
-					weaponAnim.play(Global.weapon.animString)
-				else:
-					weaponAnim.play_backwards(Global.weapon.animString)
-			else:
-				weaponAnim.play(Global.weapon.animString)
-			
-			reverseSwing += 1
+	weapSys.parentNode = self
+	weapSys.weapon = Global.weapon
+	weapSys.update(delta, get_global_mouse_position())
+	if not get_tree().paused and not Input.is_action_pressed("place") \
+	and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) \
+	and not weapSys.isAttacking:
+		weapSys.attack()
 	
 	#Place item
 	if Global.weapon and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_action_pressed("place"):

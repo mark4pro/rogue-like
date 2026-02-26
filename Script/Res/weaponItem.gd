@@ -1,13 +1,28 @@
 extends BaseItem
 class_name WeaponItem
 
+enum animType {
+	SWING,
+	AIM
+}
+
 @export_category("Weapon")
 @export var weaponScene : PackedScene = null
-@export var animString : String = "swing"
 
 @export_category("Weapon Stats")
 @export var baseDamage : float = 100
 @export var damageVar : float = 0.2
+
+@export_category("Animation")
+@export var animationType : animType = animType.SWING
+@export_category("Swing")
+@export var radius : Vector2 = Vector2(10, 10)
+@export var angleRange : Vector2 = Vector2(30, -30)
+@export var restAngle : float = -45
+@export var zRange : Vector2 = Vector2(-1, 1)
+@export var steps : int = 30
+@export var duration : float = 1
+@export var speedMulti : float = 1.0
 
 @export_category("Rolled Stats")
 @export var damage : Vector2
