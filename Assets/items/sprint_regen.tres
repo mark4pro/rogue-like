@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SprintItem" format=3 uid="uid://bk1kmcxh8558"]
+
+[ext_resource type="Texture2D" uid="uid://bdp260reabeyw" path="res://Assets/imgs/items/longer_sprint.png" id="1_i20is"]
+[ext_resource type="Script" uid="uid://clktn7oobnqim" path="res://Script/Res/sprintItem.gd" id="2_fqbpg"]
+
+[resource]
+script = ExtResource("2_fqbpg")
+id = 40
+name = "Sprint Regen"
+itemIcon = ExtResource("1_i20is")
