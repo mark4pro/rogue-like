@@ -15,7 +15,7 @@ var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 @onready var weaponPivot : Node2D = $RotPoint/WeaponRotPoint/WeaponPivot
 @onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
 @onready var weaponAnim : AnimationPlayer = $Weapon
-@onready var speed_boost_timer : Timer = $speed_boost
+@onready var boostTimer : Timer = $speedTimer
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -50,6 +50,7 @@ var played_death_anim : bool = false
 
 var dir : Vector2 = Vector2.ZERO
 var speed : float = walk_speed
+var speedBoostDecrement : float = 0
 
 var roll_state : int = 0 #0: not rolling, 1: start roll, 2: roll logic, 3: end roll
 
@@ -164,6 +165,13 @@ func _process(delta: float) -> void:
 			sprite.play("walk")
 		else:
 			if anim == "walk": sprite.stop()
+			
+	#speed boost timer
+	if speedBoostDecrement > 0:
+		walk_speed += 5
+		sprint_speed += 5
+		boostTimer.start()
+		
 		
 		#Roll animation state
 		match roll_state:
@@ -347,3 +355,9 @@ func _on_sprite_2d_animation_finished() -> void:
 func _on_message_timer_timeout() -> void:
 	var ms : Array[Node] = Global.messageBox.get_children()
 	if not ms.is_empty(): ms[0].queue_free()
+
+
+func _on_speed_timer_timeout() -> void:
+	speedBoostDecrement -= 1
+	walk_speed -= 5
+	sprint_speed -= 5
