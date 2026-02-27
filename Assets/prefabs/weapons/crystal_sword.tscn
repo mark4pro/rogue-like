@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://owsk3om5ppa4"]
+
+[ext_resource type="Texture2D" uid="uid://dgdu58kfdlxeb" path="res://Assets/imgs/weapons/crystal_sword.png" id="1_5g2y1"]
+[ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_wvcsr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wvcsr"]
+size = Vector2(9.846155, 32.000004)
+
+[node name="Sword" type="Node2D" unique_id=1725460815 node_paths=PackedStringArray("col", "sprite")]
+scale = Vector2(0.8, 0.8)
+script = ExtResource("1_wvcsr")
+col = NodePath("Sprite2D/Area2D")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=686228748]
+position = Vector2(-5.9604645e-08, -13.999998)
+scale = Vector2(0.609375, 0.81249994)
+texture = ExtResource("1_5g2y1")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=293451027]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=109730369]
+position = Vector2(-9.7812745e-08, -13.538464)
+scale = Vector2(0.99999976, 0.9999998)
+shape = SubResource("RectangleShape2D_wvcsr")
