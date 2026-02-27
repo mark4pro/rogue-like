@@ -1,7 +1,13 @@
 [gd_resource type="Resource" script_class="HealthItem" format=3 uid="uid://kb1c8jsesjn3"]
 
 [ext_resource type="Script" uid="uid://bocek0w82g3h1" path="res://Script/Res/heathItem.gd" id="1_irxwp"]
+[ext_resource type="Texture2D" uid="uid://c8wahtcopr2yf" path="res://Assets/imgs/items/More_health.png" id="1_m8vof"]
 
 [resource]
 script = ExtResource("1_irxwp")
+healthAmount = 50.0
+id = 823787638
+name = "More Health"
+itemIcon = ExtResource("1_m8vof")
+groundScale = 0.3
 metadata/_custom_type_script = "uid://bocek0w82g3h1"
