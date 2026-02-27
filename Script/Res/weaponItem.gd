@@ -22,7 +22,7 @@ enum animType {
 @export var zRange : Vector2 = Vector2(-1, 1)
 @export var steps : int = 30
 @export var duration : float = 1
-@export var speedMulti : float = 1.0
+@export var speedMulti : float = 2
 
 @export_category("Rolled Stats")
 @export var damage : Vector2

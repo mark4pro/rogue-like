@@ -73,7 +73,7 @@ func update(delta: float, target: Vector2) -> void:
 			else:
 				if isAttacking:
 					var step : float = delta / weapon.duration
-					t += step * attackDir
+					t += (step * attackDir) * weapon.speedMulti
 				
 				if t >= 1.0:
 					t = 1.0
