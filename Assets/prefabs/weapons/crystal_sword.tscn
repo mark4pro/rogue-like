@@ -2,9 +2,20 @@
 
 [ext_resource type="Texture2D" uid="uid://dgdu58kfdlxeb" path="res://Assets/imgs/weapons/crystal_sword.png" id="1_5g2y1"]
 [ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_wvcsr"]
+[ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="2_bb73d"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_krgje"]
+shader = ExtResource("2_bb73d")
+shader_parameter/debug = false
+shader_parameter/border_scale = 1.0
+shader_parameter/shadow_offset = Vector2(5, -5)
+shader_parameter/color = Color(0, 0, 0, 0.078431375)
+shader_parameter/blur_amount = 1.0000000475
+shader_parameter/shadow_scale = 1.5
+shader_parameter/disable_rotating = false
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wvcsr"]
-size = Vector2(9.846155, 32.000004)
+size = Vector2(13, 41)
 
 [node name="Sword" type="Node2D" unique_id=1725460815 node_paths=PackedStringArray("col", "sprite")]
 scale = Vector2(0.8, 0.8)
@@ -13,14 +24,17 @@ col = NodePath("Sprite2D/Area2D")
 sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=686228748]
-modulate = Color(1, 1, 1, 0.43529412)
-position = Vector2(-5.9604645e-08, -13.999998)
+modulate = Color(1, 1, 1, 0.7058824)
+material = SubResource("ShaderMaterial_krgje")
+position = Vector2(-3.5527137e-15, -17.5)
 scale = Vector2(0.609375, 0.81249994)
 texture = ExtResource("1_5g2y1")
 
 [node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=293451027]
+position = Vector2(5.830094e-15, 9.230769)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=109730369]
-position = Vector2(-9.7812745e-08, -13.538464)
-scale = Vector2(0.99999976, 0.9999998)
+visible = false
+position = Vector2(-6.7246265e-07, -17.25)
+scale = Vector2(0.9999995, 0.9999998)
 shape = SubResource("RectangleShape2D_wvcsr")
