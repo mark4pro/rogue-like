@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bbofvvd4rwy0v" path="res://Assets/imgs/weapons/over_grown.png" id="2_3hxgh"]
 [ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="2_u4v2o"]
 [ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="4_u4v2o"]
+[ext_resource type="Script" uid="uid://i5jb2fwvetnq" path="res://Script/over_grown.gd" id="5_peu7m"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_peu7m"]
 shader = ExtResource("2_u4v2o")
@@ -94,3 +95,8 @@ energy = 1.8
 blend_mode = 2
 texture = ExtResource("4_u4v2o")
 texture_scale = 0.1
+
+[node name="Ext" type="Node2D" parent="." unique_id=2146867670 node_paths=PackedStringArray("baseSword", "gpuPart")]
+script = ExtResource("5_peu7m")
+baseSword = NodePath("..")
+gpuPart = NodePath("../Sprite2D/GPUParticles2D")
