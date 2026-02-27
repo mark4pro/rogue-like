@@ -64,7 +64,7 @@ func _ready() -> void:
 				if critMultiComp == 0: critMultiColor = Color.WHITE
 				if critMultiComp < 0: critMultiColor = Color.RED
 				
-				newLabel.text = "\t\tCrit Chance: ([color=%s]%s[/color] | %s)" % [
+				newLabel.text = "\t\tCrit Multiplier: ([color=%s]%s[/color] | %s)" % [
 					critMultiColor.to_html(),
 					str(Global.formatFloat(critMultiComp)),
 					str(Global.formatFloat(item.critMulti))
