@@ -4,9 +4,9 @@ extends RigidBody2D
 @onready var cone : Node2D = $sprite2D/Cone
 
 @export_category("Base Stats")
+@export var weapon : WeaponItem = null
 @export var maxHealth : float = 100
 @export var health : float = 100
-@export var damage : float = 0.5
 @export_category("Movement")
 @export var speed : float = 7
 @export var stopDist : float = 65
@@ -43,6 +43,8 @@ var inSiteTime : float = 0
 var endChaseTime : float = 0
 
 var dir : Vector2 = Vector2.ZERO
+
+var weapSys : WeaponSys = WeaponSys.new()
 
 func take_damage(data: Dictionary):
 	if not get_tree().paused:
@@ -85,7 +87,6 @@ func _process(delta: float) -> void:
 	$UI/healthBar.value = (health / maxHealth) * 100
 	
 	if health <= 0: queue_free()
-	
 	cone.pos = eyePos
 	cone.dir = eyeDir
 	cone.vAngle = visionAngle
@@ -109,6 +110,11 @@ func _process(delta: float) -> void:
 		$Marker2D.position.x = 13
 	
 	if Global.debugVision: cone.queue_redraw()
+	
+	weapSys.parentNode = self
+	weapSys.posOffset = Vector2(0, 0)
+	weapSys.weapon = weapon
+	if Global.player: weapSys.update(delta, Global.player.position)
 	
 	match currentState:
 		state.WONDER:
@@ -169,7 +175,11 @@ func _process(delta: float) -> void:
 		
 		nav.set_velocity(dir * speed * 1000 * delta)
 	else:
-			nav.set_velocity(Vector2.ZERO)
+		nav.set_velocity(Vector2.ZERO)
+		
+		if currentState == state.CHASE and \
+		global_position.distance_to(Global.player.global_position) <= stopDist:
+			if not get_tree().paused and not weapSys.isAttacking: weapSys.attack()
 
 func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
 	linear_velocity = safe_velocity

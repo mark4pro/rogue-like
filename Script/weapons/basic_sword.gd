@@ -9,6 +9,10 @@ extends Node2D
 
 var hitTargets : Array = []
 
+func reset() -> void:
+	col.monitoring = false
+	hitTargets = []
+
 func _ready() -> void:
 	if weapSys and col and weapSys.parentNode:
 		col.set_collision_layer_value(1, false)
@@ -34,9 +38,6 @@ func _process(_delta: float) -> void:
 					if b.has_method("take_damage") and not hitTargets.has(b):
 						b.take_damage(weapSys.weapon.genDamage())
 						hitTargets.append(b)
-			else:
-				col.monitoring = false
-				hitTargets = []
 
 func _on_col_area_entered(area: Area2D) -> void:
 	var parent = area.get_parent()

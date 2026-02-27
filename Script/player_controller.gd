@@ -93,7 +93,6 @@ func _ready():
 		camera.limit_right = int(bottomRight.x)
 		camera.limit_bottom = int(bottomRight.y)
 
-
 func take_damage(data: Dictionary):
 	if not is_rolling and not get_tree().paused:
 		health -= data.value
@@ -233,7 +232,8 @@ func _process(delta: float) -> void:
 	
 	weapSys.parentNode = self
 	weapSys.posOffset = Vector2(0, 5)
-	weapSys.weapon = Global.weapon
+	weapSys.rotOffset = rot_point.rotation
+	weapSys.weapon = Global.weapon if not is_dead else null
 	weapSys.update(delta, get_global_mouse_position())
 	if not get_tree().paused and not Input.is_action_pressed("place") \
 	and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) \

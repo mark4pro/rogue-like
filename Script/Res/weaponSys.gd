@@ -4,6 +4,7 @@ class_name WeaponSys
 @export var parentNode = null
 @export var weapon : WeaponItem = null
 @export var posOffset : Vector2 = Vector2.ZERO
+@export var rotOffset : float = 0
 
 @export var time : float = 0
 @export var isAttacking : bool = false
@@ -54,7 +55,7 @@ func update(delta: float, target: Vector2) -> void:
 			oldWeapon = weapon
 		
 		if weapon:
-			var rot : float = (target - (parentNode.global_position + posOffset)).angle()
+			var rot : float = (target - (parentNode.global_position + posOffset)).angle() + rotOffset
 			var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.angleRange
 			var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.radius, angRange, weapon.steps)
 			
@@ -77,10 +78,12 @@ func update(delta: float, target: Vector2) -> void:
 				
 				if t >= 1.0:
 					t = 1.0
+					weaponNode.reset()
 					isAttacking = false
 					attackDir = -1
 				elif t <= 0.0:
 					t = 0.0
+					weaponNode.reset()
 					isAttacking = false
 					attackDir = 1
 				

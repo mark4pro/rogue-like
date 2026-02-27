@@ -66,6 +66,8 @@ func rollStats() -> void:
 	rolled = true
 
 func genDamage() -> Dictionary:
+	if not rolled: rollStats()
+	
 	var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = Global.rng
 	
