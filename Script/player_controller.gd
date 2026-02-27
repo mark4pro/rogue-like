@@ -12,9 +12,6 @@ var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 @onready var camera : Camera2D = $Camera2D
 @onready var pauseMenu : CanvasLayer = $pauseMenu
 @onready var deathScreen : CanvasLayer = $deathMenu
-@onready var weaponPivot : Node2D = $RotPoint/WeaponRotPoint/WeaponPivot
-@onready var weaponRot : Node2D = $RotPoint/WeaponRotPoint
-@onready var weaponAnim : AnimationPlayer = $Weapon
 @onready var boostTimer : Timer = $speedTimer
 
 @export_category("Stats")
