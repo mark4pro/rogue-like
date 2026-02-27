@@ -13,6 +13,7 @@ col = NodePath("Sprite2D/Area2D")
 sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=686228748]
+modulate = Color(1, 1, 1, 0.43529412)
 position = Vector2(-5.9604645e-08, -13.999998)
 scale = Vector2(0.609375, 0.81249994)
 texture = ExtResource("1_5g2y1")
