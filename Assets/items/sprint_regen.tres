@@ -8,3 +8,4 @@ script = ExtResource("2_fqbpg")
 id = 40
 name = "Sprint Regen"
 itemIcon = ExtResource("1_i20is")
+groundScale = 0.1

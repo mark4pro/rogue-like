@@ -8,3 +8,4 @@ script = ExtResource("2_is218")
 id = 75
 name = "Speed Boost"
 itemIcon = ExtResource("1_is218")
+groundScale = 0.1

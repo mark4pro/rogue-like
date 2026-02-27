@@ -9,5 +9,5 @@ healthAmount = 50.0
 id = 823787638
 name = "More Health"
 itemIcon = ExtResource("1_m8vof")
-groundScale = 0.3
+groundScale = 0.1
 metadata/_custom_type_script = "uid://bocek0w82g3h1"
