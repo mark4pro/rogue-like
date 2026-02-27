@@ -2,6 +2,5 @@ extends BaseItem
 class_name SpeedItem
 
 func use() -> void:
-	Global.player.speedBoostDecrement += 5
-
-	
+	Global.player.speedMod += 5
+	quantitiy -= 1

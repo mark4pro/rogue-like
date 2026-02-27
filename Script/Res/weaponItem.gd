@@ -16,7 +16,7 @@ enum animType {
 @export_category("Animation")
 @export var animationType : animType = animType.SWING
 @export_category("Swing")
-@export var radius : Vector2 = Vector2(10, 10)
+@export var radius : Vector2 = Vector2(5, 5)
 @export var angleRange : Vector2 = Vector2(30, -30)
 @export var restAngle : float = -45
 @export var zRange : Vector2 = Vector2(-1, 1)

@@ -33,7 +33,7 @@ func _process(_delta: float) -> void:
 	if weapSys and weapSys.parentNode:
 		for c in sprite.get_children():
 			if c is PointLight2D:
-				c.range_z_max = get_parent().z_index + 3
+				c.range_z_max = z_index + get_parent().z_index
 		
 		if col:
 			if weapSys.isAttacking:

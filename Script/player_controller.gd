@@ -50,7 +50,8 @@ var played_death_anim : bool = false
 
 var dir : Vector2 = Vector2.ZERO
 var speed : float = walk_speed
-var speedBoostDecrement : float = 0
+
+var speedMod : float = 0
 
 var roll_state : int = 0 #0: not rolling, 1: start roll, 2: roll logic, 3: end roll
 
@@ -60,8 +61,6 @@ var roll_dir : Vector2 = Vector2.ZERO
 
 var bounds : CollisionPolygon2D = null
 
-#var oldWeapon : WeaponItem = null
-#var reverseSwing : int = 0
 var weapSys : WeaponSys = WeaponSys.new()
 
 func _ready():
@@ -166,12 +165,9 @@ func _process(delta: float) -> void:
 		else:
 			if anim == "walk": sprite.stop()
 			
-	#speed boost timer
-	if speedBoostDecrement > 0:
-		walk_speed = clamp(speedBoostDecrement, 0, 5)
-		sprint_speed= clamp(speedBoostDecrement, 0, 5)
-		boostTimer.start()
-		
+		#speed boost timer
+		speedMod = max(0, speedMod)
+		if speedMod != 0 and boostTimer.is_stopped(): boostTimer.start()
 		
 		#Roll animation state
 		match roll_state:
@@ -235,46 +231,8 @@ func _process(delta: float) -> void:
 		roll_cooldown.paused = true
 		Global.messageTimer.paused = true
 	
-	##Weapon stuff
-	#var hasWeapon = weaponPivot.get_child_count() > 0
-	#
-	##Equip weapon
-	#if Global.weapon and not oldWeapon == Global.weapon:
-		#oldWeapon = Global.weapon
-		#if hasWeapon: weaponPivot.get_children()[0].queue_free()
-		#
-		#var newWeapon : Node2D = Global.weapon.weaponScene.instantiate()
-		#newWeapon.name = "weapon"
-		#if "animPlayer" in newWeapon: newWeapon.animPlayer = $Weapon
-		#if "playerSpritePivot" in newWeapon: newWeapon.playerSpritePivot = rot_point
-		#if "entity" in newWeapon: newWeapon.entity = self
-		#if "weapon" in newWeapon: newWeapon.weapon = Global.weapon
-		#
-		#weaponPivot.add_child(newWeapon)
-	#
-	##Unequip weapon
-	#if not Global.weapon and hasWeapon:
-		#weaponPivot.get_children()[0].queue_free()
-		#oldWeapon = null
-	#
-	#if hasWeapon and not get_tree().paused:
-		#var wAngle : float = (get_global_mouse_position() - global_position).angle()
-		#weaponRot.rotation = wAngle if not rot_point.scale.x == -1 else -wAngle + deg_to_rad(180)
-		#
-		#if not Input.is_action_pressed("place") and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and not weaponAnim.is_playing():
-			#reverseSwing = reverseSwing % 2
-			#
-			#if Global.weapon.animString == "swing":
-				#if reverseSwing == 0:
-					#weaponAnim.play(Global.weapon.animString)
-				#else:
-					#weaponAnim.play_backwards(Global.weapon.animString)
-			#else:
-				#weaponAnim.play(Global.weapon.animString)
-			#
-			#reverseSwing += 1
-	
 	weapSys.parentNode = self
+	weapSys.posOffset = Vector2(0, 5)
 	weapSys.weapon = Global.weapon
 	weapSys.update(delta, get_global_mouse_position())
 	if not get_tree().paused and not Input.is_action_pressed("place") \
@@ -338,13 +296,13 @@ func _physics_process(delta: float) -> void:
 			dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 		else:
 			dir = Vector2.ZERO #Don't move when rolling
-		linear_velocity = dir * speed * 1000 * delta;
+		linear_velocity = dir * (speed + speedMod) * 1000 * delta;
 		
 		#Roll logic
 		if is_rolling and roll_state != 1:
 			rot_point.rotation += rspeed * delta
 			apply_impulse(roll_dir * roll_speed * 1000 * delta)
-			
+
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
 
@@ -356,7 +314,5 @@ func _on_message_timer_timeout() -> void:
 	var ms : Array[Node] = Global.messageBox.get_children()
 	if not ms.is_empty(): ms[0].queue_free()
 
-
 func _on_speed_timer_timeout() -> void:
-	speedBoostDecrement -= 5
-	
+	speedMod -= 5
