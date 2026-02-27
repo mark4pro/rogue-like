@@ -96,7 +96,8 @@ blend_mode = 2
 texture = ExtResource("4_u4v2o")
 texture_scale = 0.1
 
-[node name="Ext" type="Node2D" parent="." unique_id=2146867670 node_paths=PackedStringArray("baseSword", "gpuPart")]
+[node name="Ext" type="Node2D" parent="." unique_id=2146867670 node_paths=PackedStringArray("baseSword", "gpuPart", "lights")]
 script = ExtResource("5_peu7m")
 baseSword = NodePath("..")
 gpuPart = NodePath("../Sprite2D/GPUParticles2D")
+lights = [NodePath("../Sprite2D/PointLight2D"), NodePath("../Sprite2D/PointLight2D2"), NodePath("../Sprite2D/PointLight2D3")]
