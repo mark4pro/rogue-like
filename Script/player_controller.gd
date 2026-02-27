@@ -168,8 +168,8 @@ func _process(delta: float) -> void:
 			
 	#speed boost timer
 	if speedBoostDecrement > 0:
-		walk_speed += 5
-		sprint_speed += 5
+		walk_speed = clamp(speedBoostDecrement, 0, 5)
+		sprint_speed= clamp(speedBoostDecrement, 0, 5)
 		boostTimer.start()
 		
 		
@@ -358,6 +358,5 @@ func _on_message_timer_timeout() -> void:
 
 
 func _on_speed_timer_timeout() -> void:
-	speedBoostDecrement -= 1
-	walk_speed -= 5
-	sprint_speed -= 5
+	speedBoostDecrement -= 5
+	
