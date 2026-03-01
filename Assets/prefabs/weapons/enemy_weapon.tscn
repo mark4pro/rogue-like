@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://cb876a2o1rjse" path="res://Assets/imgs/weapons/enemy_sword.png" id="2_p1aba"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f32yq"]
-size = Vector2(23, 3)
+size = Vector2(25.500002, 4)
 
 [node name="Node2D" type="Node2D" unique_id=346343981 node_paths=PackedStringArray("col", "sprite")]
 script = ExtResource("1_m2vbc")
@@ -17,9 +17,10 @@ rotation = -0.7853982
 texture = ExtResource("2_p1aba")
 
 [node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=1867642214]
+position = Vector2(7.7781754, -7.7781754)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=1193191623]
-position = Vector2(9.192389, -8.485281)
+position = Vector2(0.8838825, -0.8838825)
 rotation = -0.7853982
 scale = Vector2(0.99999994, 0.99999994)
 shape = SubResource("RectangleShape2D_f32yq")
