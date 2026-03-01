@@ -24,16 +24,22 @@ weapon = ExtResource("2_uasny")
 stopDist = 30.0
 metadata/_edit_group_ = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=457998798]
-position = Vector2(1, -5)
-shape = SubResource("RectangleShape2D_xl01c")
-
 [node name="sprite2D" type="Sprite2D" parent="." unique_id=17540074]
 texture = ExtResource("2_56c4l")
 region_rect = Rect2(0, 14, 33, 32)
 
 [node name="Cone" type="Node2D" parent="sprite2D" unique_id=1483688328]
 script = ExtResource("3_6e3jo")
+
+[node name="Shadow" type="Sprite2D" parent="sprite2D" unique_id=1678263220]
+modulate = Color(1, 1, 1, 0.39215687)
+show_behind_parent = true
+position = Vector2(-4, 13.000001)
+scale = Vector2(1.1459994, 0.29499996)
+texture = ExtResource("3_ebah1")
+
+[node name="Marker2D" type="Marker2D" parent="sprite2D" unique_id=1320059563]
+position = Vector2(13, -6.5)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1658699989]
 path_postprocessing = 1
@@ -42,16 +48,6 @@ avoidance_enabled = true
 radius = 15.0
 neighbor_distance = 100.0
 max_neighbors = 3
-
-[node name="Shadow" type="Sprite2D" parent="." unique_id=1678263220]
-modulate = Color(1, 1, 1, 0.39215687)
-show_behind_parent = true
-position = Vector2(-4, 13.000001)
-scale = Vector2(1.1459994, 0.29499996)
-texture = ExtResource("3_ebah1")
-
-[node name="Marker2D" type="Marker2D" parent="." unique_id=1320059563]
-position = Vector2(13, -6.5)
 
 [node name="UI" type="Control" parent="." unique_id=317017607]
 layout_mode = 3
@@ -73,6 +69,10 @@ offset_right = 50.0
 offset_bottom = 1.5
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=457998798]
+position = Vector2(1, -5)
+shape = SubResource("RectangleShape2D_xl01c")
 
 [connection signal="draw" from="sprite2D" to="." method="_on_sprite_2d_draw"]
 [connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]

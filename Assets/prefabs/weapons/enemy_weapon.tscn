@@ -20,6 +20,7 @@ texture = ExtResource("2_p1aba")
 position = Vector2(7.7781754, -7.7781754)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=1193191623]
+visible = false
 position = Vector2(0.8838825, -0.8838825)
 rotation = -0.7853982
 scale = Vector2(0.99999994, 0.99999994)

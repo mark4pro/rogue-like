@@ -80,7 +80,7 @@ func _ready() -> void:
 	id = randi() % EnemySpawner.updateSlots
 
 func _process(delta: float) -> void:
-	eyePos = $Marker2D.global_position
+	eyePos = $sprite2D/Marker2D.global_position
 	eyeDir = (target - eyePos).normalized()
 	
 	health = clamp(health, 0, maxHealth)
@@ -99,15 +99,15 @@ func _process(delta: float) -> void:
 		queue_free()
 	
 	if linear_velocity.x < 0:
-		$sprite2D.flip_h = true
+		$sprite2D.scale.x = -1
 		$CollisionShape2D.position.x = -1
-		$Shadow.position.x = 4
-		$Marker2D.position.x = -13
+		#$Shadow.position.x = 4
+		#$Marker2D.position.x = -13
 	if linear_velocity.x > 0:
-		$sprite2D.flip_h = false
+		$sprite2D.scale.x = 1
 		$CollisionShape2D.position.x = 1
-		$Shadow.position.x = -4
-		$Marker2D.position.x = 13
+		#$Shadow.position.x = -4
+		#$Marker2D.position.x = 13
 	
 	if Global.debugVision: cone.queue_redraw()
 	

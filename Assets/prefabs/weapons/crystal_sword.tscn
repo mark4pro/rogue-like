@@ -26,15 +26,14 @@ sprite = NodePath("Sprite2D")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=686228748]
 modulate = Color(1, 1, 1, 0.7058824)
 material = SubResource("ShaderMaterial_krgje")
-position = Vector2(-3.5527137e-15, -17.5)
-scale = Vector2(0.609375, 0.81249994)
+position = Vector2(0, -14.999999)
+scale = Vector2(0.7, 0.7)
 texture = ExtResource("1_5g2y1")
 
 [node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=293451027]
 position = Vector2(5.830094e-15, 9.230769)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=109730369]
-visible = false
 position = Vector2(-6.7246265e-07, -17.25)
 scale = Vector2(0.9999995, 0.9999998)
 shape = SubResource("RectangleShape2D_wvcsr")

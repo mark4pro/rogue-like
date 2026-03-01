@@ -28,7 +28,7 @@ var inventoryUI : Control = null
 var currentScene : Node = null
 
 @export_category("Testing")
-@export var debugVision : bool = false
+@export var debugVision : bool = true
 @export var addMs : bool = false
 
 @export_category("Scenes")
