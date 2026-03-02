@@ -27,8 +27,13 @@ var player : RigidBody2D = null
 var inventoryUI : Control = null
 var currentScene : Node = null
 
-@export_category("Testing")
+@export_category("Vision cones")
 @export var debugVision : bool = true
+@export var normVisionDebugColor : Color = Color(0.64, 0.0, 0.0, 0.118)
+@export var inVisionDebugColor : Color = Color(0.149, 0.64, 0.0, 0.118)
+@export var chaseVisionDebugColor : Color = Color(0.64, 0.619, 0.0, 0.118)
+@export var outVisionDebugColor : Color = Color(0.0, 0.576, 0.64, 0.118)
+@export_category("Toggles")
 @export var addMs : bool = false
 
 @export_category("Scenes")

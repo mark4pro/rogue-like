@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_56c4l"]
 [ext_resource type="Texture2D" uid="uid://dkfdrjtuto62c" path="res://Assets/imgs/enemies/spider.png" id="2_56c4l"]
 [ext_resource type="Resource" uid="uid://cuamogxy52nlx" path="res://Assets/items/enemy_sword.tres" id="2_uasny"]
-[ext_resource type="Script" uid="uid://bv4dhcf7561la" path="res://Script/cone.gd" id="3_6e3jo"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="3_ebah1"]
 [ext_resource type="PackedScene" uid="uid://diwkxcopn8e5d" path="res://Assets/prefabs/ui/health_bar.tscn" id="5_8w02l"]
 
@@ -13,23 +12,24 @@ friction = 0.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xl01c"]
 size = Vector2(30, 16)
 
-[node name="enemy" type="RigidBody2D" unique_id=764826255]
+[node name="enemy" type="RigidBody2D" unique_id=764826255 node_paths=PackedStringArray("nav", "eye", "sprite", "coll")]
 z_index = 3
 collision_layer = 4
 collision_mask = 9
 physics_material_override = SubResource("PhysicsMaterial_56c4l")
 lock_rotation = true
 script = ExtResource("1_56c4l")
+nav = NodePath("NavigationAgent2D")
+eye = NodePath("sprite2D/eye")
+sprite = NodePath("sprite2D")
+coll = NodePath("CollisionShape2D")
 weapon = ExtResource("2_uasny")
-stopDist = 30.0
+stopDist = 35.0
 metadata/_edit_group_ = true
 
 [node name="sprite2D" type="Sprite2D" parent="." unique_id=17540074]
 texture = ExtResource("2_56c4l")
 region_rect = Rect2(0, 14, 33, 32)
-
-[node name="Cone" type="Node2D" parent="sprite2D" unique_id=1483688328]
-script = ExtResource("3_6e3jo")
 
 [node name="Shadow" type="Sprite2D" parent="sprite2D" unique_id=1678263220]
 modulate = Color(1, 1, 1, 0.39215687)
@@ -38,7 +38,7 @@ position = Vector2(-4, 13.000001)
 scale = Vector2(1.1459994, 0.29499996)
 texture = ExtResource("3_ebah1")
 
-[node name="Marker2D" type="Marker2D" parent="sprite2D" unique_id=1320059563]
+[node name="eye" type="Marker2D" parent="sprite2D" unique_id=1320059563]
 position = Vector2(13, -6.5)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1658699989]
@@ -75,4 +75,3 @@ position = Vector2(1, -5)
 shape = SubResource("RectangleShape2D_xl01c")
 
 [connection signal="draw" from="sprite2D" to="." method="_on_sprite_2d_draw"]
-[connection signal="velocity_computed" from="NavigationAgent2D" to="." method="_on_navigation_agent_2d_velocity_computed"]

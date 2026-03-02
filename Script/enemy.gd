@@ -1,12 +1,21 @@
 extends RigidBody2D
 
-@onready var nav : NavigationAgent2D = $NavigationAgent2D
-@onready var cone : Node2D = $sprite2D/Cone
+@export var nav : NavigationAgent2D = null
+@export var eye : Marker2D = null
+@export var sprite : Sprite2D = null
+@export var coll : CollisionShape2D = null
+@export var healthBar : ProgressBar = null
 
 @export_category("Base Stats")
 @export var weapon : WeaponItem = null
 @export var maxHealth : float = 100
 @export var health : float = 100
+
+var weapSys : WeaponSys = WeaponSys.new()
+var thisAI : DefaultAI = DefaultAI.new()
+
+@export_category("For Vision Cone")
+@export var coneSteps : int = 12
 @export_category("Movement")
 @export var speed : float = 7
 @export var stopDist : float = 65
@@ -17,169 +26,64 @@ extends RigidBody2D
 @export var timeUntilChase : float = 1
 @export var timeUntilChaseEnd : float = 3
 
-enum state {
-	WONDER,
-	CHASE
-}
-
-var currentState : state = state.WONDER
-
-var normVisionDebugColor : Color = Color(0.64, 0.0, 0.0, 0.118)
-var inVisionDebugColor : Color = Color(0.149, 0.64, 0.0, 0.118)
-var chaseVisionDebugColor : Color = Color(0.64, 0.619, 0.0, 0.118)
-var outVisionDebugColor : Color = Color(0.0, 0.576, 0.64, 0.118)
-
-var id : int
-var target : Vector2 = Vector2.ZERO
-var pathing : bool = false
-var retarget : bool = true
-var gotoLastKnownPos : bool = false
-
-var eyeDir : Vector2 = Vector2.ZERO
-var eyePos : Vector2 = Vector2.ZERO
-
-var wonderTime : float = 0
-var inSiteTime : float = 0
-var endChaseTime : float = 0
-
-var dir : Vector2 = Vector2.ZERO
-
-var weapSys : WeaponSys = WeaponSys.new()
-
-func take_damage(data: Dictionary):
+func take_damage(data: Dictionary, attacker: Node):
 	if not get_tree().paused:
 		health -= data.value
-		Global.damageAnim($sprite2D, data.value)
-		Global.damNumbers($CollisionShape2D, data)
-		currentState = state.CHASE
-
-func canSeePlayer() -> bool:
-	if not Global.player: return false
-	
-	if eyeDir == Vector2.ZERO: return false
-	
-	var dirToPlayer = Global.player.position - eyePos
-	
-	if dirToPlayer.length() > visionRange: return false
-	
-	var angleToPlayer = rad_to_deg(eyeDir.angle_to(dirToPlayer))
-	
-	if abs(angleToPlayer) > visionAngle / 2: return false
-	
-	var space : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
-	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(eyePos, Global.player.position)
-	query.exclude = [self]
-	
-	var result = space.intersect_ray(query)
-	
-	if result and result.collider != Global.player: return false
-	return true
+		Global.damageAnim(sprite, data.value)
+		Global.damNumbers(coll, data)
+		thisAI.engage(attacker)
 
 func _ready() -> void:
-	nav.target_desired_distance = stopDist
-	id = randi() % EnemySpawner.updateSlots
+	if nav and eye and sprite and coll:
+		thisAI.body = self
+		thisAI.weapSys = weapSys
+		thisAI.baseNode = eye
+		thisAI.navAgent = nav
+		nav.connect("velocity_computed", velocity_computed)
+	else:
+		print("Please check nav, eye, sprite, and coll!")
 
 func _process(delta: float) -> void:
-	eyePos = $sprite2D/Marker2D.global_position
-	eyeDir = (target - eyePos).normalized()
-	
-	health = clamp(health, 0, maxHealth)
-	$UI/healthBar.value = (health / maxHealth) * 100
-	
-	if health <= 0: queue_free()
-	cone.pos = eyePos
-	cone.dir = eyeDir
-	cone.vAngle = visionAngle
-	cone.vRange = visionRange
-	
-	if not Global.player:
-		currentState = state.WONDER
-	
-	if Global.player and position.distance_to(Global.player.position) > 1000:
-		queue_free()
-	
-	if linear_velocity.x < 0:
-		$sprite2D.scale.x = -1
-		$CollisionShape2D.position.x = -1
-		#$Shadow.position.x = 4
-		#$Marker2D.position.x = -13
-	if linear_velocity.x > 0:
-		$sprite2D.scale.x = 1
-		$CollisionShape2D.position.x = 1
-		#$Shadow.position.x = -4
-		#$Marker2D.position.x = 13
-	
-	if Global.debugVision: cone.queue_redraw()
-	
-	weapSys.parentNode = self
-	weapSys.posOffset = Vector2(0, 0)
-	weapSys.weapon = weapon
-	if Global.player: weapSys.update(delta, Global.player.position)
-	
-	match currentState:
-		state.WONDER:
-			endChaseTime = 0
-			
-			wonderTime += delta
-			retarget = wonderTime >= wonderUpdate
-			
-			if canSeePlayer():
-				inSiteTime += delta
-				
-				if inSiteTime >= timeUntilChase:
-					currentState = state.CHASE
-				
-				if not gotoLastKnownPos:
-					gotoLastKnownPos = true
-					nav.target_position = Global.player.position
-					nav.set_velocity(Vector2.ZERO)
-				
-				cone.visionDebugColor = inVisionDebugColor
-			else:
-				inSiteTime = 0
-				cone.visionDebugColor = normVisionDebugColor
-				if gotoLastKnownPos and not pathing:
-					gotoLastKnownPos = false
-		state.CHASE:
-			retarget = true
-			wonderTime = 0
-			inSiteTime = 0
-			gotoLastKnownPos = false
-			
-			if not canSeePlayer():
-				endChaseTime += delta
-				
-				if endChaseTime >= timeUntilChaseEnd:
-					currentState = state.WONDER
-				
-				cone.visionDebugColor = outVisionDebugColor
-			else:
-				endChaseTime = 0
-				cone.visionDebugColor = chaseVisionDebugColor
-	
-	if Engine.get_physics_frames() % EnemySpawner.updateSlots == id and retarget:
-		match currentState:
-			state.WONDER:
-				wonderTime = 0
-				if not gotoLastKnownPos:
-					nav.target_position = EnemySpawner.getSpawn(position, 30)
-			state.CHASE:
-				nav.target_position = Global.player.position
-		nav.set_velocity(Vector2.ZERO)
-	
-	pathing = not nav.is_navigation_finished()
-	
-	if pathing:
-		target = nav.get_next_path_position()
-		dir = (target - position).normalized()
+	if nav and eye and sprite and coll:
+		thisAI.coneSteps = coneSteps
+		thisAI.speed = speed
+		thisAI.stopDist = stopDist
+		thisAI.wonderUpdate = wonderUpdate
+		thisAI.visionRange = visionRange
+		thisAI.visionAngle = visionAngle
+		thisAI.timeUntilChase = timeUntilChase
+		thisAI.timeUntilChaseEnd = timeUntilChaseEnd
+		thisAI.eyePos = eye.global_position
+		thisAI.isFlipped = sprite.scale.x == -1
 		
-		nav.set_velocity(dir * speed * 1000 * delta)
-	else:
-		nav.set_velocity(Vector2.ZERO)
+		#Health shit
+		health = clamp(health, 0, maxHealth)
+		if healthBar: healthBar.value = (health / maxHealth) * 100
+		if health <= 0: queue_free()
 		
-		if currentState == state.CHASE and \
-		global_position.distance_to(Global.player.global_position) <= stopDist:
-			if not get_tree().paused and not weapSys.isAttacking: weapSys.attack()
+		#Default to wonder if player isn't loaded
+		if not Global.player:
+			thisAI.disengage()
+		
+		#Unload when far away
+		if Global.player and global_position.distance_to(Global.player.global_position) > 1000:
+			queue_free()
+		
+		#Flip logic
+		if linear_velocity.x < 0:
+			sprite.scale.x = -1
+			coll.position.x = -1
+		if linear_velocity.x > 0:
+			sprite.scale.x = 1
+			coll.position.x = 1
+		
+		#Weapon system setup
+		weapSys.parentNode = self
+		weapSys.posOffset = Vector2(0, 0)
+		weapSys.weapon = weapon
+		if Global.player: weapSys.update(delta, Global.player.position)
+		
+		thisAI.update(delta)
 
-func _on_navigation_agent_2d_velocity_computed(safe_velocity: Vector2) -> void:
+func velocity_computed(safe_velocity: Vector2) -> void:
 	linear_velocity = safe_velocity

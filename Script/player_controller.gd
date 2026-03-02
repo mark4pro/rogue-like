@@ -90,7 +90,7 @@ func _ready():
 		camera.limit_right = int(bottomRight.x)
 		camera.limit_bottom = int(bottomRight.y)
 
-func take_damage(data: Dictionary):
+func take_damage(data: Dictionary, attacker: Node):
 	if not is_rolling and not get_tree().paused:
 		health -= data.value
 

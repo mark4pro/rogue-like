@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ctrevfq4gsj53"]
+
+[ext_resource type="Script" uid="uid://bv4dhcf7561la" path="res://Script/cone.gd" id="1_hgj8h"]
+
+[node name="Cone" type="Node2D" unique_id=918993823]
+script = ExtResource("1_hgj8h")

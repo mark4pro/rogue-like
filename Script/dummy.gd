@@ -1,5 +1,5 @@
 extends Node2D
 
-func take_damage(data: Dictionary):
+func take_damage(data: Dictionary, attacker: Node):
 	Global.damageAnim($Sprite2D, data.value)
 	Global.damNumbers($Area2D/CollisionPolygon2D, data)
