@@ -5,4 +5,4 @@ class_name SprintItem
 
 func use() -> void:
 	Global.player.stamina_regen += stamina
-	quantitiy -= 1
+	quantity -= 1

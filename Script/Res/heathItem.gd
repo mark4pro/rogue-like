@@ -5,4 +5,4 @@ class_name HealthItem
 
 func use() -> void:
 	Global.player.health += healthAmount
-	quantitiy -= 1
+	quantity -= 1

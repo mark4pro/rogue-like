@@ -8,6 +8,7 @@ var player_in_range = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	rotation_degrees = randf_range(0, 360)
 	scale.x = item.groundScale
 	scale.y = item.groundScale
 	item_sprite.texture = item.itemIcon

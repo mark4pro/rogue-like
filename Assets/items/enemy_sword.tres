@@ -7,7 +7,8 @@
 [resource]
 script = ExtResource("1_ms8iv")
 weaponScene = ExtResource("3_yl14b")
-baseDamage = 10.0
+baseDamage = 5.0
+speedMulti = 1.5
 id = 27
 name = "Enemy Weapon"
 itemIcon = ExtResource("1_jbfpi")

@@ -26,7 +26,7 @@ func add_item(item: BaseItem) -> void:
 		var index = data.find_custom(func(i): return i.id == item.id)
 		
 		if not index == -1:
-			data[index].quantitiy += item.quantitiy
+			data[index].quantity += item.quantity
 		else:
 			var newItem : BaseItem = item.duplicate(true)
 			if not newItem.rolled: newItem.rollStats()
@@ -39,20 +39,20 @@ func add_item(item: BaseItem) -> void:
 func remove_items(item: BaseItem, amount: int = 1) -> void:
 	var index = data.find_custom(func(i): return i == item)
 	if not index == -1:
-		amount = clampi(amount, 1, data[index].quantitiy)
-		data[index].quantitiy -= amount
+		amount = clampi(amount, 1, data[index].quantity)
+		data[index].quantity -= amount
 
 func remove_items_by_id(id: int = 0, amount: int = 1) -> void:
 	var index = data.find_custom(func(i): return i.id == id)
 	if not index == -1:
-		amount = clampi(amount, 1, data[index].quantitiy)
-		data[index].quantitiy -= amount
+		amount = clampi(amount, 1, data[index].quantity)
+		data[index].quantity -= amount
 
 func update() -> void:
 	maxSlots = roundi(grid.x) * roundi(grid.y)
 	
 	#Clear items with no quanitity
 	for i in data:
-		if i.quantitiy <= 0: 
+		if i.quantity <= 0: 
 			if Global.weapon == i: Global.weapon = null
 			data.erase(i)

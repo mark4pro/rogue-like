@@ -67,8 +67,14 @@ func getValid() -> Array[EnemyWeighted]:
 	var newArr : Array[EnemyWeighted] = []
 	
 	for entry in enemies:
-		if Global.runDays <= entry.day:
+		var afterStart : bool = entry.day <= Global.runDays
+		var beforeEnd : bool = entry.lastDay == -1 or entry.lastDay >= Global.runDays
+		
+		if afterStart and beforeEnd:
 			newArr.append(entry)
+	
+	Global.precalcWeights(newArr)
+	
 	return newArr
 
 func clearEnemies() -> void:

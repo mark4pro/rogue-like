@@ -10,6 +10,8 @@ var touching : bool = false
 var redraw : bool = false
 var latch : bool = false
 
+var refreshLatch : bool = false
+
 func _ready() -> void:
 	if item:
 		icon.texture = item.itemIcon
@@ -29,10 +31,13 @@ func _process(_delta: float) -> void:
 		touching = mousePos.x >= global_position.x and mousePos.x <= global_position.x + size.x \
 		and mousePos.y >= global_position.y and mousePos.y <= global_position.y + size.y
 		
-		amountTxt.text = str(item.quantitiy)
-		if item.quantitiy <= 0:
-			item = null
+		amountTxt.text = str(item.quantity)
+		if item and item.quantity <= 0 and not refreshLatch:
 			icon.texture = null
+			item = null
+			refreshLatch = true
+			print("test"+str(item)+str(refreshLatch))
+			get_parent().get_parent().get_parent().loaded = false
 		
 		icon.position = (size / 2) - (icon.size / 2)
 		icon.pivot_offset = (icon.size / 2)

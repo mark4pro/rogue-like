@@ -14,6 +14,11 @@ extends RigidBody2D
 @export_category("Loot")
 @export var moneyChance : float = 0.5
 @export var moneyRange : Vector2i = Vector2i(2, 5)
+@export var useGlobalLootList : bool = true
+@export var localLootList : LootList = null
+@export var lootChance : float = 0.3
+@export var lootAmount : Vector2i = Vector2i(1, 2)
+@export var equipDropChance : float = 0.1
 
 var weapSys : WeaponSys = WeaponSys.new()
 var thisAI : DefaultAI = DefaultAI.new()
@@ -65,7 +70,19 @@ func _process(delta: float) -> void:
 		if healthBar: healthBar.value = (health / maxHealth) * 100
 		if health <= 0:
 			var randomChk : float = randf()
-			if randomChk < moneyChance: Global.money += randi_range(moneyRange.x, moneyRange.y)
+			
+			if randomChk <= moneyChance: Global.money += randi_range(moneyRange.x, moneyRange.y)
+			
+			if randomChk <= lootChance:
+				var thisLootList : LootList = Global.lootList if useGlobalLootList else localLootList
+				if thisLootList:
+					for i in range(randi_range(lootAmount.x, lootAmount.y)):
+						var item : BaseItem = thisLootList.getRandom()
+						if item: item.drop(1, false, global_position)
+			
+			if randomChk <= equipDropChance:
+				if weapon: weapon.drop(1, false, global_position)
+			
 			queue_free()
 		
 		#Default to wonder if player isn't loaded

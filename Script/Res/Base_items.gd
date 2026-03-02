@@ -29,7 +29,7 @@ enum item_type {
 @export var cost : float = 0
 @export var costVar : float = 0.2
 @export var rolled : bool = false
-@export var quantitiy : int = 1
+@export var quantity : int = 1
 
 func rollStats() -> void:
 	rolled = true
@@ -46,9 +46,11 @@ func unequip() -> void:
 func throw() -> void:
 	pass
 
-func drop(amount: int = 1, decrement: bool = true) -> void:
+func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
+	var thisDropPos : Vector2 = Global.player.global_position if not pos else pos
+	
 	if not stackable: amount = 1
-	amount = clampi(amount, 1, quantitiy)
+	amount = clampi(amount, 1, quantity)
 	unequip()
 	
 	if stackable:
@@ -58,20 +60,20 @@ func drop(amount: int = 1, decrement: bool = true) -> void:
 			for i in groundItems:
 				var base : Node2D = i
 				
-				if Global.player.global_position.distance_to(base.global_position) > Global.pickupRange: continue
+				if thisDropPos.distance_to(base.global_position) > Global.pickupRange: continue
 				
 				if base.item.id == id:
-					base.item.quantitiy += amount
-					if decrement: quantitiy -= amount
+					base.item.quantity += amount
+					if decrement: quantity -= amount
 					return
 	
 	var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
 	newGroundItem.name = name
-	newGroundItem.position = Global.player.position
+	newGroundItem.position = thisDropPos
 	var newItem : BaseItem = self.duplicate()
-	newItem.quantitiy = amount
+	newItem.quantity = amount
 	newGroundItem.item = newItem
-	if decrement: quantitiy -= amount
+	if decrement: quantity -= amount
 	Global.currentScene.add_child(newGroundItem)
 
 func place(pos: Vector2) -> void:
@@ -81,4 +83,4 @@ func place(pos: Vector2) -> void:
 		newPlacedScene.global_position = pos
 		Global.currentScene.add_child(newPlacedScene)
 		newPlacedScene.z_index = 3
-		quantitiy -= 1
+		quantity -= 1

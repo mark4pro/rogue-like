@@ -6,4 +6,5 @@
 [resource]
 script = ExtResource("1_eigi8")
 data = ExtResource("1_r4ecq")
+chance = 25.0
 metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"

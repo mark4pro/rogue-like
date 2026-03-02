@@ -5,4 +5,4 @@ class_name SpeedItem
 
 func use() -> void:
 	Global.player.speedMod += speed
-	quantitiy -= 1
+	quantity -= 1

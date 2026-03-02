@@ -73,6 +73,8 @@ var currentScene : Node = null
 @export_category("Damage Animation")
 @export var damAnimRotEnable : bool = true
 
+@export var lootList : LootList = preload("res://Assets/global_loot_list.tres")
+
 const MIDNIGHT : float = 0.0
 const SUNRISE : float = 0.25
 const NOON : float = 0.5
@@ -139,6 +141,7 @@ func _ready() -> void:
 		inventory.add_item(load("res://Assets/items/over_grown.tres"))
 		inventory.add_item(load("res://Assets/items/torch.tres"))
 	loadGame()
+	lootList.getValid()
 
 func getKeyFromAction(action: String) -> String:
 	return InputMap.action_get_events(action)[0].as_text().split(" ")[0]
@@ -161,21 +164,35 @@ func resetRunDays() -> void:
 	totalDays += runDays + 1
 	runDays = 0
 	timeOfDay = SUNRISE
+	lootList.getValid()
 
-func getRandom(list: Array):
-	var total_weight : float = 0
+func precalcWeights(list: Array) -> void:
+	var totalChance : float = 0
 	for entry in list:
-		total_weight += max(entry.weight, 0)
+		totalChance += max(entry.chance, 0)
+	for entry in list:
+		entry.calcWeight(totalChance)
+
+func getRandom(list: Array, skipWeightCalc: bool = true):
+	if list.is_empty(): return null
 	
-	var roll : float = randf() * total_weight
-	var cumulative : float = 0
+	var totalChance : float = 0
+	
+	if not skipWeightCalc:
+		for entry in list:
+			totalChance += max(entry.chance, 0)
+		
+		if totalChance == 0:
+			return list[randi() % list.size()].data
+	
+	var roll : float = randf_range(0, 100)
+	var cumulative : float = 0.0
 	
 	for entry in list:
+		if not skipWeightCalc: entry.calcWeight(totalChance)
 		cumulative += entry.weight
 		if roll <= cumulative:
 			return entry.data
-	
-	if list.is_empty(): return null
 	
 	return list.back().data
 
@@ -270,6 +287,7 @@ func _process(delta: float) -> void:
 	var playerChk = get_tree().get_nodes_in_group("Player")
 	if not playerChk.is_empty(): player = playerChk[0]
 	
+	#Message system
 	if player:
 		if not messageBox:
 			messageBox = player.get_node("UI/MessageBox")
@@ -331,6 +349,7 @@ func _process(delta: float) -> void:
 			totalDays += 1
 		else:
 			runDays += 1
+		lootList.getValid()
 		timeOfDay = 0.0
 	
 	#Blood moon
@@ -363,7 +382,7 @@ func _process(delta: float) -> void:
 	
 	var moonlight : float = lerp(0.3, 0.0, tod_t)
 	ambientColor += Color(moonlight, moonlight, moonlight)
-
+	
 	
 	if get_tree().current_scene:
 		#Set ambient or add a new one

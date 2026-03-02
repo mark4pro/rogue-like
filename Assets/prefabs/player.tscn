@@ -441,6 +441,7 @@ vertical_alignment = 1
 visible = false
 
 [node name="inventory" type="Control" parent="inventoryUI" unique_id=637673965]
+process_mode = 3
 modulate = Color(1, 1, 1, 0.5647059)
 layout_mode = 3
 anchors_preset = 8

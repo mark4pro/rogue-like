@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_cnqqv"]
 [ext_resource type="Texture2D" uid="uid://dgdu58kfdlxeb" path="res://Assets/imgs/weapons/crystal_sword.png" id="1_iydry"]
-[ext_resource type="PackedScene" path="res://Assets/prefabs/weapons/crystal_sword.tscn" id="3_fc5ef"]
+[ext_resource type="PackedScene" uid="uid://owsk3om5ppa4" path="res://Assets/prefabs/weapons/crystal_sword.tscn" id="3_fc5ef"]
 
 [resource]
 script = ExtResource("1_cnqqv")
@@ -13,7 +13,10 @@ radius = Vector2(7.5, 7.5)
 id = 6
 name = "crystal sword"
 itemIcon = ExtResource("1_iydry")
+iconAlpha = 180
+iconRotOffset = 45.0
 groundScale = 0.5
+groundAlpha = 180
 itemType = 1
 equippable = true
 stackable = false

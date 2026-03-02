@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="LootList" format=3 uid="uid://bc340l20tpoev"]
+
+[ext_resource type="Script" uid="uid://dl251w1lsyqw4" path="res://Script/Res/item_weighted.gd" id="1_8cx6g"]
+[ext_resource type="Script" uid="uid://c6o5s4fws44bb" path="res://Script/Res/loot_lists.gd" id="2_qoodt"]
+[ext_resource type="Resource" uid="uid://ctrrswfhhu73y" path="res://Assets/items/over_grown.tres" id="2_umd42"]
+[ext_resource type="Resource" uid="uid://b2o8qtk8lmp71" path="res://Assets/items/crystal_sword.tres" id="3_xkh2n"]
+[ext_resource type="Resource" uid="uid://dwu6vcmregnk8" path="res://Assets/items/health_1.tres" id="4_yf6q6"]
+
+[sub_resource type="Resource" id="Resource_xkh2n"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("2_umd42")
+chance = 40.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_5qs7o"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("3_xkh2n")
+chance = 20.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_5conb"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("4_yf6q6")
+chance = 60.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[resource]
+script = ExtResource("2_qoodt")
+list = Array[ExtResource("1_8cx6g")]([SubResource("Resource_xkh2n"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb")])
+metadata/_custom_type_script = "uid://c6o5s4fws44bb"
