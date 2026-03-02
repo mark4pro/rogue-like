@@ -427,6 +427,16 @@ text = "Day:"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Money" type="Label" parent="UI" unique_id=981125000]
+offset_left = 5.0
+offset_top = 75.0
+offset_right = 45.0
+offset_bottom = 116.0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 36
+text = "$0"
+vertical_alignment = 1
+
 [node name="inventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
 visible = false
 

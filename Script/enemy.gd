@@ -11,6 +11,10 @@ extends RigidBody2D
 @export var maxHealth : float = 100
 @export var health : float = 100
 
+@export_category("Loot")
+@export var moneyChance : float = 0.5
+@export var moneyRange : Vector2i = Vector2i(2, 5)
+
 var weapSys : WeaponSys = WeaponSys.new()
 var thisAI : DefaultAI = DefaultAI.new()
 
@@ -59,7 +63,10 @@ func _process(delta: float) -> void:
 		#Health shit
 		health = clamp(health, 0, maxHealth)
 		if healthBar: healthBar.value = (health / maxHealth) * 100
-		if health <= 0: queue_free()
+		if health <= 0:
+			var randomChk : float = randf()
+			if randomChk < moneyChance: Global.money += randi_range(moneyRange.x, moneyRange.y)
+			queue_free()
 		
 		#Default to wonder if player isn't loaded
 		if not Global.player:

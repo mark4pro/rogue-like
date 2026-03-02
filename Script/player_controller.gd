@@ -258,6 +258,8 @@ func _process(delta: float) -> void:
 	else:
 		$UI/Days.text = "Days: " + str(Global.runDays)
 	
+	$UI/Money.text = "$" + str(Global.money)
+	
 	var dbck : CanvasLayer = get_node_or_null("debugMenu")
 	
 	#pause menu 
