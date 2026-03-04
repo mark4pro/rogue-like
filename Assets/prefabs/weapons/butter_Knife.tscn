@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://c43dliaj1lwnt"]
+
+[ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_elr04"]
+[ext_resource type="Texture2D" uid="uid://cjdwjsfo4lwar" path="res://Assets/imgs/weapons/butter_knife.png" id="2_on6dl"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dn3jv"]
+size = Vector2(5, 16.5)
+
+[node name="Node2D" type="Node2D" unique_id=1856690591 node_paths=PackedStringArray("col", "sprite")]
+script = ExtResource("1_elr04")
+col = NodePath("Sprite2D/Area2D")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1278876168]
+position = Vector2(1, -11)
+texture = ExtResource("2_on6dl")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=1123378590]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=821532774]
+position = Vector2(0, -4.75)
+shape = SubResource("RectangleShape2D_dn3jv")
