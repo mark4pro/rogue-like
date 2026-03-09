@@ -19,7 +19,12 @@ func _ready() -> void:
 		newLabel.bbcode_enabled = true
 		
 		if item is HealthItem:
-			newLabel.text = "\t\tHeals: " + str(Global.formatFloat(item.healthAmount))
+			newLabel.text = "\t\tHeals: %s" % [str(Global.formatFloat(item.healthAmount))]
+			stats.add_child(newLabel.duplicate())
+			
+			newLabel.text = "\t\tCost: %s" % [
+				str(Global.formatFloat(item.cost))
+			]
 			stats.add_child(newLabel.duplicate())
 		if item is WeaponItem:
 			if Global.weapon and not item == Global.weapon:
@@ -41,7 +46,6 @@ func _ready() -> void:
 					str(Global.formatFloat(damComp.y)),
 					str(Global.formatFloat(item.damage.y))
 				]
-				
 				stats.add_child(newLabel.duplicate())
 				
 				var critChanceComp : float = item.critChance - Global.weapon.critChance
@@ -55,7 +59,6 @@ func _ready() -> void:
 					str(Global.formatFloat(critChanceComp)),
 					str(Global.formatFloat(item.critChance))
 				]
-				
 				stats.add_child(newLabel.duplicate())
 				
 				var critMultiComp : float = item.critMulti - Global.weapon.critMulti
@@ -69,26 +72,22 @@ func _ready() -> void:
 					str(Global.formatFloat(critMultiComp)),
 					str(Global.formatFloat(item.critMulti))
 				]
-				
 				stats.add_child(newLabel.duplicate())
 			if not Global.weapon or item == Global.weapon:
 				newLabel.text = "\t\tDamage range: (%s, %s)" % [
 					str(Global.formatFloat(item.damage.x)),
 					str(Global.formatFloat(item.damage.y))
 				]
-				
 				stats.add_child(newLabel.duplicate())
 				
-				newLabel.text = "\t\tCrit Chance: (%s)" % [
+				newLabel.text = "\t\tCrit Chance: %s" % [
 					str(Global.formatFloat(item.critChance))
 				]
-				
 				stats.add_child(newLabel.duplicate())
 				
-				newLabel.text = "\t\tCrit Multiplier: (%s)" % [
+				newLabel.text = "\t\tCrit Multiplier: %s" % [
 					str(Global.formatFloat(item.critMulti))
 				]
-				
 				stats.add_child(newLabel.duplicate())
 			
 			var thisRarity : String = ""
@@ -114,11 +113,15 @@ func _ready() -> void:
 					thisRarity = "Historical"
 					rarityColor = Color.BLACK
 			
-			newLabel.text = "\t\tRarity: ([color=%s]%s[/color])" % [
+			newLabel.text = "\t\tRarity: [color=%s]%s[/color]" % [
 				rarityColor.to_html(),
 				str(thisRarity)
 			]
+			stats.add_child(newLabel.duplicate())
 			
+			newLabel.text = "\t\tCost: %s" % [
+				str(Global.formatFloat(item.cost))
+			]
 			stats.add_child(newLabel.duplicate())
 	
 	bg.size.y = stats.size.y + 30
