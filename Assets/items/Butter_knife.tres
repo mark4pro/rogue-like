@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://b3a0hq8gaedfp"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_3g1rd"]
+[ext_resource type="Texture2D" uid="uid://cjdwjsfo4lwar" path="res://Assets/imgs/weapons/butter_knife.png" id="1_bo7fe"]
+[ext_resource type="PackedScene" uid="uid://c43dliaj1lwnt" path="res://Assets/prefabs/weapons/butter_Knife.tscn" id="3_m4c5j"]
+
+[resource]
+script = ExtResource("1_3g1rd")
+weaponScene = ExtResource("3_m4c5j")
+baseDamage = 15.0
+id = 2
+name = "Butter Knife"
+itemIcon = ExtResource("1_bo7fe")
+itemType = 1
+equippable = true
+stackable = false
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

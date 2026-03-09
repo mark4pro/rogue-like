@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://r7ajsrgyas4i"]
+
+[ext_resource type="Texture2D" uid="uid://drouorice6pee" path="res://Assets/imgs/weapons/banana.png" id="1_570hn"]
+[ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_hxo7r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hxo7r"]
+size = Vector2(26.86031, 9.984378)
+
+[node name="Node2D" type="Node2D" unique_id=1200643578 node_paths=PackedStringArray("col", "sprite")]
+script = ExtResource("1_hxo7r")
+col = NodePath("Sprite2D/Area2D")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764474841]
+position = Vector2(5.0000005, -14.999999)
+rotation = -1.727876
+scale = Vector2(0.6, 0.6)
+texture = ExtResource("1_570hn")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=1944933314]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=1851784249]
+position = Vector2(10.505907, -2.3799624)
+rotation = -0.4712389
+shape = SubResource("RectangleShape2D_hxo7r")
