@@ -487,6 +487,62 @@ theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 8
 
+[node name="pickupMenu" type="CanvasLayer" parent="." unique_id=51222896]
+
+[node name="Control" type="Control" parent="pickupMenu" unique_id=1782156158]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="pickupMenu/Control" unique_id=2033467235]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -250.0
+offset_right = 400.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.21176471, 0.16470589, 0.14901961, 1)
+
+[node name="Label" type="Label" parent="pickupMenu/Control/ColorRect" unique_id=901448843]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 42
+text = "Pickup"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="pickupMenu/Control/ColorRect" unique_id=839794302]
+layout_mode = 0
+offset_top = 50.0
+offset_right = 800.0
+offset_bottom = 500.0
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="pickupMenu/Control/ColorRect/ScrollContainer" unique_id=820472943]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
 [node name="pauseMenu" type="CanvasLayer" parent="." unique_id=732976117]
 layer = 6
 visible = false
@@ -547,6 +603,7 @@ text = "Exit"
 metadata/_edit_group_ = true
 
 [node name="deathMenu" type="CanvasLayer" parent="." unique_id=133084291]
+layer = 3
 visible = false
 
 [node name="deathScreen" type="Control" parent="deathMenu" unique_id=279523899]

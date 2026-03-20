@@ -59,7 +59,7 @@ func update(delta: float, target: Vector2) -> void:
 			var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.angleRange
 			var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.radius, angRange, weapon.steps)
 			
-			if  not weaponNode:
+			if not weaponNode:
 				var newWeapon : Node2D = weapon.weaponScene.instantiate()
 				newWeapon.name = "Weapon"
 				
