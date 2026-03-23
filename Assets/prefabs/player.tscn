@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://dwmaslk0joqji" path="res://Script/inventory_ui.gd" id="5_w0l5f"]
 [ext_resource type="Script" uid="uid://lad2fj3lc8w3" path="res://Script/pause_menu.gd" id="6_4312i"]
 [ext_resource type="Script" uid="uid://b6bwarcve0kkn" path="res://Script/death_screen.gd" id="7_4312i"]
+[ext_resource type="Script" uid="uid://dr55hdm7q5xwe" path="res://Script/pickup_menu.gd" id="7_wwh7s"]
+[ext_resource type="PackedScene" uid="uid://cnyseror8u6js" path="res://Assets/prefabs/ui/pickup_menu_ui_prefab.tscn" id="8_8tub1"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mbpd7"]
 friction = 0.0
@@ -488,8 +490,10 @@ theme_override_constants/v_separation = 2
 columns = 8
 
 [node name="pickupMenu" type="CanvasLayer" parent="." unique_id=51222896]
+visible = false
 
-[node name="Control" type="Control" parent="pickupMenu" unique_id=1782156158]
+[node name="pickup" type="Control" parent="pickupMenu" unique_id=1782156158 node_paths=PackedStringArray("vBoxContainer")]
+modulate = Color(1, 1, 1, 0.5647059)
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
@@ -502,8 +506,11 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("7_wwh7s")
+pickupItemUI = ExtResource("8_8tub1")
+vBoxContainer = NodePath("ColorRect/ScrollContainer/VBoxContainer")
 
-[node name="ColorRect" type="ColorRect" parent="pickupMenu/Control" unique_id=2033467235]
+[node name="ColorRect" type="ColorRect" parent="pickupMenu/pickup" unique_id=2033467235]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -518,7 +525,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.21176471, 0.16470589, 0.14901961, 1)
 
-[node name="Label" type="Label" parent="pickupMenu/Control/ColorRect" unique_id=901448843]
+[node name="Label" type="Label" parent="pickupMenu/pickup/ColorRect" unique_id=901448843]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 1
 anchors_preset = 10
@@ -531,17 +538,18 @@ text = "Pickup"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="pickupMenu/Control/ColorRect" unique_id=839794302]
+[node name="ScrollContainer" type="ScrollContainer" parent="pickupMenu/pickup/ColorRect" unique_id=839794302]
 layout_mode = 0
 offset_top = 50.0
 offset_right = 800.0
 offset_bottom = 500.0
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="pickupMenu/Control/ColorRect/ScrollContainer" unique_id=820472943]
+[node name="VBoxContainer" type="VBoxContainer" parent="pickupMenu/pickup/ColorRect/ScrollContainer" unique_id=820472943]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 1
 
 [node name="pauseMenu" type="CanvasLayer" parent="." unique_id=732976117]
 layer = 6

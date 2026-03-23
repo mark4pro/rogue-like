@@ -90,32 +90,9 @@ func _ready() -> void:
 				]
 				stats.add_child(newLabel.duplicate())
 			
-			var thisRarity : String = ""
-			var rarityColor : Color = Color.WEB_GRAY
-			
-			match item.rarity:
-				0: 
-					thisRarity = "Common"
-					rarityColor = Color.WEB_GRAY
-				1:
-					thisRarity = "Uncommon"
-					rarityColor = Color.GREEN_YELLOW
-				2:
-					thisRarity = "Rare"
-					rarityColor = Color.ROYAL_BLUE
-				3:
-					thisRarity = "Epic"
-					rarityColor = Color.WEB_PURPLE
-				4:
-					thisRarity = "Legend"
-					rarityColor = Color.GOLDENROD
-				5:
-					thisRarity = "Historical"
-					rarityColor = Color.BLACK
-			
 			newLabel.text = "\t\tRarity: [color=%s]%s[/color]" % [
-				rarityColor.to_html(),
-				str(thisRarity)
+				item.getRarity().color.to_html(),
+				str(item.getRarity().txt)
 			]
 			stats.add_child(newLabel.duplicate())
 			

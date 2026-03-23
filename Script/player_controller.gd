@@ -9,6 +9,7 @@ var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 @onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
 @onready var roll_cooldown : Timer = $roll_cooldown
 @onready var Inventory_UI : CanvasLayer = $inventoryUI
+@onready var Pickup_UI : CanvasLayer = $pickupMenu
 @onready var camera : Camera2D = $Camera2D
 @onready var pauseMenu : CanvasLayer = $pauseMenu
 @onready var deathScreen : CanvasLayer = $deathMenu
@@ -265,21 +266,30 @@ func _process(delta: float) -> void:
 	#pause menu 
 	if Input.is_action_just_pressed("pause"):
 		get_tree().paused = !get_tree().paused
-		if not Inventory_UI.visible and not dbck:
+		if not Inventory_UI.visible and not Pickup_UI.visible and not dbck:
 			pauseMenu.visible = !pauseMenu.visible
 		else:
 			Inventory_UI.visible = false
+			Pickup_UI.visible = false
 			if dbck: dbck.queue_free()
 	
 	if not is_dead:
 		#inventory menu
-		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck:
+		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck \
+		and not Pickup_UI.visible:
 			Global.inventoryUI.gen_inventory()
 			Inventory_UI.visible = !Inventory_UI.visible
 			get_tree().paused = !get_tree().paused
 		
+		#pickup menu
+		if Input.is_action_just_pressed("pickup") and not pauseMenu.visible and not dbck \
+		and not Inventory_UI.visible:
+			Pickup_UI.visible = !Pickup_UI.visible
+			get_tree().paused = !get_tree().paused
+		
 		#debug menu
-		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible:
+		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible \
+		and not Pickup_UI.visible:
 			if not dbck:
 				var dbmenu : CanvasLayer = load("res://Assets/prefabs/ui/debug.tscn").instantiate()
 				dbmenu.name = "debugMenu"

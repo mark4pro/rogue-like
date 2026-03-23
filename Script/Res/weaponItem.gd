@@ -28,9 +28,6 @@ enum animType {
 @export var damage : Vector2
 @export var critChance : float
 @export var critMulti : float
-@export var rarity : int
-
-var setDay : int = 0
 
 func rollStats() -> void:
 	if Global.sceneIndex != 0:

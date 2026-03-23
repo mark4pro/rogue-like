@@ -30,9 +30,56 @@ enum item_type {
 @export var costVar : float = 0.2
 @export var rolled : bool = false
 @export var quantity : int = 1
+@export_category("Rolled Stats")
+@export var rarity : int
+
+var setDay : int = 0
 
 func rollStats() -> void:
+	if Global.sceneIndex != 0:
+		setDay = Global.runDays
+	else:
+		var per = lerp(0.5, 1.0, Global.performance)
+		setDay = Global.meta * per
+	
+	var rng : RandomNumberGenerator = RandomNumberGenerator.new()
+	rng.seed = Global.rng
+	
+	var dayBias : float = setDay * 0.015
+	
+	var roll : float = clamp(rng.randf() + dayBias, 0.0, 0.999)
+	rarity = int(roll * 6)
+	
+	Global.rng = randi()
 	rolled = true
+
+func getRarity() -> Dictionary:
+	var result : Dictionary = {
+		"txt":"",
+		"color":Color.WEB_GRAY
+	}
+	
+	match rarity:
+		0: 
+			result.txt = "Common"
+			result.color = Color.WEB_GRAY
+		1:
+			result.txt = "Uncommon"
+			result.color = Color.GREEN_YELLOW
+		2:
+			result.txt = "Rare"
+			result.color = Color.ROYAL_BLUE
+		3:
+			result.txt = "Epic"
+			result.color = Color.WEB_PURPLE
+		4:
+			result.txt = "Legend"
+			result.color = Color.GOLDENROD
+		5:
+			result.txt = "Historical"
+			result.color = Color.BLACK
+	
+	return result
 
 func use() -> void:
 	pass

@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://cnyseror8u6js"]
+
+[ext_resource type="Script" uid="uid://0etk1o05tf7b" path="res://Script/pickup_menu_ui_prefab.gd" id="1_hy6s1"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_4bqh5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5cavp"]
+bg_color = Color(0.18431373, 0.18431373, 0.18431373, 0.5882353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7p5lc"]
+bg_color = Color(0.4817894, 0.48178953, 0.4817894, 0.5882353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u7d3a"]
+bg_color = Color(0.38431373, 0.38431373, 0.38431373, 0.5882353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rknoq"]
+bg_color = Color(0.39607844, 0.08627451, 0.09803922, 0.5882353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qbxj7"]
+bg_color = Color(0.38431373, 0.38431373, 0.38431373, 0.5882353)
+
+[node name="BG" type="ColorRect" unique_id=1962336295]
+custom_minimum_size = Vector2(0, 50)
+offset_right = 800.0
+offset_bottom = 50.0
+color = Color(0.27450982, 0.27450982, 0.27450982, 0.39215687)
+script = ExtResource("1_hy6s1")
+
+[node name="Name" type="RichTextLabel" parent="." unique_id=704673061]
+custom_minimum_size = Vector2(736, 0)
+layout_mode = 1
+anchors_preset = 9
+anchor_bottom = 1.0
+offset_right = 1.0
+grow_vertical = 2
+bbcode_enabled = true
+text = "Name"
+fit_content = true
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="." unique_id=1697344024]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -8.0
+grow_horizontal = 0
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_4bqh5")
+theme_override_font_sizes/font_size = 32
+theme_override_styles/normal = SubResource("StyleBoxFlat_5cavp")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7p5lc")
+theme_override_styles/hover = SubResource("StyleBoxFlat_u7d3a")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_rknoq")
+theme_override_styles/focus = SubResource("StyleBoxFlat_qbxj7")
+text = "Take"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
