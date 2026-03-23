@@ -14,6 +14,7 @@ var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 @onready var pauseMenu : CanvasLayer = $pauseMenu
 @onready var deathScreen : CanvasLayer = $deathMenu
 @onready var boostTimer : Timer = $speedTimer
+@onready var eyes : Array[Marker2D] = [$RotPoint/Sprite2D/Eye_1, $RotPoint/Sprite2D/Eye_2]
 
 @export_category("Stats")
 @export var max_health : float = 100
@@ -70,6 +71,9 @@ func _ready():
 	
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
+	
+	for i in eyes:
+		weapSys.spawnPos.append(i.position)
 	
 	if bounds:
 		var minX = INF

@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://fq1c7ljc7flh"]
+
+[sub_resource type="Curve" id="Curve_3mone"]
+_data = [Vector2(0, 1), 0.0, -0.75, 0, 0, Vector2(1, 0.2967437), -0.75, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_l1euy"]
+colors = PackedColorArray(0.41568628, 0, 0, 1, 0.7529412, 0, 0, 0.39215687)
+
+[node name="Laser" type="Line2D" unique_id=906299086]
+points = PackedVector2Array(0, 0, 100, 0)
+width = 3.0
+width_curve = SubResource("Curve_3mone")
+gradient = SubResource("Gradient_l1euy")

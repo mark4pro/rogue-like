@@ -104,6 +104,7 @@ func _process(delta: float) -> void:
 		#Weapon system setup
 		weapSys.parentNode = self
 		weapSys.posOffset = Vector2(0, 0)
+		weapSys.spawnPos.append(eye.global_position)
 		weapSys.weapon = weapon
 		if Global.player: weapSys.update(delta, Global.player.position)
 		

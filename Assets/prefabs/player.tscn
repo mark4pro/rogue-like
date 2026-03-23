@@ -336,6 +336,12 @@ sprite_frames = SubResource("SpriteFrames_i87ed")
 animation = &"death"
 speed_scale = 4.005
 
+[node name="Eye_1" type="Marker2D" parent="RotPoint/Sprite2D" unique_id=607770776]
+position = Vector2(2, -3)
+
+[node name="Eye_2" type="Marker2D" parent="RotPoint/Sprite2D" unique_id=1188033877]
+position = Vector2(8, -3)
+
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
 wait_time = 2.0
 one_shot = true

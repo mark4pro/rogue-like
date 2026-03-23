@@ -3,7 +3,8 @@ class_name WeaponItem
 
 enum animType {
 	SWING,
-	AIM
+	AIM,
+	AIM_LASER,
 }
 
 @export_category("Weapon")
@@ -23,6 +24,10 @@ enum animType {
 @export var steps : int = 30
 @export var duration : float = 1
 @export var speedMulti : float = 2
+@export_category("Laser")
+@export var range : float = 100
+@export var activateSpeed : float = 5
+@export var deactivateSpeed : float = 5
 
 @export_category("Rolled Stats")
 @export var damage : Vector2

@@ -5,6 +5,7 @@ class_name WeaponSys
 @export var weapon : WeaponItem = null
 @export var posOffset : Vector2 = Vector2.ZERO
 @export var rotOffset : float = 0
+@export var spawnPos : Array[Vector2] = []
 
 @export var time : float = 0
 @export var isAttacking : bool = false
@@ -15,6 +16,8 @@ var t : float = 0
 var attackDir : int = 1
 var flip : bool = false
 var lockedFlip : bool = false
+
+var spawned : Array[Node] = []
 
 func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: int) -> Array[Vector2]:
 	var points : Array[Vector2] = []
@@ -44,56 +47,79 @@ func update(delta: float, target: Vector2) -> void:
 		
 		if not isAttacking: flip = target.x < parentNode.global_position.x
 		
-		if not weapon and weaponNode:
-			weaponNode.queue_free()
+		if not weapon and (weaponNode or spawned.size() > 0):
+			if weaponNode: weaponNode.queue_free()
+			else:
+				for i in spawned:
+					if i: i.queue_free()
+				spawned = []
 			reset()
 			oldWeapon = null
 		
 		if oldWeapon != weapon:
+			for i in spawned: 
+				if i: i.queue_free()
+			spawned = []
 			if weaponNode: weaponNode.queue_free()
 			reset()
 			oldWeapon = weapon
 		
 		if weapon:
-			var rot : float = (target - (parentNode.global_position + posOffset)).angle() + rotOffset
-			var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.angleRange
-			var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.radius, angRange, weapon.steps)
-			
-			if not weaponNode:
-				var newWeapon : Node2D = weapon.weaponScene.instantiate()
-				newWeapon.name = "Weapon"
-				
-				var newPos : Vector2 = parentNode.to_local(points[-1])
-				newWeapon.position = newPos
-				
-				newWeapon.rotation_degrees = weapon.restAngle
-				newWeapon.z_as_relative = true
-				newWeapon.z_index = weapon.zRange.x
-				if "weapSys" in newWeapon: newWeapon.weapSys = self
-				parentNode.add_child(newWeapon)
-			else:
-				if isAttacking:
-					var step : float = delta / weapon.duration
-					t += (step * attackDir) * weapon.speedMulti
-				
-				if t >= 1.0:
-					t = 1.0
-					weaponNode.reset()
-					isAttacking = false
-					attackDir = -1
-				elif t <= 0.0:
-					t = 0.0
-					weaponNode.reset()
-					isAttacking = false
-					attackDir = 1
-				
-				var index : int = int(t * (points.size() - 1))
-				index = clampi(index, 0, points.size() - 1)
-				
-				var newPos : Vector2 = parentNode.to_local(points[index])
-				weaponNode.position = newPos.rotated(rot) + posOffset
-				
-				var restRot : float = lerp(weapon.restAngle, -(weapon.restAngle - 180), t)
-				weaponNode.rotation_degrees = rad_to_deg(rot) + restRot
-				
-				weaponNode.z_index = weapon.zRange.x if t < 0.5 else weapon.zRange.y
+			match weapon.animationType:
+				weapon.animType.SWING:
+					var rot : float = (target - (parentNode.global_position + posOffset)).angle() + rotOffset
+					var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.angleRange
+					var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.radius, angRange, weapon.steps)
+					
+					if not weaponNode:
+						var newWeapon : Node2D = weapon.weaponScene.instantiate()
+						newWeapon.name = "Weapon"
+						
+						var newPos : Vector2 = parentNode.to_local(points[-1])
+						newWeapon.position = newPos
+						
+						newWeapon.rotation_degrees = weapon.restAngle
+						newWeapon.z_as_relative = true
+						newWeapon.z_index = weapon.zRange.x
+						if "weapSys" in newWeapon: newWeapon.weapSys = self
+						parentNode.add_child(newWeapon)
+					else:
+						if isAttacking:
+							var step : float = delta / weapon.duration
+							t += (step * attackDir) * weapon.speedMulti
+						
+						if t >= 1.0:
+							t = 1.0
+							weaponNode.reset()
+							isAttacking = false
+							attackDir = -1
+						elif t <= 0.0:
+							t = 0.0
+							weaponNode.reset()
+							isAttacking = false
+							attackDir = 1
+						
+						var index : int = int(t * (points.size() - 1))
+						index = clampi(index, 0, points.size() - 1)
+						
+						var newPos : Vector2 = parentNode.to_local(points[index])
+						weaponNode.position = newPos.rotated(rot) + posOffset
+						
+						var restRot : float = lerp(weapon.restAngle, -(weapon.restAngle - 180), t)
+						weaponNode.rotation_degrees = rad_to_deg(rot) + restRot
+						
+						weaponNode.z_index = weapon.zRange.x if t < 0.5 else weapon.zRange.y
+				weapon.animType.AIM_LASER:
+					if not spawned.size() == spawnPos.size():
+						for i in spawnPos:
+							var newWeapon : Node2D = weapon.weaponScene.instantiate()
+							newWeapon.name = "Weapon " + str(spawnPos.find(i))
+							newWeapon.position = i
+							#newWeapon.z_as_relative = true
+							#newWeapon.z_index = weapon.zRange.x
+							if "weapSys" in newWeapon: newWeapon.weapSys = self
+							parentNode.add_child(newWeapon)
+							spawned.append(newWeapon)
+					else:
+						if isAttacking:
+							pass
