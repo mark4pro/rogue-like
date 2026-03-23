@@ -5,10 +5,13 @@ _data = [Vector2(0, 1), 0.0, -0.75, 0, 0, Vector2(1, 0.2967437), -0.75, 0.0, 0, 
 point_count = 2
 
 [sub_resource type="Gradient" id="Gradient_l1euy"]
-colors = PackedColorArray(0.41568628, 0, 0, 1, 0.7529412, 0, 0, 0.39215687)
+colors = PackedColorArray(0.41568628, 0, 0, 0.39215687, 0.7529412, 0, 0, 0.39215687)
 
 [node name="Laser" type="Line2D" unique_id=906299086]
 points = PackedVector2Array(0, 0, 100, 0)
 width = 3.0
 width_curve = SubResource("Curve_3mone")
+default_color = Color(1, 1, 1, 0.13333334)
 gradient = SubResource("Gradient_l1euy")
+begin_cap_mode = 2
+end_cap_mode = 2

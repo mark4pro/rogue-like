@@ -121,5 +121,21 @@ func update(delta: float, target: Vector2) -> void:
 							parentNode.add_child(newWeapon)
 							spawned.append(newWeapon)
 					else:
+						for i in spawned:
+							var index : int = spawned.find(i)
+							
+							var _dir : Vector2 = target - parentNode.to_global(spawnPos[index])
+							var dir : Vector2 = _dir.normalized()
+							var dist : float = _dir.length()
+							
+							var clampedDist : float = min(dist, weapon.range)
+							var thisPos : Vector2 = dir * clampedDist
+							
+							i.points[1] = t * thisPos
+						
 						if isAttacking:
-							pass
+							t = min(t + (weapon.activateSpeed * delta), 1)
+						else:
+							t = max(t - (weapon.deactivateSpeed * delta), 0)
+						if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+							isAttacking = false
