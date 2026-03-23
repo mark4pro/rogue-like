@@ -333,7 +333,6 @@ position = Vector2(0, 4)
 texture_filter = 1
 position = Vector2(0, -4)
 sprite_frames = SubResource("SpriteFrames_i87ed")
-animation = &"death"
 speed_scale = 4.005
 
 [node name="Eye_1" type="Marker2D" parent="RotPoint/Sprite2D" unique_id=607770776]

@@ -114,7 +114,7 @@ func update(delta: float, target: Vector2) -> void:
 						for i in spawnPos:
 							var newWeapon : Node2D = weapon.weaponScene.instantiate()
 							newWeapon.name = "Weapon " + str(spawnPos.find(i))
-							newWeapon.position = i
+							newWeapon.global_position = i
 							#newWeapon.z_as_relative = true
 							#newWeapon.z_index = weapon.zRange.x
 							if "weapSys" in newWeapon: newWeapon.weapSys = self
@@ -124,7 +124,9 @@ func update(delta: float, target: Vector2) -> void:
 						for i in spawned:
 							var index : int = spawned.find(i)
 							
-							var _dir : Vector2 = target - parentNode.to_global(spawnPos[index])
+							i.global_position = spawnPos[index]
+							
+							var _dir : Vector2 = target - spawnPos[index]
 							var dir : Vector2 = _dir.normalized()
 							var dist : float = _dir.length()
 							
@@ -133,9 +135,18 @@ func update(delta: float, target: Vector2) -> void:
 							
 							i.points[1] = t * thisPos
 						
-						if isAttacking:
+						#checks if you are rolling
+						var canAttack : bool = true
+						if "roll_state" in parentNode and parentNode.roll_state != 0: canAttack = false
+						
+						if isAttacking and canAttack:
 							t = min(t + (weapon.activateSpeed * delta), 1)
 						else:
-							t = max(t - (weapon.deactivateSpeed * delta), 0)
+							var thisDeactivateSpeed : float = weapon.deactivateSpeed
+							
+							#this line makes the laser retract faster so it's gone before you roll
+							if not canAttack: thisDeactivateSpeed *= 2
+							
+							t = max(t - (thisDeactivateSpeed * delta), 0)
 						if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 							isAttacking = false

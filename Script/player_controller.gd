@@ -61,6 +61,7 @@ var roll_dir : Vector2 = Vector2.ZERO
 var bounds : CollisionPolygon2D = null
 
 var weapSys : WeaponSys = WeaponSys.new()
+var defaultEyePos : Array[Vector2] = []
 
 func _ready():
 	$UI.visible = true
@@ -72,8 +73,11 @@ func _ready():
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
 	
-	for i in eyes:
-		weapSys.spawnPos.append(i.position)
+	#init spawnPos array with correct size
+	weapSys.spawnPos.resize(eyes.size())
+	
+	#Store start local positions
+	for i in eyes: defaultEyePos.append(i.position)
 	
 	if bounds:
 		var minX = INF
@@ -213,6 +217,17 @@ func _process(delta: float) -> void:
 		else:
 			$CollisionShape2D.position.x = -1.5
 		
+		#Move eyes with the walk animation
+		if anim == "walk":
+			var fIndex : int = sprite.frame
+			
+			var offset = fIndex
+			if fIndex > 4: offset = 8 - fIndex
+			
+			for i in eyes:
+				var index : int = eyes.find(i)
+				i.position.x = defaultEyePos[index].x + offset
+		
 		#Finish roll and start cool down
 		#Had to change this since _process updates before _physics_process thus if rotation = 0
 		#	and triggering this at the wrong time.
@@ -235,6 +250,9 @@ func _process(delta: float) -> void:
 	weapSys.parentNode = self
 	weapSys.posOffset = Vector2(0, 5)
 	weapSys.rotOffset = rot_point.rotation
+	for i in eyes:
+		var index : int = eyes.find(i)
+		weapSys.spawnPos[index] = i.global_position
 	weapSys.weapon = Global.weapon if not is_dead else null
 	weapSys.update(delta, get_global_mouse_position())
 	if not get_tree().paused and not Input.is_action_pressed("place") \
