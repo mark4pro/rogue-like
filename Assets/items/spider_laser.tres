@@ -9,6 +9,7 @@ script = ExtResource("1_h3726")
 weaponScene = ExtResource("2_0nyhn")
 baseDamage = 2.0
 animationType = 2
+range = 65.0
 id = 36
 name = "Spider Laser"
 itemIcon = ExtResource("1_7kplm")

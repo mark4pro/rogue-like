@@ -26,22 +26,8 @@ sprite = NodePath("sprite2D")
 coll = NodePath("CollisionShape2D")
 healthBar = NodePath("UI/healthBar")
 weapon = ExtResource("2_8w02l")
-maxHealth = null
-health = null
-moneyChance = null
-moneyRange = null
-useGlobalLootList = null
-lootChance = null
-lootAmount = null
-equipDropChance = null
-coneSteps = null
 speed = null
-stopDist = 35.0
 wonderUpdate = null
-visionRange = null
-visionAngle = null
-timeUntilChase = null
-timeUntilChaseEnd = null
 metadata/_edit_group_ = true
 
 [node name="sprite2D" type="Sprite2D" parent="." unique_id=17540074]
