@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://fq1c7ljc7flh"]
 
+[ext_resource type="Script" uid="uid://c34r1x0te5ba1" path="res://Script/weapons/basic_laser.gd" id="1_l1euy"]
+
 [sub_resource type="Curve" id="Curve_3mone"]
 _data = [Vector2(0, 1), 0.0, -0.75, 0, 0, Vector2(1, 0.2967437), -0.75, 0.0, 0, 0]
 point_count = 2
@@ -15,3 +17,4 @@ default_color = Color(1, 1, 1, 0.13333334)
 gradient = SubResource("Gradient_l1euy")
 begin_cap_mode = 2
 end_cap_mode = 2
+script = ExtResource("1_l1euy")

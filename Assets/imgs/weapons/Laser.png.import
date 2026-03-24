@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://so24jgbo1u3v"
-path="res://.godot/imported/teleportation_potion.png-7c880a438d42f3c17a21ecb6dfca5f24.ctex"
+uid="uid://ecj4p2cj8218"
+path="res://.godot/imported/Laser.png-abd5b24278214c60597fcbf4900ee2e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/imgs/weapons/teleportation_potion.png"
-dest_files=["res://.godot/imported/teleportation_potion.png-7c880a438d42f3c17a21ecb6dfca5f24.ctex"]
+source_file="res://Assets/imgs/weapons/Laser.png"
+dest_files=["res://.godot/imported/Laser.png-abd5b24278214c60597fcbf4900ee2e2.ctex"]
 
 [params]
 

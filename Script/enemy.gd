@@ -2,6 +2,7 @@ extends RigidBody2D
 
 @export var nav : NavigationAgent2D = null
 @export var eye : Marker2D = null
+@export var laserEyes : Array[Marker2D] = []
 @export var sprite : Sprite2D = null
 @export var coll : CollisionShape2D = null
 @export var healthBar : ProgressBar = null
@@ -51,6 +52,8 @@ func _ready() -> void:
 		nav.connect("velocity_computed", velocity_computed)
 	else:
 		print("Please check nav, eye, sprite, and coll!")
+	
+	weapSys.spawnPos.resize(laserEyes.size())
 
 func _process(delta: float) -> void:
 	if nav and eye and sprite and coll:
@@ -104,7 +107,9 @@ func _process(delta: float) -> void:
 		#Weapon system setup
 		weapSys.parentNode = self
 		weapSys.posOffset = Vector2(0, 0)
-		weapSys.spawnPos.append(eye.global_position)
+		for i in laserEyes:
+			var index : int = laserEyes.find(i)
+			weapSys.spawnPos[index] = i
 		weapSys.weapon = weapon
 		if Global.player: weapSys.update(delta, Global.player.position)
 		

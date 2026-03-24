@@ -42,6 +42,7 @@ Player=""
 items=""
 Bounds=""
 Enemy=""
+Exclude_From_Lasers=""
 
 [input]
 

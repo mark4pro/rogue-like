@@ -104,7 +104,7 @@ func update(delta: float) -> void:
 		navAgent.set_velocity(Vector2.ZERO)
 		
 		#Weapon system attack
-		if currentState == state.CHASE and \
+		if currentState == state.CHASE and targetNode and \
 		body.global_position.distance_to(targetNode.global_position) <= stopDist and \
 		not body.get_tree().paused and weapSys and not weapSys.isAttacking:
 				weapSys.attack()

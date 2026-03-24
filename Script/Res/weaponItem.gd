@@ -28,6 +28,7 @@ enum animType {
 @export var range : float = 100
 @export var activateSpeed : float = 5
 @export var deactivateSpeed : float = 5
+@export var laserAttackSpeed : float = 1
 
 @export_category("Rolled Stats")
 @export var damage : Vector2

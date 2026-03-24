@@ -252,7 +252,7 @@ func _process(delta: float) -> void:
 	weapSys.rotOffset = rot_point.rotation
 	for i in eyes:
 		var index : int = eyes.find(i)
-		weapSys.spawnPos[index] = i.global_position
+		weapSys.spawnPos[index] = i
 	weapSys.weapon = Global.weapon if not is_dead else null
 	weapSys.update(delta, get_global_mouse_position())
 	if not get_tree().paused and not Input.is_action_pressed("place") \
