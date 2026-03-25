@@ -34,10 +34,10 @@ func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: in
 	
 	return points
 
-func raycastTo(start: Vector2, dir: Vector2, dist: float) -> Dictionary:
+func raycastTo(start: Vector2, dir: Vector2, dist: float, range: float) -> Dictionary:
 	var space : PhysicsDirectSpaceState2D = parentNode.get_world_2d().direct_space_state
 	
-	var trueDist : float = min(dist, weapon.range)
+	var trueDist : float = min(dist, range)
 	var to : Vector2 = start + dir * trueDist
 	
 	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(start, to)
@@ -82,8 +82,8 @@ func update(delta: float, target: Vector2) -> void:
 			match weapon.animationType:
 				weapon.animType.SWING:
 					var rot : float = (target - (parentNode.global_position + posOffset)).angle() + rotOffset
-					var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.angleRange
-					var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.radius, angRange, weapon.steps)
+					var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.swingAngleRange
+					var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.swingRadius, angRange, weapon.swingSteps)
 					
 					if not weaponNode:
 						var newWeapon : Node2D = weapon.weaponScene.instantiate()
@@ -92,15 +92,15 @@ func update(delta: float, target: Vector2) -> void:
 						var newPos : Vector2 = parentNode.to_local(points[-1])
 						newWeapon.position = newPos
 						
-						newWeapon.rotation_degrees = weapon.restAngle
+						newWeapon.rotation_degrees = weapon.swingRestAngle
 						newWeapon.z_as_relative = true
-						newWeapon.z_index = weapon.zRange.x
+						newWeapon.z_index = weapon.swingZRange.x
 						if "weapSys" in newWeapon: newWeapon.weapSys = self
 						parentNode.add_child(newWeapon)
 					else:
 						if isAttacking:
-							var step : float = delta / weapon.duration
-							t += (step * attackDir) * weapon.speedMulti
+							var step : float = delta / weapon.swingDuration
+							t += (step * attackDir) * weapon.swingSpeedMulti
 						
 						if t >= 1.0:
 							t = 1.0
@@ -119,10 +119,10 @@ func update(delta: float, target: Vector2) -> void:
 						var newPos : Vector2 = parentNode.to_local(points[index])
 						weaponNode.position = newPos.rotated(rot) + posOffset
 						
-						var restRot : float = lerp(weapon.restAngle, -(weapon.restAngle - 180), t)
+						var restRot : float = lerp(weapon.swingRestAngle, -(weapon.swingRestAngle - 180), t)
 						weaponNode.rotation_degrees = rad_to_deg(rot) + restRot
 						
-						weaponNode.z_index = weapon.zRange.x if t < 0.5 else weapon.zRange.y
+						weaponNode.z_index = weapon.swingZRange.x if t < 0.5 else weapon.swingZRange.y
 				weapon.animType.AIM_LASER:
 					if not spawned.size() == spawnPos.size():
 						excludeList.append(parentNode)
@@ -148,9 +148,9 @@ func update(delta: float, target: Vector2) -> void:
 							var dir : Vector2 = _dir.normalized()
 							var dist : float = _dir.length()
 							
-							var ray : Dictionary = raycastTo(spawnPos[index].global_position, dir, dist)
+							var ray : Dictionary = raycastTo(spawnPos[index].global_position, dir, dist, weapon.laserRange)
 							
-							var finalDist : float = weapon.range
+							var finalDist : float = weapon.laserRange
 							
 							if ray:
 								var hitDist : float = spawnPos[index].global_position.distance_to(ray.position)
@@ -163,7 +163,7 @@ func update(delta: float, target: Vector2) -> void:
 								if "take_damage" in thisTarget and "damage" in i and t != 0:
 									i.damage(thisTarget)
 							else:
-								finalDist = min(dist, weapon.range)
+								finalDist = min(dist, weapon.laserRange)
 							
 							var thisPos : Vector2 = dir * finalDist
 							
@@ -174,9 +174,9 @@ func update(delta: float, target: Vector2) -> void:
 						if "roll_state" in parentNode and parentNode.roll_state != 0: canAttack = false
 						
 						if isAttacking and canAttack:
-							t = min(t + (weapon.activateSpeed * delta), 1)
+							t = min(t + (weapon.laserActivateSpeed * delta), 1)
 						else:
-							var thisDeactivateSpeed : float = weapon.deactivateSpeed
+							var thisDeactivateSpeed : float = weapon.laserDeactivateSpeed
 							
 							#this line makes the laser retract faster so it's gone before you roll
 							if not canAttack: thisDeactivateSpeed *= 2
@@ -184,3 +184,9 @@ func update(delta: float, target: Vector2) -> void:
 							t = max(t - (thisDeactivateSpeed * delta), 0)
 						if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 							isAttacking = false
+				weapon.animType.RANGE:
+					#rangeSpawnAmount : int = 1
+					#rangePerSpawnDelay : float = 0
+					#rangeSpreadAngle : float = 0
+					#rangeFireTime : float = 1
+					pass

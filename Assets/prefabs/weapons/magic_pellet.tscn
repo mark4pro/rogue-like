@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://c33kw884111y8"]
+
+[ext_resource type="Texture2D" uid="uid://dnh362nl2wbom" path="res://Assets/imgs/weapons/Magic_Pellets.png" id="1_swbix"]
+[ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="2_yqal8"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_k6n3k"]
+radius = 15.0
+
+[sub_resource type="Curve" id="Curve_2g2i7"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_l22xp"]
+curve = SubResource("Curve_2g2i7")
+
+[sub_resource type="Curve" id="Curve_h805r"]
+_data = [Vector2(0.68025076, 1), 0.0, 0.33078066, 0, 0, Vector2(1, 0.46105522), -1.5143236, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_bbuaa"]
+curve = SubResource("Curve_h805r")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_u5sh7"]
+lifetime_randomness = 0.15
+emission_shape = 1
+emission_sphere_radius = 20.0
+angle_min = 1.0728835e-05
+angle_max = 1.0728835e-05
+direction = Vector3(-1, 0, 0)
+spread = 30.0
+initial_velocity_max = 150.0
+gravity = Vector3(0, 0, 0)
+linear_accel_min = -2.2351742e-06
+linear_accel_max = 21.189997
+radial_accel_min = -2.2351742e-06
+radial_accel_max = -2.2351742e-06
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+scale_min = 0.099999994
+scale_max = 0.099999994
+scale_over_velocity_max = 192.05
+scale_over_velocity_curve = SubResource("CurveTexture_bbuaa")
+color = Color(0.74, 0.44400004, 0.666, 1)
+alpha_curve = SubResource("CurveTexture_l22xp")
+
+[node name="magic_pellet" type="RigidBody2D" unique_id=281358061]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1944736931]
+visible = false
+shape = SubResource("CircleShape2D_k6n3k")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=205219844]
+texture = ExtResource("1_swbix")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=208940170]
+z_index = -1
+amount = 16
+texture = ExtResource("2_yqal8")
+process_material = SubResource("ParticleProcessMaterial_u5sh7")
+
+[node name="PointLight2D" type="PointLight2D" parent="." unique_id=611760652]
+energy = 0.5
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 1)
+texture = ExtResource("2_yqal8")
+texture_scale = 0.5
