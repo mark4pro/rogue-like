@@ -34,7 +34,9 @@ enum animType {
 @export var rangeSpawnAmount : int = 1
 @export var rangePerSpawnDelay : float = 0
 @export var rangeSpreadAngle : float = 0
-@export var rangeFireTime : float = 1
+@export var rangeFireSpeed : float = 1
+@export var rangeZOffset : int = 1
+@export var rangeSpeed : float = 25
 @export_category("Rolled Stats")
 @export var damage : Vector2
 @export var critChance : float

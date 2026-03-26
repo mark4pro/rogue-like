@@ -20,6 +20,8 @@ var lockedFlip : bool = false
 var spawned : Array[Node] = []
 var excludeList : Array[RID] = []
 
+var amount : int = 0
+
 func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: int) -> Array[Vector2]:
 	var points : Array[Vector2] = []
 	
@@ -188,5 +190,37 @@ func update(delta: float, target: Vector2) -> void:
 					#rangeSpawnAmount : int = 1
 					#rangePerSpawnDelay : float = 0
 					#rangeSpreadAngle : float = 0
-					#rangeFireTime : float = 1
-					pass
+					#rangeFireSpeed : float = 1
+					
+					if t >= 1 and amount < weapon.rangeSpawnAmount:
+						var newBullet = weapon.weaponScene.instantiate()
+						var avgPos = spawnPos.reduce(func(a, b): return a.global_position + b.global_position) / spawnPos.size()
+						newBullet.global_position = avgPos
+						
+						var dir : Vector2 = (target - avgPos).normalized()
+						var rot : float = dir.angle()
+						newBullet.rotation = rot
+						
+						newBullet.z_as_relative = false
+						newBullet.z_index = parentNode.z_index + weapon.rangeZOffset
+						if "weapSys" in newBullet: newBullet.weapSys = self
+						
+						if newBullet is RigidBody2D: newBullet.apply_impulse(dir * (1000 * weapon.rangeSpeed * delta))
+						
+						Global.currentScene.add_child(newBullet)
+						
+						amount += 1
+						t = 0
+					
+					#checks if you are rolling
+					var canAttack : bool = true
+					if "roll_state" in parentNode and parentNode.roll_state != 0: canAttack = false
+					
+					if isAttacking and canAttack:
+						t += min(t + (weapon.rangeFireSpeed * delta), 1)
+					else:
+						t = 0
+						amount = 0
+					
+					if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+						isAttacking = false

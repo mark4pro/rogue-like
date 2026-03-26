@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://c33kw884111y8"]
 
 [ext_resource type="Texture2D" uid="uid://dnh362nl2wbom" path="res://Assets/imgs/weapons/Magic_Pellets.png" id="1_swbix"]
+[ext_resource type="Script" uid="uid://bjg2u60uhe2ss" path="res://Script/weapons/basic_range.gd" id="1_yqal8"]
 [ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="2_yqal8"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_k6n3k"]
-radius = 15.0
+radius = 3.0
 
 [sub_resource type="Curve" id="Curve_2g2i7"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
@@ -36,29 +37,34 @@ radial_accel_min = -2.2351742e-06
 radial_accel_max = -2.2351742e-06
 tangential_accel_min = -2.2351742e-06
 tangential_accel_max = -2.2351742e-06
-scale_min = 0.099999994
-scale_max = 0.099999994
+scale_min = 0.01
+scale_max = 0.03
 scale_over_velocity_max = 192.05
 scale_over_velocity_curve = SubResource("CurveTexture_bbuaa")
 color = Color(0.74, 0.44400004, 0.666, 1)
 alpha_curve = SubResource("CurveTexture_l22xp")
 
-[node name="magic_pellet" type="RigidBody2D" unique_id=281358061]
+[node name="magic_pellet" type="RigidBody2D" unique_id=281358061 node_paths=PackedStringArray("col", "sprite")]
+script = ExtResource("1_yqal8")
+col = NodePath(".")
+sprite = NodePath("Sprite2D")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1944736931]
-visible = false
 shape = SubResource("CircleShape2D_k6n3k")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=205219844]
+scale = Vector2(0.2, 0.2)
 texture = ExtResource("1_swbix")
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=208940170]
 z_index = -1
+scale = Vector2(0.2, 0.2)
 amount = 16
 texture = ExtResource("2_yqal8")
 process_material = SubResource("ParticleProcessMaterial_u5sh7")
 
 [node name="PointLight2D" type="PointLight2D" parent="." unique_id=611760652]
+scale = Vector2(0.2, 0.2)
 energy = 0.5
 shadow_enabled = true
 shadow_color = Color(0, 0, 0, 1)
