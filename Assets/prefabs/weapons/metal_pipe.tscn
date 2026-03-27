@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://ee4rgn8qh6j6"]
+
+[ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_l0iin"]
+[ext_resource type="Texture2D" uid="uid://f51i00xyjcih" path="res://Assets/imgs/weapons/metal_pipe.png" id="2_gyym5"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_reggx"]
+size = Vector2(5, 34)
+
+[node name="Node2D" type="Node2D" unique_id=823954292 node_paths=PackedStringArray("col", "sprite")]
+script = ExtResource("1_l0iin")
+col = NodePath("Sprite2D/Area2D")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=745030983]
+texture_filter = 1
+position = Vector2(-2, -12)
+rotation = -0.7853982
+texture = ExtResource("2_gyym5")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=1043493074]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=1453786580]
+position = Vector2(6.010408, -3.8890877)
+rotation = 0.7853982
+scale = Vector2(0.99999994, 0.99999994)
+shape = SubResource("RectangleShape2D_reggx")
