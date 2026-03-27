@@ -59,7 +59,7 @@ position = Vector2(0, -33)
 position = Vector2(1, 2)
 texture = ExtResource("1_ofet6")
 
-[node name="Col" type="Area2D" parent="rotPoint/Sprite2D" unique_id=715220409]
+[node name="Col" type="Area2D" parent="rotPoint/Sprite2D" unique_id=715220409 groups=["Exclude_From_Lasers"]]
 visible = false
 position = Vector2(3, -37)
 

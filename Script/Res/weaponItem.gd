@@ -5,6 +5,7 @@ enum animType {
 	SWING,
 	AIM,
 	AIM_LASER,
+	RANGE,
 }
 
 @export_category("Weapon")
@@ -17,19 +18,25 @@ enum animType {
 @export_category("Animation")
 @export var animationType : animType = animType.SWING
 @export_category("Swing")
-@export var radius : Vector2 = Vector2(5, 5)
-@export var angleRange : Vector2 = Vector2(30, -30)
-@export var restAngle : float = -45
-@export var zRange : Vector2 = Vector2(-1, 1)
-@export var steps : int = 30
-@export var duration : float = 1
-@export var speedMulti : float = 2
+@export var swingRadius : Vector2 = Vector2(5, 5)
+@export var swingAngleRange : Vector2 = Vector2(30, -30)
+@export var swingRestAngle : float = -45
+@export var swingZRange : Vector2 = Vector2(-1, 1)
+@export var swingSteps : int = 30
+@export var swingDuration : float = 1
+@export var swingSpeedMulti : float = 2
 @export_category("Laser")
-@export var range : float = 100
-@export var activateSpeed : float = 5
-@export var deactivateSpeed : float = 5
+@export var laserRange : float = 100
+@export var laserActivateSpeed : float = 5
+@export var laserDeactivateSpeed : float = 5
 @export var laserAttackSpeed : float = 1
-
+@export_category("Range")
+@export var rangeSpawnAmount : int = 1
+@export var rangePerSpawnDelay : float = 0
+@export var rangeSpreadAngle : float = 0
+@export var rangeFireSpeed : float = 1
+@export var rangeZOffset : int = 1
+@export var rangeSpeed : float = 25
 @export_category("Rolled Stats")
 @export var damage : Vector2
 @export var critChance : float
