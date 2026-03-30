@@ -26,12 +26,13 @@ enum item_type {
 @export var placable : bool = false
 @export_category("Base Item Data")
 @export var weight : float = 1.0
-@export var cost : float = 0
+@export var baseCost : float = 30
 @export var costVar : float = 0.2
 @export var rolled : bool = false
 @export var quantity : int = 1
 @export_category("Rolled Stats")
-@export var rarity : int
+@export var rarity : int = -1
+@export var cost : int
 
 var setDay : int = 0
 
@@ -49,6 +50,15 @@ func rollStats() -> void:
 	
 	var roll : float = clamp(rng.randf() + dayBias, 0.0, 0.999)
 	rarity = int(roll * 6)
+	
+	var rarityMult : float = 1.0 + rarity * 0.25
+	
+	var curve : float = pow(setDay, 1.2)
+	var progMult : float = 1.0 + curve * 0.01
+	
+	if cost == 0:
+		var costVariance : float = baseCost * costVar
+		cost = roundi(rng.randf_range(baseCost - costVariance, baseCost + costVariance) * rarityMult * progMult)
 	
 	Global.rng = randi()
 	rolled = true

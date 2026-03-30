@@ -6,6 +6,15 @@ extends Control
 
 var item : BaseItem = null
 
+func getCompColor(thisProperty, equippedProperty) -> String:
+	var comp : float = thisProperty - equippedProperty
+				
+	var result : Color = Color.GREEN
+	if comp == 0: result = Color.WHITE
+	if comp < 0: result = Color.RED
+	
+	return result.to_html()
+
 func _ready() -> void:
 	if item:
 		nameTxt.text = " Name: " + item.name
@@ -26,53 +35,40 @@ func _ready() -> void:
 				str(Global.formatFloat(item.cost))
 			]
 			stats.add_child(newLabel.duplicate())
+		
 		if item is WeaponItem:
 			if Global.weapon and not item == Global.weapon:
-				var damComp : Vector2 = Vector2(item.damage.x - Global.weapon.damage.x, item.damage.y - Global.weapon.damage.y)
-				
-				var damMinColor : Color = Color.GREEN
-				if damComp.x == 0: damMinColor = Color.WHITE
-				if damComp.x < 0: damMinColor = Color.RED
-				
-				var damMaxColor : Color = Color.GREEN
-				if damComp.y == 0: damMaxColor = Color.WHITE
-				if damComp.y < 0: damMaxColor = Color.RED
-				
 				newLabel.text = "\t\tDamage range: ([color=%s]%s[/color] | %s, [color=%s]%s[/color] | %s)" % [
-					damMinColor.to_html(),
-					str(Global.formatFloat(damComp.x)),
+					getCompColor(item.damage.x, Global.weapon.damage.x),
+					str(Global.formatFloat(item.damage.x - Global.weapon.damage.x)),
 					str(Global.formatFloat(item.damage.x)),
-					damMaxColor.to_html(),
-					str(Global.formatFloat(damComp.y)),
+					getCompColor(item.damage.y, Global.weapon.damage.y),
+					str(Global.formatFloat(item.damage.y - Global.weapon.damage.y)),
 					str(Global.formatFloat(item.damage.y))
 				]
 				stats.add_child(newLabel.duplicate())
 				
-				var critChanceComp : float = item.critChance - Global.weapon.critChance
-				
-				var critChanceColor : Color = Color.GREEN
-				if critChanceComp == 0: critChanceColor = Color.WHITE
-				if critChanceComp < 0: critChanceColor = Color.RED
-				
 				newLabel.text = "\t\tCrit Chance: ([color=%s]%s[/color] | %s)" % [
-					critChanceColor.to_html(),
-					str(Global.formatFloat(critChanceComp)),
+					getCompColor(item.critChance, Global.weapon.critChance),
+					str(Global.formatFloat(item.critChance - Global.weapon.critChance)),
 					str(Global.formatFloat(item.critChance))
 				]
 				stats.add_child(newLabel.duplicate())
 				
-				var critMultiComp : float = item.critMulti - Global.weapon.critMulti
-				
-				var critMultiColor : Color = Color.GREEN
-				if critMultiComp == 0: critMultiColor = Color.WHITE
-				if critMultiComp < 0: critMultiColor = Color.RED
-				
 				newLabel.text = "\t\tCrit Multiplier: ([color=%s]%s[/color] | %s)" % [
-					critMultiColor.to_html(),
-					str(Global.formatFloat(critMultiComp)),
+					getCompColor(item.critMulti, Global.weapon.critMulti),
+					str(Global.formatFloat(item.critMulti - Global.weapon.critMulti)),
 					str(Global.formatFloat(item.critMulti))
 				]
 				stats.add_child(newLabel.duplicate())
+				
+				newLabel.text = "\t\tKnockback: ([color=%s]%s[/color] | %s)" % [
+					getCompColor(item.knockback, Global.weapon.knockback),
+					str(Global.formatFloat(item.knockback - Global.weapon.knockback)),
+					str(Global.formatFloat(item.knockback))
+				]
+				stats.add_child(newLabel.duplicate())
+				
 			if not Global.weapon or item == Global.weapon:
 				newLabel.text = "\t\tDamage range: (%s, %s)" % [
 					str(Global.formatFloat(item.damage.x)),
@@ -87,6 +83,11 @@ func _ready() -> void:
 				
 				newLabel.text = "\t\tCrit Multiplier: %s" % [
 					str(Global.formatFloat(item.critMulti))
+				]
+				stats.add_child(newLabel.duplicate())
+				
+				newLabel.text = "\t\tKnockback: %s" % [
+					str(Global.formatFloat(item.knockback))
 				]
 				stats.add_child(newLabel.duplicate())
 			

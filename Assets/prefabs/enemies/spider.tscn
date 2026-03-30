@@ -26,8 +26,6 @@ sprite = NodePath("sprite2D")
 coll = NodePath("CollisionShape2D")
 healthBar = NodePath("UI/healthBar")
 weapon = ExtResource("2_8w02l")
-speed = null
-wonderUpdate = null
 metadata/_edit_group_ = true
 
 [node name="sprite2D" type="Sprite2D" parent="." unique_id=17540074]

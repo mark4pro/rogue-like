@@ -53,6 +53,7 @@ func update() -> void:
 	
 	#Clear items with no quanitity
 	for i in data:
+		if not i.rolled: i.rollStats()
 		if i.quantity <= 0: 
 			if Global.weapon == i: Global.weapon = null
 			data.erase(i)

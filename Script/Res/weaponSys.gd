@@ -22,6 +22,10 @@ var excludeList : Array[RID] = []
 
 var amount : int = 0
 
+var lastTime : float = 0
+var firingActive : bool = false
+var perT : float = 0
+
 func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: int) -> Array[Vector2]:
 	var points : Array[Vector2] = []
 	
@@ -141,8 +145,8 @@ func update(delta: float, target: Vector2) -> void:
 							parentNode.add_child(newWeapon)
 							spawned.append(newWeapon)
 					else:
-						for i in spawned:
-							var index : int = spawned.find(i)
+						for index in range(spawned.size()):
+							var i = spawned[index]
 							
 							i.global_position = spawnPos[index].global_position
 							
@@ -162,7 +166,7 @@ func update(delta: float, target: Vector2) -> void:
 								if ray.collider is Area2D: thisTarget = ray.collider.get_parent()
 								
 								#Call the damage function
-								if "take_damage" in thisTarget and "damage" in i and t != 0:
+								if thisTarget.has_method("take_damage") and i.has_method("damage") and t > 0:
 									i.damage(thisTarget)
 							else:
 								finalDist = min(dist, weapon.laserRange)
@@ -187,40 +191,61 @@ func update(delta: float, target: Vector2) -> void:
 						if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 							isAttacking = false
 				weapon.animType.RANGE:
-					#rangeSpawnAmount : int = 1
-					#rangePerSpawnDelay : float = 0
-					#rangeSpreadAngle : float = 0
-					#rangeFireSpeed : float = 1
+					firingActive = t == 1
 					
-					if t >= 1 and amount < weapon.rangeSpawnAmount:
-						var newBullet = weapon.weaponScene.instantiate()
+					if firingActive:
 						var avgPos = spawnPos.reduce(func(a, b): return a.global_position + b.global_position) / spawnPos.size()
-						newBullet.global_position = avgPos
-						
 						var dir : Vector2 = (target - avgPos).normalized()
-						var rot : float = dir.angle()
-						newBullet.rotation = rot
 						
-						newBullet.z_as_relative = false
-						newBullet.z_index = parentNode.z_index + weapon.rangeZOffset
-						if "weapSys" in newBullet: newBullet.weapSys = self
+						if weapon.rangePerSpawnDelay == 0:
+							for i in range(weapon.rangeSpawnAmount):
+								spawnBullet(i, avgPos, dir, delta)
+								amount = weapon.rangeSpawnAmount
+						else:
+							if perT == 1 or amount == 0:
+								spawnBullet(amount, avgPos, dir, delta)
+								amount = min(amount + 1, weapon.rangeSpawnAmount)
+								perT = 0
+							perT = min(perT + (weapon.rangePerSpawnDelay * delta), 1)
 						
-						if newBullet is RigidBody2D: newBullet.apply_impulse(dir * (1000 * weapon.rangeSpeed * delta))
-						
-						Global.currentScene.add_child(newBullet)
-						
-						amount += 1
-						t = 0
+						if amount == weapon.rangeSpawnAmount:
+							amount = 0
+							t = 0
 					
 					#checks if you are rolling
 					var canAttack : bool = true
 					if "roll_state" in parentNode and parentNode.roll_state != 0: canAttack = false
 					
 					if isAttacking and canAttack:
-						t += min(t + (weapon.rangeFireSpeed * delta), 1)
+						t = min(t + (weapon.rangeFireSpeed * delta), 1)
+						if lastTime == 1:
+							t = 1
+							lastTime = 0
 					else:
 						t = 0
 						amount = 0
+						perT = 0
+						lastTime = min(lastTime + (weapon.rangeFireSpeed * delta), 1)
 					
 					if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
 						isAttacking = false
+
+func spawnBullet(index: int, pos: Vector2, dir: Vector2, delta: float) -> void:
+	var newBullet = weapon.weaponScene.instantiate()
+	
+	# angle offset for spread
+	var angleOffset : float = 0
+	if weapon.rangeSpawnAmount > 1:
+		angleOffset = lerp(-weapon.rangeSpreadAngle * 0.5, weapon.rangeSpreadAngle * 0.5, float(index) / (weapon.rangeSpawnAmount - 1))
+	
+	newBullet.global_position = pos
+	newBullet.rotation = dir.angle() + deg_to_rad(angleOffset)
+	newBullet.z_as_relative = false
+	newBullet.z_index = parentNode.z_index + weapon.rangeZOffset
+	if "weapSys" in newBullet:
+		newBullet.weapSys = self
+	
+	if newBullet is RigidBody2D:
+		newBullet.apply_impulse(dir.rotated(deg_to_rad(angleOffset)) * (1000 * weapon.rangeSpeed * delta))
+	
+	Global.currentScene.add_child(newBullet)

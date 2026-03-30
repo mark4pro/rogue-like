@@ -315,6 +315,7 @@ bg_color = Color(0.7901416, 0.51239294, 0.5351781, 1)
 process_mode = 3
 z_index = 3
 collision_layer = 2
+collision_mask = 3
 physics_material_override = SubResource("PhysicsMaterial_mbpd7")
 gravity_scale = 0.0
 lock_rotation = true
@@ -333,6 +334,7 @@ position = Vector2(0, 4)
 texture_filter = 1
 position = Vector2(0, -4)
 sprite_frames = SubResource("SpriteFrames_i87ed")
+animation = &"death"
 speed_scale = 4.005
 
 [node name="Eye_1" type="Marker2D" parent="RotPoint/Sprite2D" unique_id=607770776]

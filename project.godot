@@ -43,6 +43,7 @@ items=""
 Bounds=""
 Enemy=""
 Exclude_From_Lasers=""
+Exclude_From_Bullets=""
 
 [input]
 

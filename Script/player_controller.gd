@@ -63,6 +63,8 @@ var bounds : CollisionPolygon2D = null
 var weapSys : WeaponSys = WeaponSys.new()
 var defaultEyePos : Array[Vector2] = []
 
+var knockbackVelocity : Vector2 = Vector2.ZERO
+
 func _ready():
 	$UI.visible = true
 	Inventory_UI.visible = false
@@ -91,8 +93,8 @@ func _ready():
 			minY = min(minY, p.y)
 			maxY = max(maxY, p.y)
 		
-		var topLeft = Vector2(minX, minY)
-		var bottomRight = Vector2(maxX, maxY)
+		var topLeft = bounds.to_global(Vector2(minX, minY))
+		var bottomRight = bounds.to_global(Vector2(maxX, maxY))
 		
 		camera.limit_left = int(topLeft.x)
 		camera.limit_top = int(topLeft.y)
@@ -198,9 +200,10 @@ func _process(delta: float) -> void:
 			roll_state += 1
 	
 		#Flip sprite and rotation based on movement direction
-		if linear_velocity.x < 0:
+		var flipChck : float = linear_velocity.x - knockbackVelocity.x
+		if flipChck < 0:
 			rot_point.scale.x = -1
-		elif linear_velocity.x > 0:
+		elif flipChck > 0:
 			rot_point.scale.x = 1
 		
 		#Flip sprite and rotation based on roll direction
@@ -327,7 +330,9 @@ func _physics_process(delta: float) -> void:
 			dir = Vector2(Input.get_axis("left", "right"), Input.get_axis("up", "down")).normalized()
 		else:
 			dir = Vector2.ZERO #Don't move when rolling
-		linear_velocity = dir * (speed + speedMod) * 1000 * delta;
+		knockbackVelocity = knockbackVelocity.limit_length(Global.MAX_KNOCKBACK)
+		linear_velocity = (dir * (speed + speedMod) * 1000 * delta) + knockbackVelocity;
+		knockbackVelocity *= pow(Global.KNOCKBACK_DECAY, delta)
 		
 		#Roll logic
 		if is_rolling and roll_state != 1:

@@ -37,6 +37,12 @@ func _process(_delta: float) -> void:
 				for b in bodies:
 					if b.has_method("take_damage") and not hitTargets.has(b):
 						b.take_damage(weapSys.weapon.genDamage(), weapSys.parentNode)
+						
+						if b is RigidBody2D:
+							var knBckDir : Vector2 = (b.global_position - col.global_position).normalized()
+							if "knockbackVelocity" in b:
+								b.knockbackVelocity += knBckDir * weapSys.weapon.knockback
+						
 						hitTargets.append(b)
 
 func _on_col_area_entered(area: Area2D) -> void:

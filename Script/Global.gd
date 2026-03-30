@@ -75,6 +75,9 @@ var currentScene : Node = null
 
 @export var lootList : LootList = preload("res://Assets/global_loot_list.tres")
 
+const MAX_KNOCKBACK : float = 1000
+const KNOCKBACK_DECAY : float = 0.001
+
 const MIDNIGHT : float = 0.0
 const SUNRISE : float = 0.25
 const NOON : float = 0.5
@@ -117,7 +120,13 @@ func saveGame() -> void:
 func loadGame():
 	if ResourceLoader.exists(savePath + "save_data.tres"):
 		var save_data : SaveData = ResourceLoader.load(savePath + "save_data.tres")
+		
 		inventory = save_data.inventory
+		
+		#Reroll newly added stats
+		for i in inventory.data:
+			i.rolled = false
+		
 		weapon = save_data.weapon
 		money = save_data.money
 		timeOfDay = save_data.timeOfDay

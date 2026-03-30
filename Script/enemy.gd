@@ -36,6 +36,9 @@ var thisAI : DefaultAI = DefaultAI.new()
 @export var timeUntilChase : float = 1
 @export var timeUntilChaseEnd : float = 3
 
+var knockbackVelocity : Vector2 = Vector2.ZERO
+var dt : float = 0
+
 func take_damage(data: Dictionary, attacker: Node):
 	if not get_tree().paused:
 		health -= data.value
@@ -97,10 +100,11 @@ func _process(delta: float) -> void:
 			queue_free()
 		
 		#Flip logic
-		if linear_velocity.x < 0:
+		var flipChck : float = linear_velocity.x - knockbackVelocity.x
+		if flipChck < 0:
 			sprite.scale.x = -1
 			coll.position.x = -1
-		if linear_velocity.x > 0:
+		if flipChck > 0:
 			sprite.scale.x = 1
 			coll.position.x = 1
 		
@@ -112,8 +116,12 @@ func _process(delta: float) -> void:
 			weapSys.spawnPos[index] = i
 		weapSys.weapon = weapon
 		if Global.player: weapSys.update(delta, Global.player.position)
-		
 		thisAI.update(delta)
 
+func _physics_process(delta: float) -> void:
+		dt = delta
+
 func velocity_computed(safe_velocity: Vector2) -> void:
-	linear_velocity = safe_velocity
+	knockbackVelocity = knockbackVelocity.limit_length(Global.MAX_KNOCKBACK)
+	linear_velocity = safe_velocity + knockbackVelocity
+	knockbackVelocity *= pow(Global.KNOCKBACK_DECAY, dt)
