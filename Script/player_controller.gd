@@ -319,15 +319,17 @@ func _process(delta: float) -> void:
 		#inventory menu
 		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck:
 			if inventoryState != 0 or not Inventory_UI.visible: Inventory_Node.gen_inventory()
-			if inventoryState == 0 or not Inventory_UI.visible: Inventory_UI.visible = !Inventory_UI.visible
+			if inventoryState == 0 or not Inventory_UI.visible: 
+				Inventory_UI.visible = !Inventory_UI.visible
+				get_tree().paused = !get_tree().paused
 			inventoryState = 0
-			get_tree().paused = !get_tree().paused
 		
 		#pickup menu
 		if Input.is_action_just_pressed("pickup") and not pauseMenu.visible and not dbck:
-			if inventoryState == 1 or not Inventory_UI.visible: Inventory_UI.visible = !Inventory_UI.visible
+			if inventoryState == 1 or not Inventory_UI.visible: 
+				Inventory_UI.visible = !Inventory_UI.visible
+				get_tree().paused = !get_tree().paused
 			inventoryState = 1
-			get_tree().paused = !get_tree().paused
 		
 		#debug menu
 		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible:
