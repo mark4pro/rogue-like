@@ -17,6 +17,8 @@ var startPos : Vector2 = Vector2.ZERO
 var mousePos : Vector2 = Vector2.ZERO
 var initialVelocity : Vector2 = Vector2.ZERO
 var maxDist : float = 0
+var t : float = 0
+var hit : bool = false
 
 func _ready() -> void:
 	startPos = global_position
@@ -56,18 +58,16 @@ func _physics_process(delta: float) -> void:
 	if get_contact_count() == 0: 
 		dir = linear_velocity.normalized()
 	
-	#startPos = global_position
-	#mousePos = get_global_mouse_position()
 	var dist : float = global_position.distance_to(startPos)
 	maxDist = min(maxRange, mousePos.distance_to(startPos))
-	var t : float = clamp(dist / maxDist, 0, 1)
+	t = clamp(dist / maxDist, 0, 1)
 	
 	var thisRotSpeed : float = deg_to_rad((1 - t) * rotSpeed)
 	
 	rotation += thisRotSpeed if not weapSys.flip else -thisRotSpeed
 	linear_velocity = initialVelocity.lerp(Vector2.ZERO, t)
 	
-	if t > 0.9: telePlayer()
+	if t > 0.9 or hit: telePlayer()
 
 func bulletCol(body: Node):
 	if not body.is_in_group("Exclude_From_Bullets"):
@@ -103,7 +103,7 @@ func bulletCol(body: Node):
 		if body.has_method("take_damage") and canDamage:
 			body.take_damage(weapSys.weapon.genDamage(), weapSys.parentNode)
 		
-		telePlayer()
+		hit = true
 
 func bulletArea(area: Area2D) -> void:
 	var parent = area.get_parent()
@@ -137,9 +137,8 @@ func bulletArea(area: Area2D) -> void:
 		if parent.has_method("take_damage") and canDamage:
 			parent.take_damage(weapSys.weapon.genDamage(), weapSys.parentNode)
 		
-		telePlayer()
+		hit = true
 
 func telePlayer() -> void:
-	global_position = startPos + initialVelocity.normalized() * maxDist
 	Global.player.global_position = global_position
 	queue_free()
