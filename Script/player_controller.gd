@@ -327,6 +327,7 @@ func _process(delta: float) -> void:
 		#pickup menu
 		if Input.is_action_just_pressed("pickup") and not pauseMenu.visible and not dbck:
 			if inventoryState == 1 or not Inventory_UI.visible: 
+				Inventory_Node.visible = false
 				Inventory_UI.visible = !Inventory_UI.visible
 				get_tree().paused = !get_tree().paused
 			inventoryState = 1
