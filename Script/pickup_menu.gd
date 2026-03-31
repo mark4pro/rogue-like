@@ -8,6 +8,9 @@ var loaded : bool = false
 func _process(_delta: float) -> void:
 	if pickupItemUI and vBoxContainer:
 		if not loaded and $"..".visible:
+			if vBoxContainer.get_child_count() > 0:
+				for i in vBoxContainer.get_children():
+					i.queue_free()
 			for i in get_tree().get_nodes_in_group("items"):
 				if Global.player.global_position.distance_to(i.global_position) > Global.pickupRange:
 					continue

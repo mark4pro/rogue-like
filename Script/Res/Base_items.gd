@@ -100,9 +100,6 @@ func equip() -> void:
 func unequip() -> void:
 	pass
 
-func throw() -> void:
-	pass
-
 func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 	var thisDropPos : Vector2 = Global.player.global_position if not pos else pos
 	
@@ -138,6 +135,22 @@ func place(pos: Vector2) -> void:
 		var newPlacedScene : Node2D = placedScene.instantiate()
 		newPlacedScene.name = name
 		newPlacedScene.global_position = pos
-		Global.currentScene.add_child(newPlacedScene)
 		newPlacedScene.z_index = 3
+		newPlacedScene.add_to_group("items")
+		
+		if "item" in newPlacedScene:
+			var newItem : BaseItem = self.duplicate()
+			newItem.quantity = 1
+			newPlacedScene.item = newItem
+		
+		if "weapSys" in newPlacedScene:
+			var newItem : BaseItem = self.duplicate()
+			newItem.quantity = 1
+			
+			var newWeapSys : WeaponSys = WeaponSys.new()
+			newWeapSys.weapon = newItem
+			
+			newPlacedScene.weapSys = newWeapSys
+		
+		Global.currentScene.add_child(newPlacedScene)
 		quantity -= 1

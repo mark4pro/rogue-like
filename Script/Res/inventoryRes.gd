@@ -28,6 +28,7 @@ func add_item(item: BaseItem) -> void:
 		if not index == -1:
 			data[index].quantity += item.quantity
 		else:
+			print(item.name)
 			var newItem : BaseItem = item.duplicate(true)
 			if not newItem.rolled: newItem.rollStats()
 			data.append(newItem)

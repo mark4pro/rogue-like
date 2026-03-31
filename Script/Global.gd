@@ -123,9 +123,9 @@ func loadGame():
 		
 		inventory = save_data.inventory
 		
-		#Reroll newly added stats
-		for i in inventory.data:
-			i.rolled = false
+		##Reroll newly added stats
+		#for i in inventory.data:
+			#i.rolled = false
 		
 		weapon = save_data.weapon
 		money = save_data.money

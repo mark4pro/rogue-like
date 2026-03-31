@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://t6kbsofw7tad"]
+
+[ext_resource type="Script" uid="uid://cv5sf0kabwdue" path="res://Script/weapons/tele_potion.gd" id="1_hxod4"]
+[ext_resource type="PackedScene" uid="uid://ddtkbysspg0ai" path="res://Assets/prefabs/effects/hit_sparks.tscn" id="2_mrsg1"]
+[ext_resource type="Texture2D" uid="uid://so24jgbo1u3v" path="res://Assets/imgs/items/teleportation_potion.png" id="3_r15nx"]
+
+[node name="tele_potion" type="RigidBody2D" unique_id=1238101011 node_paths=PackedStringArray("area")]
+script = ExtResource("1_hxod4")
+area = NodePath("Area2D")
+hitEffect = ExtResource("2_mrsg1")
+maxRange = 300.0
+rotSpeed = 50.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=337153657]
+scale = Vector2(0.4, 0.4)
+polygon = PackedVector2Array(2, -2, 10, 5, 10, 11, 3, 18, -3, 18, -10, 11, -10, 5, -2, -2, -2, -18, 2, -18)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=98793469]
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("3_r15nx")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=762618037]
+monitorable = false
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D" unique_id=1608131092]
+scale = Vector2(0.4, 0.4)
+polygon = PackedVector2Array(2, -2, 10, 5, 10, 11, 3, 18, -3, 18, -10, 11, -10, 5, -2, -2, -2, -18, 2, -18)

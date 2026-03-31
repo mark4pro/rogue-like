@@ -34,7 +34,7 @@ func gen_inventory():
 	loaded = true
 
 func _process(_delta: float) -> void:
-	if not $"..".visible: oldSize = Vector2.ZERO
+	if not visible: oldSize = Vector2.ZERO
 	
 	if loaded:
 		var menuMinSize : Vector2 = Vector2((64 * Global.inventory.grid.x) + (grid_container.get_theme_constant("h_separation") * Global.inventory.grid.x) + 120, \

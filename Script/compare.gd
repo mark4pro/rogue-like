@@ -38,7 +38,7 @@ func _ready() -> void:
 		
 		if item is WeaponItem:
 			if Global.weapon and not item == Global.weapon:
-				newLabel.text = "\t\tDamage range: ([color=%s]%s[/color] | %s, [color=%s]%s[/color] | %s)" % [
+				newLabel.text = "\t\tDamage: ([color=%s]%s[/color] | %s, [color=%s]%s[/color] | %s)" % [
 					getCompColor(item.damage.x, Global.weapon.damage.x),
 					str(Global.formatFloat(item.damage.x - Global.weapon.damage.x)),
 					str(Global.formatFloat(item.damage.x)),
@@ -70,7 +70,7 @@ func _ready() -> void:
 				stats.add_child(newLabel.duplicate())
 				
 			if not Global.weapon or item == Global.weapon:
-				newLabel.text = "\t\tDamage range: (%s, %s)" % [
+				newLabel.text = "\t\tDamage: (%s, %s)" % [
 					str(Global.formatFloat(item.damage.x)),
 					str(Global.formatFloat(item.damage.y))
 				]
@@ -105,7 +105,7 @@ func _ready() -> void:
 	bg.size.y = stats.size.y + 30
 
 func _process(_delta: float) -> void:
-	position = get_viewport().get_mouse_position()
+	global_position = get_global_mouse_position()
 	bg.size.y = stats.size.y + 30
 	nameTxt.size.x = bg.size.x
 	stats.size.x = bg.size.x

@@ -311,6 +311,12 @@ bg_color = Color(0.13, 0.071499996, 0.12512502, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbpd7"]
 bg_color = Color(0.7901416, 0.51239294, 0.5351781, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tub1"]
+bg_color = Color(0.6, 0.6, 0.6, 0.11764706)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i87ed"]
+bg_color = Color(1, 1, 1, 0.11764706)
+
 [node name="Player" type="RigidBody2D" unique_id=2014763879 groups=["Player"]]
 process_mode = 3
 z_index = 3
@@ -447,7 +453,6 @@ text = "$0"
 vertical_alignment = 1
 
 [node name="inventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
-visible = false
 
 [node name="inventory" type="Control" parent="inventoryUI" unique_id=637673965]
 process_mode = 3
@@ -496,10 +501,7 @@ theme_override_constants/h_separation = 2
 theme_override_constants/v_separation = 2
 columns = 8
 
-[node name="pickupMenu" type="CanvasLayer" parent="." unique_id=51222896]
-visible = false
-
-[node name="pickup" type="Control" parent="pickupMenu" unique_id=1782156158 node_paths=PackedStringArray("vBoxContainer")]
+[node name="pickup" type="Control" parent="inventoryUI" unique_id=1782156158 node_paths=PackedStringArray("vBoxContainer")]
 modulate = Color(1, 1, 1, 0.5647059)
 layout_mode = 3
 anchors_preset = 8
@@ -507,56 +509,92 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -520.0
+offset_top = -320.0
+offset_right = -480.0
+offset_bottom = -280.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("7_wwh7s")
 pickupItemUI = ExtResource("8_8tub1")
 vBoxContainer = NodePath("ColorRect/ScrollContainer/VBoxContainer")
 
-[node name="ColorRect" type="ColorRect" parent="pickupMenu/pickup" unique_id=2033467235]
+[node name="ColorRect" type="ColorRect" parent="inventoryUI/pickup" unique_id=2033467235]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -400.0
-offset_top = -250.0
-offset_right = 400.0
-offset_bottom = 250.0
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 980.0
+offset_bottom = 580.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.21176471, 0.16470589, 0.14901961, 1)
 
-[node name="Label" type="Label" parent="pickupMenu/pickup/ColorRect" unique_id=901448843]
+[node name="Label" type="Label" parent="inventoryUI/pickup/ColorRect" unique_id=901448843]
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 23.0
+offset_bottom = 72.0
 grow_horizontal = 2
 theme_override_fonts/font = ExtResource("5_ev7rh")
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 64
 text = "Pickup"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="ScrollContainer" type="ScrollContainer" parent="pickupMenu/pickup/ColorRect" unique_id=839794302]
+[node name="ScrollContainer" type="ScrollContainer" parent="inventoryUI/pickup/ColorRect" unique_id=839794302]
 layout_mode = 0
-offset_top = 50.0
-offset_right = 800.0
-offset_bottom = 500.0
+offset_top = 72.0
+offset_right = 1000.0
+offset_bottom = 600.0
 horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="pickupMenu/pickup/ColorRect/ScrollContainer" unique_id=820472943]
+[node name="VBoxContainer" type="VBoxContainer" parent="inventoryUI/pickup/ColorRect/ScrollContainer" unique_id=820472943]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 1
+
+[node name="Controls" type="Control" parent="inventoryUI" unique_id=1182428047]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Left" type="Button" parent="inventoryUI/Controls" unique_id=483979809]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 0
+offset_left = 440.0
+offset_top = 220.0
+offset_right = 512.0
+offset_bottom = 292.0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_8tub1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_i87ed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_i87ed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_i87ed")
+text = "<"
+
+[node name="Right" type="Button" parent="inventoryUI/Controls" unique_id=1915719768]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 0
+offset_left = 1368.0
+offset_top = 220.0
+offset_right = 1440.0
+offset_bottom = 292.0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 42
+theme_override_styles/normal = SubResource("StyleBoxFlat_8tub1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_i87ed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_i87ed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_i87ed")
+text = ">"
 
 [node name="pauseMenu" type="CanvasLayer" parent="." unique_id=732976117]
 layer = 6
@@ -645,6 +683,8 @@ one_shot = true
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="timeout" from="roll_cooldown" to="." method="_on_roll_cooldown_timeout"]
 [connection signal="timeout" from="UI/MessageTimer" to="." method="_on_message_timer_timeout"]
+[connection signal="button_down" from="inventoryUI/Controls/Left" to="." method="_on_left_button_down"]
+[connection signal="button_down" from="inventoryUI/Controls/Right" to="." method="_on_right_button_down"]
 [connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/Resume" to="pauseMenu/pauseMenu" method="_on_resume_button_down"]
 [connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/backToHub" to="pauseMenu/pauseMenu" method="_on_back_to_hub_button_down"]
 [connection signal="button_down" from="pauseMenu/pauseMenu/ColorRect/exitGame" to="pauseMenu/pauseMenu" method="_on_exit_game_button_down"]

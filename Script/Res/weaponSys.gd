@@ -199,11 +199,15 @@ func update(delta: float, target: Vector2) -> void:
 						
 						if weapon.rangePerSpawnDelay == 0:
 							for i in range(weapon.rangeSpawnAmount):
-								spawnBullet(i, avgPos, dir, delta)
-								amount = weapon.rangeSpawnAmount
+								if weapon.quantity > 0:
+									spawnBullet(i, avgPos, dir, delta)
+								if weapon.throwable: weapon.quantity -= 1
+							amount = weapon.rangeSpawnAmount
 						else:
 							if perT == 1 or amount == 0:
-								spawnBullet(amount, avgPos, dir, delta)
+								if weapon.quantity > 0:
+									spawnBullet(amount, avgPos, dir, delta)
+									if weapon.throwable: weapon.quantity -= 1
 								amount = min(amount + 1, weapon.rangeSpawnAmount)
 								perT = 0
 							perT = min(perT + (weapon.rangePerSpawnDelay * delta), 1)
@@ -246,6 +250,7 @@ func spawnBullet(index: int, pos: Vector2, dir: Vector2, delta: float) -> void:
 		newBullet.weapSys = self
 	
 	if newBullet is RigidBody2D:
-		newBullet.apply_impulse(dir.rotated(deg_to_rad(angleOffset)) * (1000 * weapon.rangeSpeed * delta))
+		#newBullet.apply_impulse(dir.rotated(deg_to_rad(angleOffset)) * (1000 * weapon.rangeSpeed * delta))
+		newBullet.linear_velocity = dir.rotated(deg_to_rad(angleOffset)) * (1000 * weapon.rangeSpeed * delta)
 	
 	Global.currentScene.add_child(newBullet)

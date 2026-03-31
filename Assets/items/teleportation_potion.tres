@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://cdc1gfeklgwg6"]
+
+[ext_resource type="Texture2D" uid="uid://so24jgbo1u3v" path="res://Assets/imgs/items/teleportation_potion.png" id="1_1bmvk"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="2_1jfgm"]
+[ext_resource type="PackedScene" uid="uid://t6kbsofw7tad" path="res://Assets/prefabs/weapons/tele_potion.tscn" id="3_1jfgm"]
+
+[resource]
+script = ExtResource("2_1jfgm")
+weaponScene = ExtResource("3_1jfgm")
+baseDamage = 0.0
+damageVar = 0.0
+baseKnBck = 0.0
+KnBckVar = 0.0
+animationType = 3
+rangeFireSpeed = 1.0
+knockback = 30.0
+id = 57849
+name = "Teleportation Potion"
+itemIcon = ExtResource("1_1bmvk")
+groundScale = 0.2
+itemType = 1
+equippable = true
+throwable = true
+rolled = true
+rarity = 1
+cost = 80
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

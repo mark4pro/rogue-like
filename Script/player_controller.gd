@@ -9,7 +9,8 @@ var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 @onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
 @onready var roll_cooldown : Timer = $roll_cooldown
 @onready var Inventory_UI : CanvasLayer = $inventoryUI
-@onready var Pickup_UI : CanvasLayer = $pickupMenu
+@onready var Pickup_Node : Control = $inventoryUI/pickup
+@onready var Inventory_Node : Control = $inventoryUI/inventory
 @onready var camera : Camera2D = $Camera2D
 @onready var pauseMenu : CanvasLayer = $pauseMenu
 @onready var deathScreen : CanvasLayer = $deathMenu
@@ -64,6 +65,10 @@ var weapSys : WeaponSys = WeaponSys.new()
 var defaultEyePos : Array[Vector2] = []
 
 var knockbackVelocity : Vector2 = Vector2.ZERO
+
+var placeLatch : bool = false
+
+var inventoryState : int = 0
 
 func _ready():
 	$UI.visible = true
@@ -264,8 +269,12 @@ func _process(delta: float) -> void:
 		weapSys.attack()
 	
 	#Place item
-	if Global.weapon and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_action_pressed("place"):
+	if Global.weapon and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_action_pressed("place") and not placeLatch:
 		Global.weapon.place(get_global_mouse_position())
+		placeLatch = true
+	
+	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) or not Input.is_action_pressed("place"):
+		placeLatch = false
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5
@@ -291,30 +300,37 @@ func _process(delta: float) -> void:
 	#pause menu 
 	if Input.is_action_just_pressed("pause"):
 		get_tree().paused = !get_tree().paused
-		if not Inventory_UI.visible and not Pickup_UI.visible and not dbck:
+		if not Inventory_UI.visible and not dbck:
 			pauseMenu.visible = !pauseMenu.visible
 		else:
 			Inventory_UI.visible = false
-			Pickup_UI.visible = false
 			if dbck: dbck.queue_free()
 	
 	if not is_dead:
+		if Inventory_UI.visible:
+			match inventoryState:
+				0:
+					Inventory_Node.visible = true
+					Pickup_Node.visible = false
+				1:
+					Inventory_Node.visible = false
+					Pickup_Node.visible = true
+		
 		#inventory menu
-		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck \
-		and not Pickup_UI.visible:
-			Global.inventoryUI.gen_inventory()
-			Inventory_UI.visible = !Inventory_UI.visible
+		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck:
+			if inventoryState != 0 or not Inventory_UI.visible: Inventory_Node.gen_inventory()
+			if inventoryState == 0 or not Inventory_UI.visible: Inventory_UI.visible = !Inventory_UI.visible
+			inventoryState = 0
 			get_tree().paused = !get_tree().paused
 		
 		#pickup menu
-		if Input.is_action_just_pressed("pickup") and not pauseMenu.visible and not dbck \
-		and not Inventory_UI.visible:
-			Pickup_UI.visible = !Pickup_UI.visible
+		if Input.is_action_just_pressed("pickup") and not pauseMenu.visible and not dbck:
+			if inventoryState == 1 or not Inventory_UI.visible: Inventory_UI.visible = !Inventory_UI.visible
+			inventoryState = 1
 			get_tree().paused = !get_tree().paused
 		
 		#debug menu
-		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible \
-		and not Pickup_UI.visible:
+		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible:
 			if not dbck:
 				var dbmenu : CanvasLayer = load("res://Assets/prefabs/ui/debug.tscn").instantiate()
 				dbmenu.name = "debugMenu"
@@ -352,3 +368,17 @@ func _on_message_timer_timeout() -> void:
 
 func _on_speed_timer_timeout() -> void:
 	speedMod -= 5
+
+func _on_left_button_down() -> void:
+	if inventoryState > 0:
+		inventoryState = max(1 - inventoryState, 0)
+	else:
+		inventoryState = 1
+	if inventoryState == 0: Inventory_Node.gen_inventory()
+
+func _on_right_button_down() -> void:
+	if inventoryState < 1:
+		inventoryState = max(1 + inventoryState, 1)
+	else:
+		inventoryState = 0
+	if inventoryState == 0: Inventory_Node.gen_inventory()

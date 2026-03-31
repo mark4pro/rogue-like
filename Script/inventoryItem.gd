@@ -29,7 +29,8 @@ func _process(_delta: float) -> void:
 		var mousePos : Vector2 = get_viewport().get_mouse_position()
 		
 		touching = mousePos.x >= global_position.x and mousePos.x <= global_position.x + size.x \
-		and mousePos.y >= global_position.y and mousePos.y <= global_position.y + size.y
+		and mousePos.y >= global_position.y and mousePos.y <= global_position.y + size.y \
+		and Global.player.Inventory_Node.visible
 		
 		amountTxt.text = str(item.quantity)
 		if item and item.quantity <= 0 and not refreshLatch:
