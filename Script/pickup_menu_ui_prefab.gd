@@ -39,7 +39,7 @@ func _process(_delta: float) -> void:
 			if not thisComp:
 				var newComp : Control = compareUI.instantiate()
 				newComp.item = thisItem
-				Global.player.Inventory_UIp.add_child(newComp)
+				Global.player.Inventory_UI.add_child(newComp)
 			if thisComp and not thisComp.item == thisItem:
 				thisComp.queue_free()
 		else:
