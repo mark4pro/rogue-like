@@ -139,6 +139,11 @@ func _process(delta: float) -> void:
 	regen_stamina = not can_sprint and stamina < max_stamina
 	roll_state =  roll_state % 4
 	
+	#Is in dialogue
+	var inDialogue : bool = false
+	var dialChk : Array[Node] = get_tree().get_nodes_in_group("dialogue")
+	inDialogue = dialChk.size() > 0
+	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
 		speed = sprint_speed
@@ -265,11 +270,12 @@ func _process(delta: float) -> void:
 	weapSys.update(delta, get_global_mouse_position())
 	if not get_tree().paused and not Input.is_action_pressed("place") \
 	and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) \
-	and not weapSys.isAttacking:
+	and not weapSys.isAttacking and not inDialogue:
 		weapSys.attack()
 	
 	#Place item
-	if Global.weapon and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) and Input.is_action_pressed("place") and not placeLatch:
+	if Global.weapon and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) \
+	and Input.is_action_pressed("place") and not placeLatch and not inDialogue:
 		Global.weapon.place(get_global_mouse_position())
 		placeLatch = true
 	
@@ -317,7 +323,8 @@ func _process(delta: float) -> void:
 					Pickup_Node.visible = true
 		
 		#inventory menu
-		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck:
+		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck \
+		 and not inDialogue:
 			if inventoryState != 0 or not Inventory_UI.visible: Inventory_Node.gen_inventory()
 			if inventoryState == 0 or not Inventory_UI.visible: 
 				Inventory_UI.visible = !Inventory_UI.visible
@@ -325,7 +332,8 @@ func _process(delta: float) -> void:
 			inventoryState = 0
 		
 		#pickup menu
-		if Input.is_action_just_pressed("pickup") and not pauseMenu.visible and not dbck:
+		if Input.is_action_just_pressed("pickup") and not pauseMenu.visible and not dbck \
+		 and not inDialogue:
 			if inventoryState == 1 or not Inventory_UI.visible: 
 				Inventory_Node.visible = false
 				Inventory_UI.visible = !Inventory_UI.visible
@@ -333,7 +341,8 @@ func _process(delta: float) -> void:
 			inventoryState = 1
 		
 		#debug menu
-		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible:
+		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible \
+		 and not inDialogue:
 			if not dbck:
 				var dbmenu : CanvasLayer = load("res://Assets/prefabs/ui/debug.tscn").instantiate()
 				dbmenu.name = "debugMenu"

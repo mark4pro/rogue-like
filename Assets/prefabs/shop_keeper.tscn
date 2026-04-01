@@ -2,18 +2,12 @@
 
 [ext_resource type="Texture2D" uid="uid://cj8ij6he84d27" path="res://Assets/imgs/ShopKeeper/Body.png" id="1_nl1u1"]
 [ext_resource type="Script" uid="uid://mke1td7ku1lw" path="res://Script/shop_keeper.gd" id="1_t5djk"]
+[ext_resource type="Resource" uid="uid://46xiqu427keh" path="res://Assets/Dialogue/Shop_Keeper/Shop_Keeper.dialogue" id="2_6la8a"]
 [ext_resource type="Texture2D" uid="uid://qvttm23886uv" path="res://Assets/imgs/ShopKeeper/Head.png" id="2_t5djk"]
+[ext_resource type="PackedScene" uid="uid://ds30o1ruuuuin" path="res://Example_Dialogue_Box/balloon.tscn" id="3_m4lgo"]
 [ext_resource type="Texture2D" uid="uid://c7t1l0a2hm5hh" path="res://Assets/imgs/ShopKeeper/Arm_1.png" id="3_q5p6k"]
 [ext_resource type="Texture2D" uid="uid://b77cj81hwvam0" path="res://Assets/imgs/effects/zzz.png" id="4_lb8gd"]
 [ext_resource type="Texture2D" uid="uid://cusp8t62tk8wj" path="res://Assets/imgs/ShopKeeper/Arm_2.png" id="4_lrpm0"]
-[ext_resource type="Script" uid="uid://bsnvihgwkkh1j" path="res://Script/dialogue_system.gd" id="6_lrpm0"]
-[ext_resource type="Script" uid="uid://bb8l2eniq2s16" path="res://addons/godot-voice-generator/voice_audio_stream_player.gd" id="6_q5p6k"]
-[ext_resource type="Script" uid="uid://b660axry2e18c" path="res://Script/Res/dialogue.gd" id="7_m4lgo"]
-[ext_resource type="Script" uid="uid://db2qca68nacs4" path="res://Script/Res/convo.gd" id="8_fggkm"]
-[ext_resource type="Script" uid="uid://duc1so4kqgbh0" path="res://Script/Res/options.gd" id="9_lb8gd"]
-[ext_resource type="Texture2D" uid="uid://lo1tmwk5jip5" path="res://Assets/imgs/UI/Arrow.png" id="11_fggkm"]
-[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="12_see0k"]
-[ext_resource type="Texture2D" uid="uid://bybema4juvejp" path="res://Assets/imgs/UI/text_box.png" id="12_v06ya"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m4lgo"]
 atlas = ExtResource("2_t5djk")
@@ -452,27 +446,11 @@ states/Wave/node = SubResource("AnimationNodeAnimation_q5p6k")
 states/Wave/position = Vector2(531, 18)
 transitions = ["Default", "Wave", SubResource("AnimationNodeStateMachineTransition_2gutm"), "Default", "Resting", SubResource("AnimationNodeStateMachineTransition_6la8a"), "Start", "Default", SubResource("AnimationNodeStateMachineTransition_m4lgo"), "Wave", "Default", SubResource("AnimationNodeStateMachineTransition_fggkm"), "Resting", "Default", SubResource("AnimationNodeStateMachineTransition_lb8gd")]
 
-[sub_resource type="Resource" id="Resource_see0k"]
-script = ExtResource("8_fggkm")
-speaker = "Shop Keeper"
-text = "YIPPEE! It works."
-metadata/_custom_type_script = "uid://db2qca68nacs4"
-
-[sub_resource type="Resource" id="Resource_v06ya"]
-script = ExtResource("8_fggkm")
-speaker = "Shop Keeper"
-text = "Second convo!"
-metadata/_custom_type_script = "uid://db2qca68nacs4"
-
-[sub_resource type="Resource" id="Resource_cspdg"]
-script = ExtResource("7_m4lgo")
-id = "Test"
-convos = Array[ExtResource("8_fggkm")]([SubResource("Resource_see0k"), SubResource("Resource_v06ya")])
-metadata/_custom_type_script = "uid://b660axry2e18c"
-
 [node name="ShopKeeper" type="Node2D" unique_id=2064473006]
 script = ExtResource("1_t5djk")
 rest = false
+dialogue = ExtResource("2_6la8a")
+dialogueBox = ExtResource("3_m4lgo")
 
 [node name="Body" type="Sprite2D" parent="." unique_id=1767667003]
 position = Vector2(0, -6.5)
@@ -550,72 +528,6 @@ anim_player = NodePath("../AnimationPlayer")
 wait_time = 3.0
 one_shot = true
 
-[node name="Text" type="CanvasLayer" parent="." unique_id=1843041407]
-script = ExtResource("6_lrpm0")
-dialogue = Array[ExtResource("7_m4lgo")]([SubResource("Resource_cspdg")])
-textSpeed = 20.0
-
-[node name="VoiceAudioStreamPlayer" type="AudioStreamPlayer" parent="Text" unique_id=1861978791]
-bus = &"Voices"
-script = ExtResource("6_q5p6k")
-metadata/_custom_type_script = "uid://bb8l2eniq2s16"
-
-[node name="BG" type="NinePatchRect" parent="Text" unique_id=855499586]
-modulate = Color(1, 1, 1, 0.627451)
-custom_minimum_size = Vector2(800, 200)
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -400.0
-offset_top = -200.0
-offset_right = 400.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = ExtResource("12_v06ya")
-region_rect = Rect2(0, 0, 96, 96)
-patch_margin_left = 32
-patch_margin_top = 32
-patch_margin_right = 32
-patch_margin_bottom = 32
-axis_stretch_horizontal = 1
-axis_stretch_vertical = 1
-
-[node name="Text" type="Label" parent="Text/BG" unique_id=1114468786]
-custom_minimum_size = Vector2(782, 192)
-layout_mode = 1
-offset_left = 9.0
-offset_top = 3.0
-offset_right = 791.0
-offset_bottom = 195.0
-theme_override_colors/font_color = Color(1, 1, 1, 0.627451)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.23529412)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("12_see0k")
-theme_override_font_sizes/font_size = 42
-autowrap_mode = 3
-
-[node name="Arrow" type="TextureRect" parent="Text/BG" unique_id=1066896852]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -27.0
-offset_top = -27.0
-offset_right = 13.0
-offset_bottom = 13.0
-grow_horizontal = 0
-grow_vertical = 0
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("11_fggkm")
-
 [connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
 [connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
 [connection signal="timeout" from="Idle" to="." method="_on_idle_timeout"]
-[connection signal="finished" from="Text/VoiceAudioStreamPlayer" to="." method="_on_voice_audio_stream_player_finished"]
-[connection signal="finished_saying" from="Text/VoiceAudioStreamPlayer" to="." method="_on_voice_audio_stream_player_finished_saying"]
-[connection signal="saying_characters" from="Text/VoiceAudioStreamPlayer" to="." method="_on_voice_audio_stream_player_saying_characters"]

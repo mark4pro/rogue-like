@@ -1,7 +1,6 @@
 extends Node2D
 
 @onready var idleTimer : Timer = $Idle
-@onready var dialogue : CanvasLayer = $Text
 @onready var head : AnimatedSprite2D = $Body/HeadAnchor/Head
 @onready var zPart : GPUParticles2D = $Body/HeadAnchor/Head/Zzz
 
@@ -12,10 +11,15 @@ extends Node2D
 @export var isShopOpen : bool = false
 @export var inDialogue : bool = false
 
+@export var dialogue : DialogueResource = null
+@export var dialogueBox : PackedScene = null
+
 func _ready() -> void:
 	rest = true
 	head.animation = "sleeping"
-	dialogue.voice.set_sub_stream(load("res://addons/godot-voice-generator/sound/v1.ogg"))
+	
+	#thisDialogue.voice.set_sub_stream(load("res://addons/godot-voice-generator/sound/v1.ogg"))
+	#thisDialogue.voice.connect("saying_characters", saying_characters)
 
 func _process(_delta: float) -> void:
 	if inRange:
@@ -25,21 +29,21 @@ func _process(_delta: float) -> void:
 		zPart.emitting = false
 		
 		#Dialogue
-		inDialogue = dialogue.currentDial != null
-		dialogue.visible = inDialogue
-		
-		head.sprite_frames.set_animation_speed("talking", dialogue.textSpeed)
+		#inDialogue = thisDialogue.currentDial != null
+		#thisDialogue.visible = inDialogue
+		#
+		#head.sprite_frames.set_animation_speed("talking", thisDialogue.textSpeed)
 		
 		if not inDialogue:
 			head.play("default")
 			
 			if Input.is_action_just_pressed("interact"):
-				dialogue.start("Test")
+				DialogueManager.show_dialogue_balloon(dialogue, "start")
+				#thisDialogue.start("Test")
 	else:
 		inDialogue = false
 		isShopOpen = false
-		dialogue.visible = false
-		dialogue.stop()
+		
 		if idleTimer.is_stopped(): idleTimer.start()
 		if rest:
 			head.play("sleeping")
@@ -58,6 +62,6 @@ func _on_area_2d_body_exited(body: Node2D) -> void:
 func _on_idle_timeout() -> void:
 	rest = true
 
-func _on_voice_audio_stream_player_saying_characters(_position: int) -> void:
+func saying_characters(_position: int) -> void:
 	head.stop()
 	head.play("talking")

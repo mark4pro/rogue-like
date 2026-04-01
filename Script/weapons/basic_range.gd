@@ -3,6 +3,7 @@ extends RigidBody2D
 @export_category("This Object")
 @export var area : Area2D = null
 @export var hitEffect : PackedScene = null
+@export var rotSpeed : float = 0
 
 @export_category("Data")
 @export var weapSys : WeaponSys = null
@@ -43,6 +44,9 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if get_contact_count() == 0: 
 		dir = linear_velocity.normalized()
+	
+	var thisRotSpeed : float = deg_to_rad(rotSpeed)
+	rotation += thisRotSpeed if not weapSys.flip else -thisRotSpeed
 
 func bulletCol(body: Node):
 	if not body.is_in_group("Exclude_From_Bullets"):
