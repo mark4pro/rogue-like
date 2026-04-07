@@ -4,7 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://ckvgyvclnwggo" path="res://addons/dialogue_manager/dialogue_label.tscn" id="2_a8ve6"]
 [ext_resource type="Texture2D" uid="uid://bybema4juvejp" path="res://Assets/imgs/UI/text_box.png" id="2_vmhlx"]
 [ext_resource type="Script" uid="uid://bb52rsfwhkxbn" path="res://addons/dialogue_manager/dialogue_responses_menu.gd" id="3_72ixx"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="3_d2s4i"]
 [ext_resource type="Texture2D" uid="uid://lo1tmwk5jip5" path="res://Assets/imgs/UI/Arrow.png" id="4_mr5q7"]
+[ext_resource type="AudioStream" uid="uid://4cmr17x07rv2" path="res://Assets/audio/voices/default_voice.tres" id="6_mr5q7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_spyqn"]
 bg_color = Color(0, 0, 0, 1)
@@ -80,7 +82,7 @@ length = 0.001
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("%Progress:position:x")
+tracks/0/path = NodePath("Progress:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -96,7 +98,7 @@ step = 0.1
 tracks/0/type = "bezier"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("%Progress:position:x")
+tracks/0/path = NodePath("Progress:position:x")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -111,7 +113,13 @@ _data = {
 &"progress": SubResource("Animation_qkmqt")
 }
 
-[node name="ExampleBalloon" type="CanvasLayer" unique_id=2009849258 groups=["dialogue"]]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kf6fr"]
+bg_color = Color(1, 1, 1, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j2lxl"]
+bg_color = Color(1, 1, 1, 0.15686275)
+
+[node name="TextBox" type="CanvasLayer" unique_id=2009849258 groups=["dialogue"]]
 layer = 100
 script = ExtResource("1_36de5")
 
@@ -156,6 +164,7 @@ unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0.501961)
 layout_mode = 2
 mouse_filter = 1
+theme_override_fonts/normal_font = ExtResource("3_d2s4i")
 bbcode_enabled = true
 text = "Character"
 fit_content = true
@@ -165,6 +174,8 @@ scroll_active = false
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_fonts/normal_font = ExtResource("3_d2s4i")
+theme_override_font_sizes/normal_font_size = 24
 text = "Dialogue..."
 
 [node name="Control" type="Control" parent="Balloon/MarginContainer/PanelContainer/MarginContainer/HBoxContainer" unique_id=1259766583]
@@ -183,32 +194,35 @@ texture = ExtResource("4_mr5q7")
 libraries/ = SubResource("AnimationLibrary_1337t")
 autoplay = &"progress"
 
-[node name="ResponsesMenu" type="VBoxContainer" parent="Balloon" unique_id=1394060158 node_paths=PackedStringArray("response_template")]
+[node name="ResponsesMenu" type="VBoxContainer" parent="Balloon/MarginContainer/PanelContainer/MarginContainer" unique_id=1394060158 node_paths=PackedStringArray("response_template")]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -290.5
-offset_top = -35.0
-offset_right = 290.5
-offset_bottom = 35.0
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 2
 size_flags_vertical = 8
 theme_override_constants/separation = 2
 alignment = 1
 script = ExtResource("3_72ixx")
 response_template = NodePath("ResponseExample")
 
-[node name="ResponseExample" type="Button" parent="Balloon/ResponsesMenu" unique_id=18545606]
+[node name="ResponseExample" type="Button" parent="Balloon/MarginContainer/PanelContainer/MarginContainer/ResponsesMenu" unique_id=18545606]
+custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
+theme_override_fonts/font = ExtResource("3_d2s4i")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_kf6fr")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_j2lxl")
+theme_override_styles/hover = SubResource("StyleBoxFlat_j2lxl")
+theme_override_styles/focus = SubResource("StyleBoxFlat_j2lxl")
 text = "Response example"
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=602859281]
 unique_name_in_owner = true
 
+[node name="Yip" type="AudioStreamPlayer" parent="." unique_id=262875479]
+unique_name_in_owner = true
+stream = ExtResource("6_mr5q7")
+bus = &"Voices"
+
 [connection signal="gui_input" from="Balloon" to="." method="_on_balloon_gui_input"]
-[connection signal="response_selected" from="Balloon/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]
+[connection signal="skipped_typing" from="Balloon/MarginContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="." method="_on_dialogue_label_skipped_typing"]
+[connection signal="spoke" from="Balloon/MarginContainer/PanelContainer/MarginContainer/HBoxContainer/VBoxContainer/DialogueLabel" to="." method="_on_dialogue_label_spoke"]
+[connection signal="response_selected" from="Balloon/MarginContainer/PanelContainer/MarginContainer/ResponsesMenu" to="." method="_on_responses_menu_response_selected"]

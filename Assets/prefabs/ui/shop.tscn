@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://bspm1f1aimwfx"]
+
+[ext_resource type="Texture2D" uid="uid://bybema4juvejp" path="res://Assets/imgs/UI/text_box.png" id="1_sclm4"]
+[ext_resource type="Script" uid="uid://60pnwrfogjdw" path="res://Script/shop.gd" id="1_v55m0"]
+[ext_resource type="Resource" uid="uid://ejl4b7b1qobc" path="res://Assets/shop_loot_list.tres" id="2_r2re2"]
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_v55m0"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r2re2"]
+texture = ExtResource("1_sclm4")
+texture_margin_left = 32.0
+texture_margin_top = 32.0
+texture_margin_right = 32.0
+texture_margin_bottom = 32.0
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+region_rect = Rect2(0, 0, 96, 96)
+
+[node name="Shop" type="CanvasLayer" unique_id=287507784 groups=["dialogue"]]
+script = ExtResource("1_v55m0")
+shopLootList = ExtResource("2_r2re2")
+
+[node name="Control" type="Control" parent="." unique_id=1769863153]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="Control" unique_id=788378301]
+custom_minimum_size = Vector2(1000, 600)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -300.0
+offset_right = 500.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_r2re2")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer" unique_id=1805184287]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Control/PanelContainer/VBoxContainer" unique_id=704670365]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_v55m0")
+theme_override_font_sizes/normal_font_size = 36
+bbcode_enabled = true
+text = "Shop"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="Control/PanelContainer" unique_id=431028652]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme_override_constants/h_separation = 0
+theme_override_fonts/font = ExtResource("2_v55m0")
+theme_override_font_sizes/font_size = 32
+text = "X"
+icon_alignment = 1
+
+[connection signal="pressed" from="Control/PanelContainer/Button" to="." method="_on_button_pressed"]

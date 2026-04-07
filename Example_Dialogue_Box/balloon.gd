@@ -23,6 +23,8 @@ extends CanvasLayer
 ## A sound player for voice lines (if they exist).
 @onready var audio_stream_player: AudioStreamPlayer = %AudioStreamPlayer
 
+@onready var yip : AudioStreamPlayer = %Yip
+
 ## Temporary game states
 var temporary_game_states: Array = []
 
@@ -70,6 +72,7 @@ var mutation_cooldown: Timer = Timer.new()
 ## Indicator to show that player can progress dialogue.
 @onready var progress: TextureRect = %Progress
 
+var ratio : float = 1
 
 func _ready() -> void:
 	balloon.hide()
@@ -215,3 +218,11 @@ func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 
 
 #endregion
+
+func _on_dialogue_label_skipped_typing() -> void:
+	yip.stop()
+
+func _on_dialogue_label_spoke(letter: String, letter_index: int, speed: float) -> void:
+	ratio = speed
+	yip.pitch_scale = randf_range(0.6, 1.1)
+	yip.play()

@@ -1,11 +1,16 @@
 ~ start
-Shop Keeper: [wave][[Hi|Hello|Howdy]][/wave], this is some dialogue.
-Shop Keeper: Here are some choices.
-- First one
-	Shop Keeper: You picked the first one.
-- Second one
-	Shop Keeper: You picked the second one.
-- Start again => start
-- End the conversation => END
-Shop Keeper: For more information see the online documentation.
+- Shop
+	Shop Keeper: [speed=0.2]I'll show you what I have.
+	do isShopOpen = true
+	=> END
+- Chat
+	Shop Keeper: [speed=0.2]How's it going? (wip)
+	=> start
+- Exit => END
+Shop Keeper: [speed=0.2]See ya!
+=> END
+
+~ bye
+Shop Keeper: [speed=0.2]Thanks for business!
+do isShopClosed = false
 => END

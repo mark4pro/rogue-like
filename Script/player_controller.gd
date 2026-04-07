@@ -68,6 +68,8 @@ var knockbackVelocity : Vector2 = Vector2.ZERO
 
 var placeLatch : bool = false
 
+var dialogueT : float = 0
+
 var inventoryState : int = 0
 
 func _ready():
@@ -142,7 +144,17 @@ func _process(delta: float) -> void:
 	#Is in dialogue
 	var inDialogue : bool = false
 	var dialChk : Array[Node] = get_tree().get_nodes_in_group("dialogue")
-	inDialogue = dialChk.size() > 0
+	
+	#Added delay to stop activating weapons during last mouse click in dialogue
+	if dialChk.size() > 0:
+		inDialogue = true
+		dialogueT = 0
+	else:
+		if dialogueT < 1:
+			inDialogue = true
+			dialogueT += 1 * delta
+		else:
+			inDialogue = false
 	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
