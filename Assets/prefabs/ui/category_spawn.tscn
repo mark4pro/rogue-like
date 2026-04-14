@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://bxa4yce7s77wq"]
+
+[ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_lua5p"]
+
+[node name="itemSpawn" type="ColorRect" unique_id=1784761731]
+modulate = Color(1, 1, 1, 0.39215687)
+custom_minimum_size = Vector2(800, 50)
+color = Color(0.34407556, 0.3440758, 0.34407565, 1)
+
+[node name="title" type="Label" parent="." unique_id=970985554]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.005
+anchor_right = 0.005
+offset_left = 1.0
+offset_right = 791.0
+offset_bottom = 48.0
+theme_override_fonts/font = ExtResource("2_lua5p")
+theme_override_font_sizes/font_size = 42
+text = "Test"
+vertical_alignment = 1
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

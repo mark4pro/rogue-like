@@ -7,6 +7,10 @@ var loaded : bool = false
 
 func _process(_delta: float) -> void:
 	if pickupItemUI and vBoxContainer:
+		if visible:
+			var contextChk : Control = get_parent().get_node_or_null("ContextMenu")
+			if contextChk: contextChk.queue_free()
+		
 		if not loaded and $"..".visible:
 			if vBoxContainer.get_child_count() > 0:
 				for i in vBoxContainer.get_children():

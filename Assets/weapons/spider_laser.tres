@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://bsrswcnoltxaf"]
+
+[ext_resource type="Texture2D" uid="uid://ecj4p2cj8218" path="res://Assets/imgs/weapons/Laser.png" id="1_mouev"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="2_lnocy"]
+[ext_resource type="PackedScene" uid="uid://fq1c7ljc7flh" path="res://Assets/prefabs/weapons/spider_laser.tscn" id="3_cgh10"]
+
+[resource]
+script = ExtResource("2_lnocy")
+weaponScene = ExtResource("3_cgh10")
+baseDamage = 2.0
+animationType = 2
+laserRange = 65.0
+name = "Spider Laser"
+itemIcon = ExtResource("1_mouev")
+iconScale = 1.0
+groundScale = 0.2
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

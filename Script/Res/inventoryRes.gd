@@ -12,7 +12,7 @@ func hasSpace(item: BaseItem) -> bool:
 		return data.size() < maxSlots
 	else:
 		if item.stackable:
-			var index = data.find_custom(func(i): return i.id == item.id)
+			var index = data.find_custom(func(i): return i.name == item.name)
 			
 			if not index == -1:
 				return true
@@ -23,7 +23,7 @@ func hasSpace(item: BaseItem) -> bool:
 
 func add_item(item: BaseItem) -> void:
 	if item.stackable:
-		var index = data.find_custom(func(i): return i.id == item.id)
+		var index = data.find_custom(func(i): return i.name == item.name)
 		
 		if not index == -1:
 			data[index].quantity += item.quantity
@@ -43,8 +43,8 @@ func remove_items(item: BaseItem, amount: int = 1) -> void:
 		amount = clampi(amount, 1, data[index].quantity)
 		data[index].quantity -= amount
 
-func remove_items_by_id(id: int = 0, amount: int = 1) -> void:
-	var index = data.find_custom(func(i): return i.id == id)
+func remove_items_by_name(name: String = "", amount: int = 1) -> void:
+	var index = data.find_custom(func(i): return i.name == name)
 	if not index == -1:
 		amount = clampi(amount, 1, data[index].quantity)
 		data[index].quantity -= amount

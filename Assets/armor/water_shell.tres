@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://c2xgcsv4g1ihw"]
+
+[ext_resource type="PackedScene" uid="uid://d2lm4tdbcflny" path="res://Assets/prefabs/armor/water_shell.tscn" id="1_epnv5"]
+[ext_resource type="Texture2D" uid="uid://bqtdhguvj43xp" path="res://Assets/imgs/armor/water_shell.png" id="2_fmcvs"]
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="3_c6q8s"]
+
+[resource]
+script = ExtResource("3_c6q8s")
+armorScene = ExtResource("1_epnv5")
+name = "Water Shell"
+itemIcon = ExtResource("2_fmcvs")
+iconScale = 2.0
+itemType = 2
+equippable = true
+stackable = false
+metadata/_custom_type_script = "uid://dajegbj308dnw"

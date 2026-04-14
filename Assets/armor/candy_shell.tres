@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://cgtuabk0ypsfg"]
+
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="1_548no"]
+[ext_resource type="PackedScene" uid="uid://ctcjwig3neygb" path="res://Assets/prefabs/armor/candy_shell.tscn" id="1_wblfa"]
+[ext_resource type="Texture2D" uid="uid://dsaajbls1sc1t" path="res://Assets/imgs/armor/candy_shell.png" id="2_bqdax"]
+
+[resource]
+script = ExtResource("1_548no")
+armorScene = ExtResource("1_wblfa")
+name = "Candy Shell"
+itemIcon = ExtResource("2_bqdax")
+iconScale = 2.0
+itemType = 2
+equippable = true
+stackable = false
+metadata/_custom_type_script = "uid://dajegbj308dnw"

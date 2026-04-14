@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://ctrrswfhhu73y"]
+
+[ext_resource type="Texture2D" uid="uid://bbofvvd4rwy0v" path="res://Assets/imgs/weapons/over_grown.png" id="1_wtyim"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="2_gkaud"]
+[ext_resource type="PackedScene" uid="uid://blrmnsogahhbg" path="res://Assets/prefabs/weapons/over_grown.tscn" id="3_xn2rn"]
+
+[resource]
+script = ExtResource("2_gkaud")
+weaponScene = ExtResource("3_xn2rn")
+baseDamage = 30.0
+name = "Over Grown"
+itemIcon = ExtResource("1_wtyim")
+iconScale = 1.2
+groundScale = 0.5
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+cost = 50
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

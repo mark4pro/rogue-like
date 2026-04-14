@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dsd43o5r6kyb7"]
 
 [ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_bsgsx"]
-[ext_resource type="Resource" uid="uid://bsrswcnoltxaf" path="res://Assets/items/spider_laser.tres" id="2_ersri"]
+[ext_resource type="Resource" uid="uid://bsrswcnoltxaf" path="res://Assets/weapons/spider_laser.tres" id="2_ersri"]
 [ext_resource type="Texture2D" uid="uid://bf2rs2mvx06kp" path="res://Assets/imgs/enemies/the_watcher.png" id="3_k18rq"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="4_7y7kf"]
 [ext_resource type="PackedScene" uid="uid://diwkxcopn8e5d" path="res://Assets/prefabs/ui/health_bar.tscn" id="5_t2isc"]

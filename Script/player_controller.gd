@@ -2,35 +2,37 @@ extends RigidBody2D
 
 var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
 
-@onready var sprite : AnimatedSprite2D = $RotPoint/Sprite2D
-@onready var rot_point : Node2D = $RotPoint
-@onready var health_bar : TextureRect = $UI/HealthBar
-@onready var stamina_bar : ProgressBar = $UI/StaminaBar
-@onready var roll_cooldown_bar : ProgressBar = $UI/RollCooldownBar
-@onready var roll_cooldown : Timer = $roll_cooldown
-@onready var Inventory_UI : CanvasLayer = $inventoryUI
-@onready var Pickup_Node : Control = $inventoryUI/pickup
-@onready var Inventory_Node : Control = $inventoryUI/inventory
-@onready var camera : Camera2D = $Camera2D
-@onready var pauseMenu : CanvasLayer = $pauseMenu
-@onready var deathScreen : CanvasLayer = $deathMenu
-@onready var boostTimer : Timer = $speedTimer
-@onready var eyes : Array[Marker2D] = [$RotPoint/Sprite2D/Eye_1, $RotPoint/Sprite2D/Eye_2]
+@onready var camera : Camera2D = %Camera2D
+@onready var sprite : AnimatedSprite2D = %Sprite2D
+@onready var shadow : Sprite2D = %Shadow
+@onready var shell : Node2D = %Shell
+@onready var collShape : CollisionShape2D = %CollisionShape2D
+@onready var rot_point : Node2D = %RotPoint
+@onready var eyes : Array[Marker2D] = [%Eye_1, %Eye_2]
+
+@onready var roll_cooldown : Timer = %roll_cooldown
+@onready var boostTimer : Timer = %speedTimer
+
+@onready var health_bar : TextureRect = %HealthBar
+@onready var stamina_bar : ProgressBar = %StaminaBar
+@onready var roll_cooldown_bar : ProgressBar = %RollCooldownBar
+
+@onready var fpsTxt : Label = %FPS
+@onready var daysTxt : Label = %Days
+@onready var moneyTxt : Label = %Money
+
+@onready var ui : CanvasLayer = %UI
+@onready var Inventory_UI : CanvasLayer = %inventoryUI
+@onready var Pickup_Node : Control = %pickup
+@onready var Inventory_Node : Control = %inventory
+@onready var pauseMenu : CanvasLayer = %pauseMenu
+@onready var deathScreen : CanvasLayer = %deathMenu
+
+var pStats : stats = Global.playerStats
 
 @export_category("Stats")
-@export var max_health : float = 100
-@export var health : float = max_health
-@export var max_stamina : float = 100
-@export var stamina : float = max_stamina
-@export var stamina_regen : float = 5
-@export var stamina_exhausted_regen : float = 15
-@export var stamina_drain : float = 25
-
-@export_category("Movement")
-@export var sprint_speed : float = 15
-@export var walk_speed : float = 7
-@export var roll_speed : float = 10
-@export var roll_rot_speed : float = 7
+@export var health : float = pStats.max_health
+@export var stamina : float = pStats.max_stamina
 
 @export_category("UI")
 @export var stamina_norm_color : Color
@@ -49,22 +51,20 @@ var is_dead : bool = false
 var played_death_anim : bool = false
 
 var dir : Vector2 = Vector2.ZERO
-var speed : float = walk_speed
-
-var speedMod : float = 0
+var speed : float = pStats.walk_speed
 
 var roll_state : int = 0 #0: not rolling, 1: start roll, 2: roll logic, 3: end roll
 
-var rspeed : float = roll_speed
+var rspeed : float = pStats.roll_speed
 var roll_target : Vector2 = Vector2.ZERO
 var roll_dir : Vector2 = Vector2.ZERO
+
+var knockbackVelocity : Vector2 = Vector2.ZERO
 
 var bounds : CollisionPolygon2D = null
 
 var weapSys : WeaponSys = WeaponSys.new()
 var defaultEyePos : Array[Vector2] = []
-
-var knockbackVelocity : Vector2 = Vector2.ZERO
 
 var placeLatch : bool = false
 
@@ -72,12 +72,14 @@ var dialogueT : float = 0
 
 var inventoryState : int = 0
 
+var oldArmor : ArmorItem = null
+
 func _ready():
-	$UI.visible = true
+	ui.visible = true
 	Inventory_UI.visible = false
 	pauseMenu.visible = false
 	deathScreen.visible = false
-	Global.inventoryUI = $inventoryUI/inventory
+	Global.inventoryUI = Inventory_Node
 	
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
@@ -108,16 +110,23 @@ func _ready():
 		camera.limit_right = int(bottomRight.x)
 		camera.limit_bottom = int(bottomRight.y)
 
+func calc_defense() -> float:
+	var result : float = pStats.base_defense
+	if Global.armor: result + Global.armor.defense
+	return result
+
 func take_damage(data: Dictionary, attacker: Node):
 	if not is_rolling and not get_tree().paused:
-		health -= data.value
+		health -= data.value * (100 / (100 + calc_defense()))
+		Global.damageAnim(sprite, data.value)
+		Global.damNumbers(collShape, data)
 
 func _process(delta: float) -> void:
-	$UI/FPS.text = "FPS: " + str(Engine.get_frames_per_second())
+	fpsTxt.text = "FPS: " + str(Engine.get_frames_per_second())
 	anim = sprite.animation
 	
 	#Clamp health
-	health = clamp(health, 0, max_health)
+	health = clamp(health, 0, pStats.max_health)
 	is_dead = not health > 0
 	deathScreen.visible = is_dead
 	
@@ -125,7 +134,7 @@ func _process(delta: float) -> void:
 		if not played_death_anim:
 			sprite.call_deferred("play", "death")
 			played_death_anim = true
-		$Shadow.visible = sprite.frame < sprite.sprite_frames.get_frame_count("death") - 1
+		shadow.visible = sprite.frame < sprite.sprite_frames.get_frame_count("death") - 1
 		rot_point.rotation = 0
 		roll_cooldown.stop()
 		is_rolling = false 
@@ -136,9 +145,9 @@ func _process(delta: float) -> void:
 	
 	#Movement check
 	is_moving = not dir == Vector2.ZERO
-	is_sprinting = speed == sprint_speed
+	is_sprinting = speed == pStats.sprint_speed
 	can_sprint = not regen_stamina and stamina > 0
-	regen_stamina = not can_sprint and stamina < max_stamina
+	regen_stamina = not can_sprint and stamina < pStats.max_stamina
 	roll_state =  roll_state % 4
 	
 	#Is in dialogue
@@ -158,9 +167,9 @@ func _process(delta: float) -> void:
 	
 	#Activate sprint
 	if Input.is_action_pressed("sprint") and can_sprint and is_moving:
-		speed = sprint_speed
+		speed = pStats.sprint_speed
 	if Input.is_action_just_released("sprint") or not is_moving:
-		speed = walk_speed
+		speed = pStats.walk_speed
 	
 	if not get_tree().paused:
 		roll_cooldown.paused = false
@@ -168,19 +177,19 @@ func _process(delta: float) -> void:
 		
 		#Drain stamina if sprinting
 		if is_moving and is_sprinting and can_sprint:
-			stamina -= stamina_drain * delta
+			stamina -= pStats.stamina_drain * delta
 		
 		#Regen stamina if stamina isn't full (doesn't stop strinting)
-		if not is_sprinting and can_sprint and stamina < max_stamina:
-			stamina += stamina_regen * delta
+		if not is_sprinting and can_sprint and stamina < pStats.max_stamina:
+			stamina += pStats.stamina_regen * delta
 		
 		#Regen stamina if fully drained (stops strinting)
 		if regen_stamina:
-			stamina += stamina_exhausted_regen * delta
+			stamina += pStats.stamina_exhausted_regen * delta
 		
 		#Set speed back to walk speed
 		if not can_sprint:
-			speed = walk_speed
+			speed = pStats.walk_speed
 		
 		#Set animation speed
 		if is_sprinting:
@@ -195,8 +204,8 @@ func _process(delta: float) -> void:
 			if anim == "walk": sprite.stop()
 			
 		#speed boost timer
-		speedMod = max(0, speedMod)
-		if speedMod != 0 and boostTimer.is_stopped(): boostTimer.start()
+		pStats.mod_speed = max(0, pStats.mod_speed)
+		if pStats.mod_speed != 0 and boostTimer.is_stopped(): boostTimer.start()
 		
 		#Roll animation state
 		match roll_state:
@@ -231,27 +240,16 @@ func _process(delta: float) -> void:
 		#Flip sprite and rotation based on roll direction
 		if is_rolling:
 			if roll_dir.x < 0:
-				rspeed = -roll_rot_speed
+				rspeed = -pStats.roll_rot_speed
 				rot_point.scale.x = -1
 			elif roll_dir.x > 0:
-				rspeed = roll_rot_speed
+				rspeed = pStats.roll_rot_speed
 				rot_point.scale.x = 1
 		
 		if rot_point.scale.x == -1:
-			$CollisionShape2D.position.x = 1.5
+			collShape.position.x = 1.5
 		else:
-			$CollisionShape2D.position.x = -1.5
-		
-		#Move eyes with the walk animation
-		if anim == "walk":
-			var fIndex : int = sprite.frame
-			
-			var offset = fIndex
-			if fIndex > 4: offset = 8 - fIndex
-			
-			for i in eyes:
-				var index : int = eyes.find(i)
-				i.position.x = defaultEyePos[index].x + offset
+			collShape.position.x = -1.5
 		
 		#Finish roll and start cool down
 		#Had to change this since _process updates before _physics_process thus if rotation = 0
@@ -285,6 +283,22 @@ func _process(delta: float) -> void:
 	and not weapSys.isAttacking and not inDialogue:
 		weapSys.attack()
 	
+	#Armor
+	if shell.get_child_count() > 0:
+		if not Global.armor:
+			for c in shell.get_children():
+				c.queue_free()
+			oldArmor = null
+		
+		if oldArmor != Global.armor:
+			for c in shell.get_children():
+				c.queue_free()
+	
+	if Global.armor and shell.get_child_count() == 0:
+		oldArmor = Global.armor
+		var newArmor = Global.armor.armorScene.instantiate()
+		shell.add_child(newArmor)
+	
 	#Place item
 	if Global.weapon and Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT) \
 	and Input.is_action_pressed("place") and not placeLatch and not inDialogue:
@@ -296,8 +310,8 @@ func _process(delta: float) -> void:
 	
 	#Update the UI here
 	var maxHBSize : float = health_bar.texture.get_width() * 5
-	health_bar.size.x = (health / max_health) * maxHBSize
-	stamina_bar.value = (stamina / max_stamina) * 100
+	health_bar.size.x = (health / pStats.max_health) * maxHBSize
+	stamina_bar.value = (stamina / pStats.max_stamina) * 100
 	if can_sprint:
 		stamina_bar.get_theme_stylebox("fill").bg_color = stamina_norm_color
 	else:
@@ -307,11 +321,11 @@ func _process(delta: float) -> void:
 	roll_cooldown_bar.visible = roll_cooldown.time_left > 0
 	
 	if Global.sceneIndex == 0:
-		$UI/Days.text = "Days: " + str(Global.totalDays)
+		daysTxt.text = "Days: " + str(Global.totalDays)
 	else:
-		$UI/Days.text = "Days: " + str(Global.runDays)
+		daysTxt.text = "Days: " + str(Global.runDays)
 	
-	$UI/Money.text = "$" + str(Global.money)
+	moneyTxt.text = "$" + str(Global.money)
 	
 	var dbck : CanvasLayer = get_node_or_null("debugMenu")
 	
@@ -371,13 +385,13 @@ func _physics_process(delta: float) -> void:
 		else:
 			dir = Vector2.ZERO #Don't move when rolling
 		knockbackVelocity = knockbackVelocity.limit_length(Global.MAX_KNOCKBACK)
-		linear_velocity = (dir * (speed + speedMod) * 1000 * delta) + knockbackVelocity;
+		linear_velocity = (dir * (speed + pStats.mod_speed) * 1000 * delta) + knockbackVelocity;
 		knockbackVelocity *= pow(Global.KNOCKBACK_DECAY, delta)
 		
 		#Roll logic
 		if is_rolling and roll_state != 1:
 			rot_point.rotation += rspeed * delta
-			apply_impulse(roll_dir * roll_speed * 1000 * delta)
+			apply_impulse(roll_dir * pStats.roll_speed * 1000 * delta)
 
 func _on_roll_cooldown_timeout() -> void:
 	can_roll = true
@@ -391,7 +405,7 @@ func _on_message_timer_timeout() -> void:
 	if not ms.is_empty(): ms[0].queue_free()
 
 func _on_speed_timer_timeout() -> void:
-	speedMod -= 5
+	pStats.mod_speed -= 5
 
 func _on_left_button_down() -> void:
 	if inventoryState > 0:
@@ -406,3 +420,30 @@ func _on_right_button_down() -> void:
 	else:
 		inventoryState = 0
 	if inventoryState == 0: Inventory_Node.gen_inventory()
+
+func _on_sprite_2d_frame_changed() -> void:
+	var fIndex : int = sprite.frame
+		
+	match sprite.animation:
+		"walk":
+			shell.position.x = -8
+			
+			#Move eyes with the walk animation
+			var offset = fIndex
+			if fIndex > 4: offset = 8 - fIndex
+			
+			for i in eyes:
+				var index : int = eyes.find(i)
+				i.position.x = defaultEyePos[index].x + offset
+		"start_roll":
+			if fIndex < 6: shell.position.x = -8
+			if fIndex == 6: shell.position.x = -7
+			if fIndex == 7: shell.position.x = -4
+			if fIndex == 8: shell.position.x = -2
+		"roll":
+			shell.position.x = 0
+		"end_roll":
+			if fIndex == 0: shell.position.x = -2
+			if fIndex == 1: shell.position.x = -4
+			if fIndex == 2: shell.position.x = -7
+			if fIndex > 2: shell.position.x = -8

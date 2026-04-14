@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://b8144wplbcifh"]
+
+[ext_resource type="PackedScene" uid="uid://cemcj3vmfdtos" path="res://Assets/prefabs/armor/ice_shell.tscn" id="1_hp7eh"]
+[ext_resource type="Texture2D" uid="uid://bp2p0j3msegcd" path="res://Assets/imgs/armor/ice_shell.png" id="2_cyabm"]
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="3_yxqjr"]
+
+[resource]
+script = ExtResource("3_yxqjr")
+armorScene = ExtResource("1_hp7eh")
+name = "Ice Shell"
+itemIcon = ExtResource("2_cyabm")
+iconScale = 2.0
+itemType = 2
+equippable = true
+stackable = false
+metadata/_custom_type_script = "uid://dajegbj308dnw"

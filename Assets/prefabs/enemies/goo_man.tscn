@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ci5nwumt5ijd3"]
 
 [ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_d7u5s"]
-[ext_resource type="Resource" uid="uid://bsrswcnoltxaf" path="res://Assets/items/spider_laser.tres" id="2_seoq1"]
+[ext_resource type="Resource" uid="uid://bsrswcnoltxaf" path="res://Assets/weapons/spider_laser.tres" id="2_seoq1"]
 [ext_resource type="Texture2D" uid="uid://m2ngavmj0qj7" path="res://Assets/imgs/enemies/goo_enemy.png" id="3_d03qg"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="4_c7vne"]
 [ext_resource type="PackedScene" uid="uid://diwkxcopn8e5d" path="res://Assets/prefabs/ui/health_bar.tscn" id="5_8tfsi"]
@@ -10,7 +10,7 @@
 friction = 0.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xl01c"]
-size = Vector2(12, 24)
+size = Vector2(13, 24)
 
 [node name="enemy" type="RigidBody2D" unique_id=764826255 node_paths=PackedStringArray("nav", "eye", "laserEyes", "sprite", "coll", "healthBar")]
 z_index = 3
@@ -78,7 +78,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=457998798]
-position = Vector2(0, -1)
+position = Vector2(-0.5, 0)
 shape = SubResource("RectangleShape2D_xl01c")
 
 [connection signal="draw" from="sprite2D" to="." method="_on_sprite_2d_draw"]

@@ -7,8 +7,13 @@ enum item_type {
 	ARMOR
 }
 
+enum hotbar_type {
+	NONE,
+	WEAPON,
+	ITEM
+}
+
 @export_category("Base Item")
-@export var id : int = 0
 @export var name : String = ""
 @export_category("Icon")
 @export var itemIcon : Texture2D
@@ -24,6 +29,7 @@ enum item_type {
 @export var stackable : bool = true
 @export var throwable : bool = false
 @export var placable : bool = false
+@export var hotBarType : hotbar_type = hotbar_type.NONE
 @export_category("Base Item Data")
 @export var weight : float = 1.0
 @export var baseCost : float = 30
@@ -116,7 +122,7 @@ func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 				
 				if thisDropPos.distance_to(base.global_position) > Global.pickupRange: continue
 				
-				if base.item.id == id:
+				if base.item.name == name:
 					base.item.quantity += amount
 					if decrement: quantity -= amount
 					return

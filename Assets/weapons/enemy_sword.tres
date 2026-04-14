@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://cuamogxy52nlx"]
+
+[ext_resource type="Texture2D" uid="uid://cb876a2o1rjse" path="res://Assets/imgs/weapons/enemy_sword.png" id="1_jbfpi"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_ms8iv"]
+[ext_resource type="PackedScene" uid="uid://ml68nn55cn5p" path="res://Assets/prefabs/weapons/enemy_weapon.tscn" id="3_yl14b"]
+
+[resource]
+script = ExtResource("1_ms8iv")
+weaponScene = ExtResource("3_yl14b")
+baseDamage = 5.0
+name = "Enemy Weapon"
+itemIcon = ExtResource("1_jbfpi")
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

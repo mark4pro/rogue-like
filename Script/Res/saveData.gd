@@ -7,6 +7,11 @@ class_name SaveData
 @export var inventory : Inventory = Inventory.new()
 @export var weapon : WeaponItem = null
 @export var money : int = 0
+@export var playerStats : stats = stats.new()
+
+@export_category("Hot Bar")
+@export var hotbar_weapons : Array[BaseItem] = []
+@export var hotbar_items : Array[BaseItem] = []
 
 @export_category("Time/Day Data")
 @export_range(0.0, 1.0, 0.001) var timeOfDay : float = 0.0

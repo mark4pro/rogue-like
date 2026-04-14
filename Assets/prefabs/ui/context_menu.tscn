@@ -3,6 +3,9 @@
 [ext_resource type="Script" uid="uid://dghtvdfwbkc3c" path="res://Script/context_menu.gd" id="1_mtgmi"]
 [ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_1a0vn"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_napag"]
+bg_color = Color(0.22, 0.20192333, 0.1562, 1)
+
 [node name="ContextMenu" type="Control" unique_id=473995532]
 z_index = 2
 layout_mode = 3
@@ -17,37 +20,73 @@ script = ExtResource("1_mtgmi")
 custom_minimum_size = Vector2(100, 25)
 layout_mode = 0
 offset_right = 100.0
-offset_bottom = 31.0
+offset_bottom = 26.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_napag")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=790111456]
 layout_mode = 2
 theme_override_constants/separation = 0
 
 [node name="equipBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1809940055]
+unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Equip"
 
 [node name="unequipBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1070392595]
+unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Unequip"
 
 [node name="useBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=382146567]
+unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Use"
 
 [node name="dropBttn" type="Button" parent="PanelContainer/VBoxContainer" unique_id=2061061854]
+unique_name_in_owner = true
 visible = false
+custom_minimum_size = Vector2(0, 25)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_1a0vn")
 text = "Drop"
+
+[node name="hotbar_1" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1969218675]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_1a0vn")
+text = "Add to slot 1"
+
+[node name="hotbar_2" type="Button" parent="PanelContainer/VBoxContainer" unique_id=2035716946]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_1a0vn")
+text = "Add to slot 2"
+
+[node name="hotbar_3" type="Button" parent="PanelContainer/VBoxContainer" unique_id=1121536149]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_1a0vn")
+text = "Add to slot 3"
 
 [connection signal="button_down" from="PanelContainer/VBoxContainer/equipBttn" to="." method="_on_equip_bttn_button_down"]
 [connection signal="button_down" from="PanelContainer/VBoxContainer/unequipBttn" to="." method="_on_unequip_bttn_button_down"]
 [connection signal="button_down" from="PanelContainer/VBoxContainer/useBttn" to="." method="_on_use_bttn_button_down"]
 [connection signal="button_down" from="PanelContainer/VBoxContainer/dropBttn" to="." method="_on_drop_bttn_button_down"]
+[connection signal="button_down" from="PanelContainer/VBoxContainer/hotbar_1" to="." method="_on_hotbar_1_button_down"]
+[connection signal="button_down" from="PanelContainer/VBoxContainer/hotbar_2" to="." method="_on_hotbar_2_button_down"]
+[connection signal="button_down" from="PanelContainer/VBoxContainer/hotbar_3" to="." method="_on_hotbar_3_button_down"]

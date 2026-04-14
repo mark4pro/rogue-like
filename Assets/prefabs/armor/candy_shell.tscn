@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ctcjwig3neygb"]
+
+[ext_resource type="Texture2D" uid="uid://dsaajbls1sc1t" path="res://Assets/imgs/armor/candy_shell.png" id="1_4iypj"]
+
+[node name="armor" type="Sprite2D" unique_id=1639896376]
+texture = ExtResource("1_4iypj")

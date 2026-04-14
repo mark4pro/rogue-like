@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://ei7v3sv0c01y"]
+
+[ext_resource type="Texture2D" uid="uid://f51i00xyjcih" path="res://Assets/imgs/weapons/metal_pipe.png" id="1_n1gc8"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="2_djkui"]
+[ext_resource type="PackedScene" uid="uid://ee4rgn8qh6j6" path="res://Assets/prefabs/weapons/metal_pipe.tscn" id="3_4fynq"]
+
+[resource]
+script = ExtResource("2_djkui")
+weaponScene = ExtResource("3_4fynq")
+name = "metalPipe"
+itemIcon = ExtResource("1_n1gc8")
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

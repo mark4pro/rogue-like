@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://b2o8qtk8lmp71"]
+
+[ext_resource type="Texture2D" uid="uid://dgdu58kfdlxeb" path="res://Assets/imgs/weapons/crystal_sword.png" id="1_s5or3"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="2_fl6bj"]
+[ext_resource type="PackedScene" uid="uid://owsk3om5ppa4" path="res://Assets/prefabs/weapons/crystal_sword.tscn" id="3_6nqj5"]
+
+[resource]
+script = ExtResource("2_fl6bj")
+weaponScene = ExtResource("3_6nqj5")
+baseDamage = 40.0
+damageVar = 0.5
+name = "crystal sword"
+itemIcon = ExtResource("1_s5or3")
+iconRotOffset = 45.0
+groundScale = 0.5
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

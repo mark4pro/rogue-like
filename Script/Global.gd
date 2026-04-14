@@ -14,6 +14,11 @@ var compareUI : PackedScene = preload("res://Assets/prefabs/ui/compare.tscn")
 @export var armor : ArmorItem = null
 @export var money : int = 0
 @export var pickupRange : float = 50
+@export var playerStats : stats = stats.new()
+
+@export_category("Hot Bar")
+@export var hotbar_weapons : Array[BaseItem] = []
+@export var hotbar_items : Array[BaseItem] = []
 
 var messageTimer : Timer = null
 var messageBox : VBoxContainer = null
@@ -92,6 +97,8 @@ var savePath : String = "user://saves/"
 
 func saveGame() -> void:
 	if sceneIndex == 0:
+		playerStats.reset_mods()
+		
 		if not DirAccess.dir_exists_absolute(savePath):
 			DirAccess.make_dir_recursive_absolute(savePath)
 		
@@ -99,6 +106,9 @@ func saveGame() -> void:
 		save_data.inventory = inventory
 		save_data.weapon = weapon
 		save_data.money = money
+		save_data.playerStats = playerStats
+		save_data.hotbar_weapons = hotbar_weapons
+		save_data.hotbar_items = hotbar_items
 		save_data.timeOfDay = timeOfDay
 		save_data.totalDays = totalDays
 		save_data.lastRunDays = lastRunDays
@@ -129,6 +139,9 @@ func loadGame():
 		
 		weapon = save_data.weapon
 		money = save_data.money
+		playerStats = save_data.playerStats
+		hotbar_weapons = save_data.hotbar_weapons
+		hotbar_items = save_data.hotbar_items
 		timeOfDay = save_data.timeOfDay
 		totalDays = save_data.totalDays
 		lastRunDays = save_data.lastRunDays
@@ -146,11 +159,14 @@ func _ready() -> void:
 	if not ResourceLoader.exists(savePath + "save_data.tres"):
 		inventory.add_item(load("res://Assets/items/health_1.tres"))
 		inventory.add_item(load("res://Assets/items/health_1.tres"))
-		inventory.add_item(load("res://Assets/items/over_grown.tres"))
-		inventory.add_item(load("res://Assets/items/over_grown.tres"))
-		inventory.add_item(load("res://Assets/items/torch.tres"))
+		inventory.add_item(load("res://Assets/weapons/over_grown.tres"))
+		inventory.add_item(load("res://Assets/weapons/over_grown.tres"))
+		inventory.add_item(load("res://Assets/weapons/torch.tres"))
 	loadGame()
 	lootList.getValid()
+	
+	hotbar_weapons.resize(3)
+	hotbar_items.resize(3)
 
 func getKeyFromAction(action: String) -> String:
 	return InputMap.action_get_events(action)[0].as_text().split(" ")[0]
@@ -407,6 +423,31 @@ func _process(delta: float) -> void:
 				get_tree().current_scene.add_child(newAmbient)
 		
 		if ambientLight: ambientLight.color = ambientColor
+	
+	#Hot Bar
+	if hotbar_weapons.size() == 3:
+		if Input.is_action_just_pressed("hotbar_1") and hotbar_weapons[0]:
+			weapon = hotbar_weapons[0]
+		if Input.is_action_just_pressed("hotbar_2") and hotbar_weapons[1]:
+			weapon = hotbar_weapons[1]
+		if Input.is_action_just_pressed("hotbar_3") and hotbar_weapons[2]:
+			weapon = hotbar_weapons[2]
+	if hotbar_items.size() == 3:
+		if Input.is_action_just_pressed("hotbar_4") and hotbar_items[0]:
+			if hotbar_items[0] is WeaponItem:
+				weapon = hotbar_items[0]
+			else:
+				hotbar_items[0].use()
+		if Input.is_action_just_pressed("hotbar_5") and hotbar_items[1]:
+			if hotbar_items[1] is WeaponItem:
+				weapon = hotbar_items[1]
+			else:
+				hotbar_items[1].use()
+		if Input.is_action_just_pressed("hotbar_6") and hotbar_items[2]:
+			if hotbar_items[2] is WeaponItem:
+				weapon = hotbar_items[2]
+			else:
+				hotbar_items[2].use()
 	
 	#For testing
 	if addMs and OS.has_feature("editor"):

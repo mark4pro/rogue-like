@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://2c0y3bykldm5"]
+
+[ext_resource type="Texture2D" uid="uid://drouorice6pee" path="res://Assets/imgs/weapons/banana.png" id="1_8p5m2"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="2_veykp"]
+[ext_resource type="PackedScene" uid="uid://r7ajsrgyas4i" path="res://Assets/prefabs/weapons/banan.tscn" id="3_e7xug"]
+
+[resource]
+script = ExtResource("2_veykp")
+weaponScene = ExtResource("3_e7xug")
+baseDamage = 15.0
+name = "banana"
+itemIcon = ExtResource("1_8p5m2")
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

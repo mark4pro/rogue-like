@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bkp105hlkim6u"]
+
+[ext_resource type="Texture2D" uid="uid://coc8f8fjbu5d" path="res://Assets/imgs/armor/stone_shell.png" id="1_8xt2w"]
+
+[node name="armor" type="Sprite2D" unique_id=1640690997]
+texture = ExtResource("1_8xt2w")

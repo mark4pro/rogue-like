@@ -3,7 +3,8 @@ extends TextureRect
 @onready var icon : TextureRect = $InventoryItem
 @onready var amountTxt : Label = $Amount
 
-@export var equippedColor : Color = Color.RED
+@export var equippedColor_weapon : Color = Color.RED
+@export var equippedColor_armor : Color = Color.BLUE
 @export var item : BaseItem = null
 
 var touching : bool = false
@@ -64,10 +65,10 @@ func _process(_delta: float) -> void:
 		else:
 			if comp and comp.item == item: comp.queue_free()
 		
-		if Global.weapon == item and not redraw:
+		if (Global.weapon == item or Global.armor == item) and not redraw:
 			queue_redraw()
 			redraw = true
-		if not Global.weapon == item and redraw:
+		if not Global.weapon == item and not Global.armor == item and redraw:
 			queue_redraw()
 			redraw = false
 	else:
@@ -77,6 +78,10 @@ func _process(_delta: float) -> void:
 
 func _draw() -> void:
 	if item and item.equippable:
-		if item.itemType == BaseItem.item_type.WEAPON:
-			if Global.weapon == item:
-				draw_rect(Rect2(0, 0, size.x, size.y), equippedColor, false, 2)
+		match item.itemType:
+			BaseItem.item_type.WEAPON:
+				if Global.weapon == item:
+					draw_rect(Rect2(0, 0, size.x, size.y), equippedColor_weapon, false, 2)
+			BaseItem.item_type.ARMOR:
+				if Global.armor == item:
+					draw_rect(Rect2(0, 0, size.x, size.y), equippedColor_armor, false, 2)

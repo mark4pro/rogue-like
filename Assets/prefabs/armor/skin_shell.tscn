@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cmxj5likinlao"]
+
+[ext_resource type="Texture2D" uid="uid://b1x8ag21v3fnf" path="res://Assets/imgs/armor/skin_shell.png" id="1_dd44q"]
+
+[node name="armor" type="Sprite2D" unique_id=1073350462]
+texture = ExtResource("1_dd44q")

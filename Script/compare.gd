@@ -68,7 +68,7 @@ func _ready() -> void:
 					str(Global.formatFloat(item.knockback))
 				]
 				stats.add_child(newLabel.duplicate())
-				
+			
 			if not Global.weapon or item == Global.weapon:
 				newLabel.text = "\t\tDamage: (%s, %s)" % [
 					str(Global.formatFloat(item.damage.x)),
@@ -101,7 +101,32 @@ func _ready() -> void:
 				str(Global.formatFloat(item.cost))
 			]
 			stats.add_child(newLabel.duplicate())
-	
+		
+		if item is ArmorItem:
+			if Global.armor and not item == Global.armor:
+				newLabel.text = "\t\tDefense: ([color=%s]%s[/color] | %s)" % [
+					getCompColor(item.defense, Global.armor.defense),
+					str(Global.formatFloat(item.defense - Global.armor.defense)),
+					str(Global.formatFloat(item.defense))
+				]
+				stats.add_child(newLabel.duplicate())
+			
+			if not Global.armor or item == Global.armor:
+				newLabel.text = "\t\tDefense: %s" % [
+					str(Global.formatFloat(item.defense))
+				]
+				stats.add_child(newLabel.duplicate())
+			
+			newLabel.text = "\t\tRarity: [color=%s]%s[/color]" % [
+				item.getRarity().color.to_html(),
+				str(item.getRarity().txt)
+			]
+			stats.add_child(newLabel.duplicate())
+			
+			newLabel.text = "\t\tCost: %s" % [
+				str(Global.formatFloat(item.cost))
+			]
+			stats.add_child(newLabel.duplicate())
 	bg.size.y = stats.size.y + 30
 
 func _process(_delta: float) -> void:

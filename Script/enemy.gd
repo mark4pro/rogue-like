@@ -11,6 +11,7 @@ extends RigidBody2D
 @export var weapon : WeaponItem = null
 @export var maxHealth : float = 100
 @export var health : float = 100
+@export var defense : float = 10
 
 @export_category("Loot")
 @export var moneyChance : float = 0.5
@@ -41,7 +42,7 @@ var dt : float = 0
 
 func take_damage(data: Dictionary, attacker: Node):
 	if not get_tree().paused:
-		health -= data.value
+		health -= data.value * (100 / (100 + defense))
 		Global.damageAnim(sprite, data.value)
 		Global.damNumbers(coll, data)
 		thisAI.engage(attacker)

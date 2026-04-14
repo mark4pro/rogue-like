@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://3h2ehywpy2jp"]
+
+[ext_resource type="Texture2D" uid="uid://dbkqct8dnerui" path="res://Assets/imgs/armor/fire_shell.png" id="1_v5j5p"]
+
+[node name="armor" type="Sprite2D" unique_id=415578398]
+texture = ExtResource("1_v5j5p")

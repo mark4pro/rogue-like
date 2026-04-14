@@ -1,20 +1,24 @@
 [gd_resource type="Resource" script_class="LootList" format=3 uid="uid://bc340l20tpoev"]
 
 [ext_resource type="Script" uid="uid://dl251w1lsyqw4" path="res://Script/Res/item_weighted.gd" id="1_8cx6g"]
+[ext_resource type="Resource" uid="uid://ctrrswfhhu73y" path="res://Assets/weapons/over_grown.tres" id="2_g7ce6"]
 [ext_resource type="Script" uid="uid://c6o5s4fws44bb" path="res://Script/Res/loot_lists.gd" id="2_qoodt"]
-[ext_resource type="Resource" uid="uid://ctrrswfhhu73y" path="res://Assets/items/over_grown.tres" id="2_umd42"]
-[ext_resource type="Resource" uid="uid://b2o8qtk8lmp71" path="res://Assets/items/crystal_sword.tres" id="3_xkh2n"]
+[ext_resource type="Resource" uid="uid://b2o8qtk8lmp71" path="res://Assets/weapons/crystal_sword.tres" id="3_f217l"]
 [ext_resource type="Resource" uid="uid://dwu6vcmregnk8" path="res://Assets/items/health_1.tres" id="4_yf6q6"]
+[ext_resource type="Resource" uid="uid://cmsqmonojo5pp" path="res://Assets/armor/stone_shell.tres" id="5_1hqug"]
+[ext_resource type="Resource" uid="uid://t02vo7usiqe5" path="res://Assets/armor/fire_shell.tres" id="6_1tw25"]
+[ext_resource type="Resource" uid="uid://c2xgcsv4g1ihw" path="res://Assets/armor/water_shell.tres" id="7_1iu74"]
+[ext_resource type="Resource" uid="uid://b8144wplbcifh" path="res://Assets/armor/ice_shell.tres" id="8_7pxns"]
 
 [sub_resource type="Resource" id="Resource_xkh2n"]
 script = ExtResource("1_8cx6g")
-data = ExtResource("2_umd42")
+data = ExtResource("2_g7ce6")
 chance = 40.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_5qs7o"]
 script = ExtResource("1_8cx6g")
-data = ExtResource("3_xkh2n")
+data = ExtResource("3_f217l")
 chance = 20.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
@@ -24,7 +28,31 @@ data = ExtResource("4_yf6q6")
 chance = 60.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
+[sub_resource type="Resource" id="Resource_o4ngj"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("5_1hqug")
+chance = 40.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_kex7k"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("6_1tw25")
+chance = 20.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_qk06m"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("7_1iu74")
+chance = 20.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_jw4l0"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("8_7pxns")
+chance = 20.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
 [resource]
 script = ExtResource("2_qoodt")
-list = Array[ExtResource("1_8cx6g")]([SubResource("Resource_xkh2n"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb")])
+list = Array[ExtResource("1_8cx6g")]([SubResource("Resource_xkh2n"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0")])
 metadata/_custom_type_script = "uid://c6o5s4fws44bb"

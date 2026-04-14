@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://bocuq5n3soyig"]
+
+[ext_resource type="Texture2D" uid="uid://dnh362nl2wbom" path="res://Assets/imgs/weapons/Magic_Pellets.png" id="1_knrlo"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="2_ul8n7"]
+[ext_resource type="PackedScene" uid="uid://c33kw884111y8" path="res://Assets/prefabs/weapons/magic_pellet.tscn" id="3_ibbs7"]
+
+[resource]
+script = ExtResource("2_ul8n7")
+weaponScene = ExtResource("3_ibbs7")
+baseDamage = 10.0
+animationType = 3
+name = "Magic Pellet"
+itemIcon = ExtResource("1_knrlo")
+iconScale = 0.8
+groundScale = 0.8
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

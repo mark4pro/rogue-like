@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://cdqkuh0os6fao"]
+
+[ext_resource type="PackedScene" uid="uid://cmxj5likinlao" path="res://Assets/prefabs/armor/skin_shell.tscn" id="1_8a2gj"]
+[ext_resource type="Texture2D" uid="uid://b1x8ag21v3fnf" path="res://Assets/imgs/armor/skin_shell.png" id="2_pxxsi"]
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="3_0xhi8"]
+
+[resource]
+script = ExtResource("3_0xhi8")
+armorScene = ExtResource("1_8a2gj")
+name = "Skin Shell"
+itemIcon = ExtResource("2_pxxsi")
+iconScale = 2.0
+itemType = 2
+equippable = true
+stackable = false
+metadata/_custom_type_script = "uid://dajegbj308dnw"
