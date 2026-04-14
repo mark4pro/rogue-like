@@ -11,7 +11,7 @@ var compareUI : PackedScene = preload("res://Assets/prefabs/ui/compare.tscn")
 @export_category("Player")
 @export var inventory : Inventory = Inventory.new()
 @export var weapon : WeaponItem = null
-#@export var armor : ArmorItem = null
+@export var armor : ArmorItem = null
 @export var money : int = 0
 @export var pickupRange : float = 50
 
@@ -261,18 +261,20 @@ func damNumbers(colShape, data: Dictionary) -> void:
 		Global.currentScene.add_child(newLabel)
 
 func damageAnim(node: Node2D, damage: float = 10) -> void:
+	var og_size : Vector2 = node.scale
+	
 	var intensity = clamp(sqrt(damage) * 0.02, 0.05, 0.4)
 	
-	var squash = 1.0 - intensity
-	var stretch = 1.0 + intensity
+	var squash = max(og_size.y - intensity, 0.01)
+	var stretch = og_size.x + intensity
 	
 	var tween = create_tween()
 	tween.set_trans(Tween.TRANS_BACK)
 	tween.set_ease(Tween.EASE_OUT)
 	
 	tween.tween_property(node, "scale", Vector2(stretch, squash), 0.08)
-	tween.tween_property(node, "scale", Vector2(1.05, 0.95), 0.06)
-	tween.tween_property(node, "scale", Vector2.ONE, 0.06)
+	tween.tween_property(node, "scale", Vector2(og_size.x + 0.05, max(og_size.x - 0.05, 0.01)), 0.06)
+	tween.tween_property(node, "scale", og_size, 0.06)
 	
 	if damAnimRotEnable:
 		var rot = randf_range(-intensity, intensity)

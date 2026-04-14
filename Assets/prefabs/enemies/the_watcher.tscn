@@ -36,7 +36,7 @@ region_rect = Rect2(0, 14, 33, 32)
 [node name="Shadow" type="Sprite2D" parent="sprite2D" unique_id=1678263220]
 modulate = Color(1, 1, 1, 0.39215687)
 show_behind_parent = true
-position = Vector2(1.9999993, 24)
+position = Vector2(0, 24)
 scale = Vector2(1.1459994, 0.29499996)
 texture = ExtResource("4_7y7kf")
 
