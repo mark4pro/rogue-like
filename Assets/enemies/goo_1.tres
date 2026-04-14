@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EnemyWeighted" format=3 uid="uid://d2trvwp7x5u5n"]
+
+[ext_resource type="Script" path="res://Script/Res/enemy_weighted.gd" id="1_60y1p"]
+[ext_resource type="PackedScene" uid="uid://ci5nwumt5ijd3" path="res://Assets/prefabs/enemies/goo_man.tscn" id="1_mxoi5"]
+
+[resource]
+script = ExtResource("1_60y1p")
+data = ExtResource("1_mxoi5")
+chance = 25.0

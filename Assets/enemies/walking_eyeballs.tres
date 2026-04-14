@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EnemyWeighted" format=3 uid="uid://bgn7dj0nfprgi"]
+
+[ext_resource type="Script" path="res://Script/Res/enemy_weighted.gd" id="1_6qd5d"]
+[ext_resource type="PackedScene" uid="uid://bb8ao82cq1eyp" path="res://Assets/prefabs/enemies/walking_eyeballs.tscn" id="1_obm5b"]
+
+[resource]
+script = ExtResource("1_6qd5d")
+data = ExtResource("1_obm5b")
+chance = 25.0
