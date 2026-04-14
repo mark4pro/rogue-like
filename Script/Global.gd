@@ -105,6 +105,7 @@ func saveGame() -> void:
 		var save_data : SaveData = SaveData.new()
 		save_data.inventory = inventory
 		save_data.weapon = weapon
+		save_data.armor = armor
 		save_data.money = money
 		save_data.playerStats = playerStats
 		save_data.hotbar_weapons = hotbar_weapons
@@ -138,6 +139,7 @@ func loadGame():
 			#i.rolled = false
 		
 		weapon = save_data.weapon
+		armor = save_data.armor
 		money = save_data.money
 		playerStats = save_data.playerStats
 		hotbar_weapons = save_data.hotbar_weapons

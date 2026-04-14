@@ -6,6 +6,7 @@ class_name SaveData
 @export_category("Player Data")
 @export var inventory : Inventory = Inventory.new()
 @export var weapon : WeaponItem = null
+@export var armor : ArmorItem = null
 @export var money : int = 0
 @export var playerStats : stats = stats.new()
 

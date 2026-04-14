@@ -20,7 +20,7 @@ physics_material_override = SubResource("PhysicsMaterial_56c4l")
 lock_rotation = true
 script = ExtResource("1_d7u5s")
 nav = NodePath("NavigationAgent2D")
-eye = NodePath("sprite2D/eye_1")
+eye = NodePath("sprite2D/detect")
 laserEyes = [NodePath("sprite2D/eye_1"), NodePath("sprite2D/eye_2")]
 sprite = NodePath("sprite2D")
 coll = NodePath("CollisionShape2D")
@@ -29,7 +29,7 @@ weapon = ExtResource("2_seoq1")
 metadata/_edit_group_ = true
 
 [node name="sprite2D" type="Sprite2D" parent="." unique_id=17540074]
-position = Vector2(-1.5, 0)
+position = Vector2(-1.25, 0)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("3_d03qg")
 region_rect = Rect2(0, 14, 33, 32)
@@ -42,11 +42,14 @@ scale = Vector2(1.1459994, 0.29499996)
 texture = ExtResource("4_c7vne")
 
 [node name="eye_1" type="Marker2D" parent="sprite2D" unique_id=1320059563]
-position = Vector2(13, -6.5)
+position = Vector2(-4, -9)
 
 [node name="eye_2" type="Marker2D" parent="sprite2D" unique_id=2105043245]
 z_index = -1
-position = Vector2(12, -6.5)
+position = Vector2(9, -8.5)
+
+[node name="detect" type="Marker2D" parent="sprite2D" unique_id=1480231988]
+position = Vector2(2.5, -8.5)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1658699989]
 path_postprocessing = 1

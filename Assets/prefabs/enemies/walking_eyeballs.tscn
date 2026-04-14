@@ -9,9 +9,6 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_56c4l"]
 friction = 0.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xl01c"]
-size = Vector2(12, 18)
-
 [node name="enemy" type="RigidBody2D" unique_id=764826255 node_paths=PackedStringArray("nav", "eye", "laserEyes", "sprite", "coll", "healthBar")]
 z_index = 3
 collision_layer = 4
@@ -20,7 +17,7 @@ physics_material_override = SubResource("PhysicsMaterial_56c4l")
 lock_rotation = true
 script = ExtResource("1_ess3b")
 nav = NodePath("NavigationAgent2D")
-eye = NodePath("sprite2D/eye_1")
+eye = NodePath("sprite2D/detect")
 laserEyes = [NodePath("sprite2D/eye_1"), NodePath("sprite2D/eye_2")]
 sprite = NodePath("sprite2D")
 coll = NodePath("CollisionShape2D")
@@ -41,11 +38,13 @@ scale = Vector2(1.1459994, 0.29499996)
 texture = ExtResource("4_rc0ye")
 
 [node name="eye_1" type="Marker2D" parent="sprite2D" unique_id=1320059563]
-position = Vector2(13, -6.5)
+position = Vector2(-8, -11.5)
 
 [node name="eye_2" type="Marker2D" parent="sprite2D" unique_id=2105043245]
 z_index = -1
-position = Vector2(12, -6.5)
+position = Vector2(8, -11.5)
+
+[node name="detect" type="Marker2D" parent="sprite2D" unique_id=673923291]
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1658699989]
 path_postprocessing = 1
@@ -76,8 +75,9 @@ offset_bottom = 18.166664
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=457998798]
-position = Vector2(0, 2)
-shape = SubResource("RectangleShape2D_xl01c")
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1365355152]
+visible = false
+position = Vector2(0, 1)
+polygon = PackedVector2Array(4.9188423, -10.756531, 6.053974, -10.208536, 7.5413876, -8.603694, 8.011099, -7.664274, 8.005032, -5.7567177, 7.58053, -4.8068733, 8.98966, -1.6754742, 8.994221, 0.25862217, 8.486259, 3.2261896, 7.5413876, 7.757864, 6.9151077, 8.227573, 3.5097122, 8.305859, 2.4920082, 7.249012, 1.5134468, 4.2350407, -0.9916725, 4.2350407, -1.9702349, 7.7187214, -3.0270815, 8.775568, -7.019615, 8.736425, -7.501177, 8.244049, -8.037319, 7.170727, -9.015882, 4.1567554, -9.485592, 1.7299213, -9.485592, -2.2626114, -7.4893246, -4.728588, -8.009139, -5.7834525, -8.009139, -7.708361, -7.450182, -8.799406, -6.041053, -10.208536, -4.9921875, -10.7421875, -3.0234375, -10.75, -2.0078125, -10.234375, -0.5219631, -8.760263, 0.5348835, -8.760263, 2, -10.25, 3.03125, -10.7578125)
 
 [connection signal="draw" from="sprite2D" to="." method="_on_sprite_2d_draw"]

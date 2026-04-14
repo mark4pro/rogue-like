@@ -4,7 +4,7 @@ extends RigidBody2D
 @export var eye : Marker2D = null
 @export var laserEyes : Array[Marker2D] = []
 @export var sprite : Sprite2D = null
-@export var coll : CollisionShape2D = null
+@export var coll : Node2D = null
 @export var healthBar : ProgressBar = null
 
 @export_category("Base Stats")
@@ -40,6 +40,8 @@ var thisAI : DefaultAI = DefaultAI.new()
 var knockbackVelocity : Vector2 = Vector2.ZERO
 var dt : float = 0
 
+var collPosX : float = 0
+
 func take_damage(data: Dictionary, attacker: Node):
 	if not get_tree().paused:
 		health -= data.value * (100 / (100 + defense))
@@ -54,6 +56,8 @@ func _ready() -> void:
 		thisAI.baseNode = eye
 		thisAI.navAgent = nav
 		nav.connect("velocity_computed", velocity_computed)
+		
+		collPosX = coll.position.x
 	else:
 		print("Please check nav, eye, sprite, and coll!")
 	
@@ -104,10 +108,10 @@ func _process(delta: float) -> void:
 		var flipChck : float = linear_velocity.x - knockbackVelocity.x
 		if flipChck < 0:
 			sprite.scale.x = -1
-			coll.position.x = -1
+			coll.position.x = -collPosX
 		if flipChck > 0:
 			sprite.scale.x = 1
-			coll.position.x = 1
+			coll.position.x = collPosX
 		
 		#Weapon system setup
 		weapSys.parentNode = self
