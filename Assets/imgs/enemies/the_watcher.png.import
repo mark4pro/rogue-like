@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m2ngavmj0qj7"
-path="res://.godot/imported/goo_enemy.png-069ecaa39c61ed79cc6c5a9e46b9f119.ctex"
+uid="uid://bf2rs2mvx06kp"
+path="res://.godot/imported/the_watcher.png-8d8f2776d0072a140b6e03998426c77e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/imgs/weapons/goo_enemy.png"
-dest_files=["res://.godot/imported/goo_enemy.png-069ecaa39c61ed79cc6c5a9e46b9f119.ctex"]
+source_file="res://Assets/imgs/enemies/the_watcher.png"
+dest_files=["res://.godot/imported/the_watcher.png-8d8f2776d0072a140b6e03998426c77e.ctex"]
 
 [params]
 
