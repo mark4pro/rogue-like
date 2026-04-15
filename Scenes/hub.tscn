@@ -92,8 +92,9 @@ tile_set = ExtResource("4_imdk4")
 occlusion_enabled = false
 navigation_enabled = false
 
-[node name="House" type="Node2D" parent="World" unique_id=573323539]
+[node name="House" type="Node2D" parent="World" unique_id=573323539 node_paths=PackedStringArray("spawn")]
 script = ExtResource("1_ourlr")
+spawn = NodePath("Spawn")
 
 [node name="Floor" type="Sprite2D" parent="World/House" unique_id=1419043341]
 position = Vector2(16, 16)
