@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://dr55hdm7q5xwe" path="res://Script/pickup_menu.gd" id="7_wwh7s"]
 [ext_resource type="PackedScene" uid="uid://cnyseror8u6js" path="res://Assets/prefabs/ui/pickup_menu_ui_prefab.tscn" id="8_8tub1"]
 [ext_resource type="Script" uid="uid://bflxhnx1v35dm" path="res://Script/hot_bar.gd" id="9_pbh8v"]
+[ext_resource type="AudioStream" uid="uid://bdfcjapm5m5eu" path="res://Assets/audio/ambient/wind.mp3" id="15_6j11s"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mbpd7"]
 friction = 0.0
@@ -327,6 +328,8 @@ bg_color = Color(0.6, 0.6, 0.6, 0.11764706)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i87ed"]
 bg_color = Color(1, 1, 1, 0.11764706)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_pbh8v"]
 
 [node name="Player" type="RigidBody2D" unique_id=2014763879 groups=["Player"]]
 process_mode = 3
@@ -950,6 +953,14 @@ text = "Back to hub"
 unique_name_in_owner = true
 wait_time = 5.0
 one_shot = true
+
+[node name="Ambient_SFX" type="AudioStreamPlayer" parent="." unique_id=261195487]
+stream = SubResource("AudioStreamRandomizer_pbh8v")
+bus = &"Ambient"
+
+[node name="Ambient_BG" type="AudioStreamPlayer" parent="." unique_id=2073452856]
+stream = ExtResource("15_6j11s")
+bus = &"Ambient"
 
 [connection signal="animation_finished" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_animation_finished"]
 [connection signal="frame_changed" from="RotPoint/Sprite2D" to="." method="_on_sprite_2d_frame_changed"]
