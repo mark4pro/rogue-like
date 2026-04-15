@@ -99,6 +99,12 @@ func _process(delta: float) -> void:
 			
 			queue_free()
 		
+		#Fix scale for the vision cone
+		var visionConeChk : Node2D = eye.get_node_or_null("Cone")
+		
+		if visionConeChk:
+			visionConeChk.scale = Vector2.ONE / sprite.global_scale
+		
 		#Default to wonder if player isn't loaded
 		if not Global.player:
 			thisAI.disengage()
@@ -110,10 +116,10 @@ func _process(delta: float) -> void:
 		#Flip logic
 		var flipChck : float = linear_velocity.x - knockbackVelocity.x
 		if flipChck < 0:
-			sprite.scale.x = -1
+			sprite.scale.x = -ogScale.x
 			coll.position.x = -collPosX
 		if flipChck > 0:
-			sprite.scale.x = 1
+			sprite.scale.x = ogScale.x
 			coll.position.x = collPosX
 		
 		#Weapon system setup
