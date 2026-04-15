@@ -45,7 +45,6 @@ texture = ExtResource("4_c7vne")
 position = Vector2(-4, -9)
 
 [node name="eye_2" type="Marker2D" parent="sprite2D" unique_id=2105043245]
-z_index = -1
 position = Vector2(9, -8.5)
 
 [node name="detect" type="Marker2D" parent="sprite2D" unique_id=1480231988]
