@@ -109,11 +109,19 @@ func _on_hotbar_1_button_down() -> void:
 			if Global.hotbar_weapons[0] == item:
 				Global.hotbar_weapons[0] = null
 			else:
+				for i in range(Global.hotbar_weapons.size()):
+					var thisItem : BaseItem = Global.hotbar_weapons[i]
+					if thisItem == item: Global.hotbar_weapons[i] = null
+				
 				Global.hotbar_weapons[0] = item
 		BaseItem.hotbar_type.ITEM:
 			if Global.hotbar_items[0] == item:
 				Global.hotbar_items[0] = null
 			else:
+				for i in range(Global.hotbar_items.size()):
+					var thisItem : BaseItem = Global.hotbar_items[i]
+					if thisItem == item: Global.hotbar_items[i] = null
+				
 				Global.hotbar_items[0] = item
 
 func _on_hotbar_2_button_down() -> void:
@@ -122,11 +130,19 @@ func _on_hotbar_2_button_down() -> void:
 			if Global.hotbar_weapons[1] == item:
 				Global.hotbar_weapons[1] = null
 			else:
+				for i in range(Global.hotbar_weapons.size()):
+					var thisItem : BaseItem = Global.hotbar_weapons[i]
+					if thisItem == item: Global.hotbar_weapons[i] = null
+				
 				Global.hotbar_weapons[1] = item
 		BaseItem.hotbar_type.ITEM:
 			if Global.hotbar_items[1] == item:
 				Global.hotbar_items[1] = null
 			else:
+				for i in range(Global.hotbar_items.size()):
+					var thisItem : BaseItem = Global.hotbar_items[i]
+					if thisItem == item: Global.hotbar_items[i] = null
+				
 				Global.hotbar_items[1] = item
 
 func _on_hotbar_3_button_down() -> void:
@@ -135,9 +151,17 @@ func _on_hotbar_3_button_down() -> void:
 			if Global.hotbar_weapons[2] == item:
 				Global.hotbar_weapons[2] = null
 			else:
+				for i in range(Global.hotbar_weapons.size()):
+					var thisItem : BaseItem = Global.hotbar_weapons[i]
+					if thisItem == item: Global.hotbar_weapons[i] = null
+				
 				Global.hotbar_weapons[2] = item
 		BaseItem.hotbar_type.ITEM:
 			if Global.hotbar_items[2] == item:
 				Global.hotbar_items[2] = null
 			else:
+				for i in range(Global.hotbar_items.size()):
+					var thisItem : BaseItem = Global.hotbar_items[i]
+					if thisItem == item: Global.hotbar_items[i] = null
+				
 				Global.hotbar_items[2] = item

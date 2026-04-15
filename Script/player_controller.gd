@@ -1,12 +1,13 @@
 extends RigidBody2D
 
-var snail_slime: PackedScene = preload("res://Assets/prefabs/snail_slime.tscn")
+@export var snail_slime: PackedScene
+@export var default_shell: PackedScene
 
 @onready var camera : Camera2D = %Camera2D
 @onready var sprite : AnimatedSprite2D = %Sprite2D
 @onready var shadow : Sprite2D = %Shadow
 @onready var shell : Node2D = %Shell
-@onready var collShape : CollisionShape2D = %CollisionShape2D
+@onready var collShape : CollisionPolygon2D = %CollisionShape2D
 @onready var rot_point : Node2D = %RotPoint
 @onready var eyes : Array[Marker2D] = [%Eye_1, %Eye_2]
 
@@ -138,7 +139,6 @@ func _process(delta: float) -> void:
 		if not played_death_anim:
 			sprite.call_deferred("play", "death")
 			played_death_anim = true
-		shadow.visible = sprite.frame < sprite.sprite_frames.get_frame_count("death") - 1
 		rot_point.rotation = 0
 		roll_cooldown.stop()
 		is_rolling = false 
@@ -236,9 +236,9 @@ func _process(delta: float) -> void:
 	
 		#Flip sprite and rotation based on movement direction
 		var flipChck : float = linear_velocity.x - knockbackVelocity.x
-		if flipChck < 0:
+		if flipChck < -0.01:
 			rot_point.scale.x = -1
-		elif flipChck > 0:
+		elif flipChck > 0.01:
 			rot_point.scale.x = 1
 		
 		#Flip sprite and rotation based on roll direction
@@ -291,7 +291,9 @@ func _process(delta: float) -> void:
 	if shell.get_child_count() > 0:
 		if not Global.armor:
 			for c in shell.get_children():
+				if c.is_in_group("default_shell"): continue
 				c.queue_free()
+			
 			oldArmor = null
 		
 		if oldArmor != Global.armor:
@@ -301,6 +303,10 @@ func _process(delta: float) -> void:
 	if Global.armor and shell.get_child_count() == 0:
 		oldArmor = Global.armor
 		var newArmor = Global.armor.armorScene.instantiate()
+		shell.add_child(newArmor)
+	
+	if not Global.armor and shell.get_child_count() == 0:
+		var newArmor = default_shell.instantiate()
 		shell.add_child(newArmor)
 	
 	#Place item

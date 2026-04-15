@@ -5,7 +5,7 @@
 	=> END
 - Chat
 	Shop Keeper: [speed=0.2]How's it going? (wip)
-	=> start
+	=> END
 - Exit => END
 Shop Keeper: [speed=0.2]See ya!
 => END

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://daewd31d0gobn"]
+
+[ext_resource type="Texture2D" uid="uid://b618l112eeyah" path="res://Assets/imgs/armor/green_shell.png" id="1_65xru"]
+
+[node name="armor" type="Sprite2D" unique_id=1856658189 groups=["default_shell"]]
+texture = ExtResource("1_65xru")

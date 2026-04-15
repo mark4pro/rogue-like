@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://bjts4lj4357yt"]
 
 [ext_resource type="Script" uid="uid://bfgy714al867q" path="res://Script/player_controller.gd" id="1_fj04p"]
+[ext_resource type="PackedScene" uid="uid://dltsyaukncc2b" path="res://Assets/prefabs/snail_slime.tscn" id="2_44bd2"]
 [ext_resource type="Texture2D" uid="uid://bgy1rvpqhpbh1" path="res://Assets/imgs/Bob-sheet.png" id="2_fj04p"]
 [ext_resource type="Texture2D" uid="uid://bcetjsof4a06x" path="res://Assets/imgs/UI/heart.png" id="3_g621r"]
 [ext_resource type="PackedScene" uid="uid://bkp105hlkim6u" path="res://Assets/prefabs/armor/stone_shell.tscn" id="3_i87ed"]
+[ext_resource type="PackedScene" uid="uid://daewd31d0gobn" path="res://Assets/prefabs/armor/green_shell.tscn" id="3_pbh8v"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="4_gmoaq"]
 [ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="5_ev7rh"]
 [ext_resource type="Script" uid="uid://dwmaslk0joqji" path="res://Script/inventory_ui.gd" id="5_w0l5f"]
@@ -11,152 +13,150 @@
 [ext_resource type="Script" uid="uid://b6bwarcve0kkn" path="res://Script/death_screen.gd" id="7_4312i"]
 [ext_resource type="Script" uid="uid://dr55hdm7q5xwe" path="res://Script/pickup_menu.gd" id="7_wwh7s"]
 [ext_resource type="PackedScene" uid="uid://cnyseror8u6js" path="res://Assets/prefabs/ui/pickup_menu_ui_prefab.tscn" id="8_8tub1"]
+[ext_resource type="Script" uid="uid://bflxhnx1v35dm" path="res://Script/hot_bar.gd" id="9_pbh8v"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mbpd7"]
 friction = 0.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ykx3s"]
-size = Vector2(21, 10)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_i87ed"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(0, 105, 35, 35)
+region = Rect2(0, 72, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6mtiy"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(35, 105, 35, 35)
+region = Rect2(34, 72, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_44bd2"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(70, 105, 35, 35)
+region = Rect2(68, 72, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pbh8v"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(105, 105, 35, 35)
+region = Rect2(102, 72, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6j11s"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(140, 105, 35, 35)
+region = Rect2(136, 72, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4emnn"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(0, 140, 35, 35)
+region = Rect2(0, 96, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_evqlu"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(35, 140, 35, 35)
+region = Rect2(34, 96, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7dwfe"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(70, 140, 35, 35)
+region = Rect2(68, 96, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_41nns"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(105, 140, 35, 35)
+region = Rect2(102, 96, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_84v1y"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(140, 140, 35, 35)
+region = Rect2(136, 96, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_83lc3"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(0, 175, 35, 35)
+region = Rect2(0, 120, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nef1y"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(35, 35, 35, 35)
+region = Rect2(34, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0chty"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(70, 35, 35, 35)
+region = Rect2(68, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ag7xc"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(105, 35, 35, 35)
+region = Rect2(102, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7veig"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(140, 35, 35, 35)
+region = Rect2(136, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pqkjv"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(0, 70, 35, 35)
+region = Rect2(0, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_nfjlg"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(35, 70, 35, 35)
+region = Rect2(34, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jc262"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(70, 70, 35, 35)
+region = Rect2(68, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mh00j"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(105, 70, 35, 35)
+region = Rect2(102, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2w30e"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(140, 70, 35, 35)
+region = Rect2(136, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_msyj5"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(0, 35, 35, 35)
+region = Rect2(0, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_j6nl4"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(140, 70, 35, 35)
+region = Rect2(136, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2c8ug"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(105, 70, 35, 35)
+region = Rect2(102, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_03pk1"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(70, 70, 35, 35)
+region = Rect2(68, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_u4l6r"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(35, 70, 35, 35)
+region = Rect2(34, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kptfn"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(0, 70, 35, 35)
+region = Rect2(0, 48, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jf6mi"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(140, 35, 35, 35)
+region = Rect2(136, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_77sxb"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(105, 35, 35, 35)
+region = Rect2(102, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0rhtx"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(70, 35, 35, 35)
+region = Rect2(68, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xfvn8"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(35, 35, 35, 35)
+region = Rect2(34, 24, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0hseh"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(0, 0, 35, 35)
+region = Rect2(0, 0, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1aooi"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(35, 0, 35, 35)
+region = Rect2(34, 0, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2sou3"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(70, 0, 35, 35)
+region = Rect2(68, 0, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_312gd"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(105, 0, 35, 35)
+region = Rect2(102, 0, 34, 24)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_pgfnh"]
 atlas = ExtResource("2_fj04p")
-region = Rect2(140, 0, 35, 35)
+region = Rect2(136, 0, 34, 24)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_i87ed"]
 animations = [{
@@ -312,6 +312,16 @@ bg_color = Color(0.13, 0.071499996, 0.12512502, 0)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mbpd7"]
 bg_color = Color(0.7901416, 0.51239294, 0.5351781, 1)
 
+[sub_resource type="Gradient" id="Gradient_44bd2"]
+offsets = PackedFloat32Array(0.9585492, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_pbh8v"]
+gradient = SubResource("Gradient_44bd2")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0)
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8tub1"]
 bg_color = Color(0.6, 0.6, 0.6, 0.11764706)
 
@@ -327,13 +337,16 @@ physics_material_override = SubResource("PhysicsMaterial_mbpd7")
 gravity_scale = 0.0
 lock_rotation = true
 script = ExtResource("1_fj04p")
+snail_slime = ExtResource("2_44bd2")
+default_shell = ExtResource("3_pbh8v")
 stamina_norm_color = Color(0.4117647, 0.6901961, 0, 1)
 stamina_exh_color = Color(0.31672, 0.37, 0.2368, 1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2099576623]
+[node name="CollisionShape2D" type="CollisionPolygon2D" parent="." unique_id=1066359186]
 unique_name_in_owner = true
-position = Vector2(-1.5, 5)
-shape = SubResource("RectangleShape2D_ykx3s")
+visible = false
+position = Vector2(0, 5.5)
+polygon = PackedVector2Array(-12, 5.5, -13, 3.5, -13, -5.5, -9, -7.5, 0, -7.5, 2, -5.5, 12, -4.5, 12, 5.5)
 
 [node name="RotPoint" type="Node2D" parent="." unique_id=1568228705]
 unique_name_in_owner = true
@@ -343,24 +356,27 @@ position = Vector2(0, 4)
 unique_name_in_owner = true
 texture_filter = 1
 texture_repeat = 1
-position = Vector2(0, 1)
+position = Vector2(2, -4)
 sprite_frames = SubResource("SpriteFrames_i87ed")
 animation = &"walk"
 speed_scale = 4.005
 
-[node name="Eye_1" type="Marker2D" parent="RotPoint/Sprite2D" unique_id=607770776]
-unique_name_in_owner = true
-position = Vector2(2, -8)
+[node name="Offset" type="Node2D" parent="RotPoint/Sprite2D" unique_id=634101156]
+position = Vector2(0.5, 0.5)
 
-[node name="Eye_2" type="Marker2D" parent="RotPoint/Sprite2D" unique_id=1188033877]
+[node name="Shell" type="Node2D" parent="RotPoint/Sprite2D/Offset" unique_id=874996345]
 unique_name_in_owner = true
-position = Vector2(8, -8)
+position = Vector2(-8, 4)
 
-[node name="Shell" type="Node2D" parent="RotPoint/Sprite2D" unique_id=874996345]
+[node name="armor" parent="RotPoint/Sprite2D/Offset/Shell" unique_id=1640690997 instance=ExtResource("3_i87ed")]
+
+[node name="Eye_1" type="Marker2D" parent="RotPoint/Sprite2D/Offset" unique_id=607770776]
 unique_name_in_owner = true
-position = Vector2(-8, -1)
+position = Vector2(2, -3)
 
-[node name="armor" parent="RotPoint/Sprite2D/Shell" unique_id=1640690997 instance=ExtResource("3_i87ed")]
+[node name="Eye_2" type="Marker2D" parent="RotPoint/Sprite2D/Offset" unique_id=1188033877]
+unique_name_in_owner = true
+position = Vector2(8, -3)
 
 [node name="roll_cooldown" type="Timer" parent="." unique_id=1953313286]
 unique_name_in_owner = true
@@ -384,7 +400,6 @@ texture = ExtResource("4_gmoaq")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=963694637]
 unique_name_in_owner = true
-visible = false
 
 [node name="HealthBar" type="TextureRect" parent="UI" unique_id=1332307762]
 unique_name_in_owner = true
@@ -477,6 +492,229 @@ theme_override_fonts/font = ExtResource("5_ev7rh")
 theme_override_font_sizes/font_size = 36
 text = "$0"
 vertical_alignment = 1
+
+[node name="HotBar" type="PanelContainer" parent="UI" unique_id=94414984]
+modulate = Color(1, 1, 1, 0.54901963)
+custom_minimum_size = Vector2(600, 100)
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -300.0
+offset_top = -100.0
+offset_right = 300.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("9_pbh8v")
+
+[node name="VBox" type="HBoxContainer" parent="UI/HotBar" unique_id=1326021698]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Slot_1" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1952597009]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.36, 0.28440002, 0.28440002, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/HotBar/VBox/Slot_1" unique_id=1829084461]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Slot_1_Icon" type="TextureRect" parent="UI/HotBar/VBox/Slot_1/MarginContainer" unique_id=1863441313]
+unique_name_in_owner = true
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Slot_1_Outline" type="TextureRect" parent="UI/HotBar/VBox/Slot_1" unique_id=674930813]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_2" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1946801337]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.36, 0.28440002, 0.28440002, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/HotBar/VBox/Slot_2" unique_id=327557929]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Slot_2_Icon" type="TextureRect" parent="UI/HotBar/VBox/Slot_2/MarginContainer" unique_id=872147]
+unique_name_in_owner = true
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Slot_2_Outline" type="TextureRect" parent="UI/HotBar/VBox/Slot_2" unique_id=26230153]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_3" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1482883813]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.36, 0.28440002, 0.28440002, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/HotBar/VBox/Slot_3" unique_id=136124319]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Slot_3_Icon" type="TextureRect" parent="UI/HotBar/VBox/Slot_3/MarginContainer" unique_id=208434305]
+unique_name_in_owner = true
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Slot_3_Outline" type="TextureRect" parent="UI/HotBar/VBox/Slot_3" unique_id=84545034]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_4" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1608861513]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.3526, 0.36982, 0.41, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/HotBar/VBox/Slot_4" unique_id=1331343908]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Slot_4_Icon" type="TextureRect" parent="UI/HotBar/VBox/Slot_4/MarginContainer" unique_id=2006210486]
+unique_name_in_owner = true
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Slot_4_Outline" type="TextureRect" parent="UI/HotBar/VBox/Slot_4" unique_id=941081532]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_5" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1122446900]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.3526, 0.36982, 0.41, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/HotBar/VBox/Slot_5" unique_id=159408399]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Slot_5_Icon" type="TextureRect" parent="UI/HotBar/VBox/Slot_5/MarginContainer" unique_id=1047885084]
+unique_name_in_owner = true
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Slot_5_Outline" type="TextureRect" parent="UI/HotBar/VBox/Slot_5" unique_id=609272879]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_6" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1509881528]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+color = Color(0.3526, 0.36982, 0.41, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="UI/HotBar/VBox/Slot_6" unique_id=979214016]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="Slot_6_Icon" type="TextureRect" parent="UI/HotBar/VBox/Slot_6/MarginContainer" unique_id=2049254569]
+unique_name_in_owner = true
+layout_mode = 2
+stretch_mode = 5
+
+[node name="Slot_6_Outline" type="TextureRect" parent="UI/HotBar/VBox/Slot_6" unique_id=145099360]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_pbh8v")
 
 [node name="inventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
 unique_name_in_owner = true

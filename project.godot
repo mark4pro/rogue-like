@@ -50,6 +50,7 @@ Enemy=""
 Exclude_From_Lasers=""
 Exclude_From_Bullets=""
 dialogue=""
+default_shell=""
 
 [input]
 

@@ -1,7 +1,8 @@
 extends TextureRect
 
-@onready var icon : TextureRect = $InventoryItem
-@onready var amountTxt : Label = $Amount
+@onready var icon : TextureRect = %InventoryItem
+@onready var amountTxt : Label = %Amount
+@onready var favIcon : TextureRect = %FavIcon
 
 @export var equippedColor_weapon : Color = Color.RED
 @export var equippedColor_armor : Color = Color.BLUE
@@ -13,12 +14,40 @@ var latch : bool = false
 
 var refreshLatch : bool = false
 
+var favAtlas : AtlasTexture = null
+var favIcon_Type : int = 0
+var favIcon_Index : int = 0
+
+func is_in_hotbar():
+	if not Global.hotbar_weapons.has(item) and \
+	not Global.hotbar_items.has(item):
+		favIcon.visible = false
+		return null
+	
+	for i in range(Global.hotbar_weapons.size()):
+		if Global.hotbar_weapons[i] == item:
+			favIcon_Type = 0
+			favIcon_Index = i
+	
+	for i in range(Global.hotbar_items.size()):
+		if Global.hotbar_items[i] == item:
+			favIcon_Type = 1
+			favIcon_Index = i
+	
+	favIcon.visible = true
+
 func _ready() -> void:
+	favAtlas = favIcon.texture.duplicate()
+	favIcon.visible = false
+	
 	if item:
+		amountTxt.visible = item.stackable
+		
 		icon.texture = item.itemIcon
 		icon.scale = Vector2.ONE * item.iconScale
 		icon.rotation_degrees = item.iconRotOffset
-	else: amountTxt.visible = false
+	else:
+		amountTxt.visible = false
 
 func _process(_delta: float) -> void:
 	if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT): latch = false
@@ -40,6 +69,8 @@ func _process(_delta: float) -> void:
 			refreshLatch = true
 			print("test"+str(item)+str(refreshLatch))
 			get_parent().get_parent().get_parent().loaded = false
+		
+		is_in_hotbar()
 		
 		icon.position = (size / 2) - (icon.size / 2)
 		icon.pivot_offset = (icon.size / 2)
@@ -72,9 +103,18 @@ func _process(_delta: float) -> void:
 			queue_redraw()
 			redraw = false
 	else:
+		favIcon.visible = false
 		amountTxt.visible = false
 		if comp and comp.item == item: comp.queue_free()
 		if contextMenu and contextMenu.item == item: contextMenu.queue_free()
+	
+	favIcon_Type = favIcon_Type % 2
+	favIcon_Index = favIcon_Index % 3
+	
+	favAtlas.region = Rect2(favIcon_Index * 32, favIcon_Type * 32, 32, 32)
+	favIcon.texture = favAtlas
+	
+	favIcon.position = (size * scale) - (favIcon.size * favIcon.scale) - Vector2(2, 2)
 
 func _draw() -> void:
 	if item and item.equippable:

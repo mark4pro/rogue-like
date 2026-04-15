@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cjdp0wyd8ewvv" path="res://Script/inventoryItem.gd" id="1_y7bcj"]
 [ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_jn7ii"]
+[ext_resource type="Texture2D" uid="uid://dpqft4hwhm4tc" path="res://Assets/imgs/UI/hotbar_icons.png" id="3_kg0i2"]
 
 [sub_resource type="Gradient" id="Gradient_y7bcj"]
 colors = PackedColorArray(0.21, 0.21, 0.21, 1, 0.21176471, 0.21176471, 0.21176471, 1)
@@ -9,12 +10,17 @@ colors = PackedColorArray(0.21, 0.21, 0.21, 1, 0.21176471, 0.21176471, 0.2117647
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_jn7ii"]
 gradient = SubResource("Gradient_y7bcj")
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7h8o"]
+atlas = ExtResource("3_kg0i2")
+region = Rect2(0, 0, 32, 32)
+
 [node name="BG" type="TextureRect" unique_id=1142438980]
 clip_contents = true
 texture = SubResource("GradientTexture2D_jn7ii")
 script = ExtResource("1_y7bcj")
 
 [node name="InventoryItem" type="TextureRect" parent="." unique_id=691380142]
+unique_name_in_owner = true
 z_index = 1
 layout_mode = 0
 scale = Vector2(0.5, 0.5)
@@ -22,6 +28,7 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Amount" type="Label" parent="." unique_id=750925871]
+unique_name_in_owner = true
 z_index = 1
 layout_mode = 0
 offset_left = 7.0
@@ -30,3 +37,11 @@ offset_bottom = 93.0
 theme_override_fonts/font = ExtResource("2_jn7ii")
 theme_override_font_sizes/font_size = 32
 text = "1"
+
+[node name="FavIcon" type="TextureRect" parent="." unique_id=912118082]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 32.0
+offset_bottom = 32.0
+scale = Vector2(0.8, 0.8)
+texture = SubResource("AtlasTexture_h7h8o")
