@@ -42,10 +42,12 @@ var dt : float = 0
 
 var collPosX : float = 0
 
+var ogScale : Vector2 = Vector2.ONE
+
 func take_damage(data: Dictionary, attacker: Node):
 	if not get_tree().paused:
 		health -= data.value * (100 / (100 + defense))
-		Global.damageAnim(sprite, data.value)
+		Global.damageAnim(sprite, data.value, ogScale)
 		Global.damNumbers(coll, data)
 		thisAI.engage(attacker)
 
@@ -58,6 +60,7 @@ func _ready() -> void:
 		nav.connect("velocity_computed", velocity_computed)
 		
 		collPosX = coll.position.x
+		ogScale = sprite.scale
 	else:
 		print("Please check nav, eye, sprite, and coll!")
 	

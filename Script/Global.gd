@@ -278,9 +278,7 @@ func damNumbers(colShape, data: Dictionary) -> void:
 		newLabel.position = randomPos
 		Global.currentScene.add_child(newLabel)
 
-func damageAnim(node: Node2D, damage: float = 10) -> void:
-	var og_size : Vector2 = node.scale
-	
+func damageAnim(node: Node2D, damage: float = 10, og_size : Vector2 = Vector2.ONE) -> void:
 	var intensity = clamp(sqrt(damage) * 0.02, 0.05, 0.4)
 	
 	var squash = max(og_size.y - intensity, 0.01)

@@ -72,6 +72,8 @@ var dialogueT : float = 0
 
 var inventoryState : int = 0
 
+var ogScale : Vector2 = Vector2.ONE
+
 var oldArmor : ArmorItem = null
 
 func _ready():
@@ -80,6 +82,8 @@ func _ready():
 	pauseMenu.visible = false
 	deathScreen.visible = false
 	Global.inventoryUI = Inventory_Node
+	
+	ogScale = sprite.scale
 	
 	var boundsChk = get_tree().get_nodes_in_group("Bounds")
 	if not boundsChk.is_empty(): bounds = boundsChk[0].get_node_or_null("CollisionPolygon2D")
@@ -118,7 +122,7 @@ func calc_defense() -> float:
 func take_damage(data: Dictionary, attacker: Node):
 	if not is_rolling and not get_tree().paused:
 		health -= data.value * (100 / (100 + calc_defense()))
-		Global.damageAnim(sprite, data.value)
+		Global.damageAnim(sprite, data.value, ogScale)
 		Global.damNumbers(collShape, data)
 
 func _process(delta: float) -> void:
