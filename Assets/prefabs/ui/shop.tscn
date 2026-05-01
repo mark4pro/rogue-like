@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://60pnwrfogjdw" path="res://Script/shop.gd" id="1_v55m0"]
 [ext_resource type="Resource" uid="uid://ejl4b7b1qobc" path="res://Assets/shop_loot_list.tres" id="2_r2re2"]
 [ext_resource type="FontFile" uid="uid://dv68j0l4djo44" path="res://Assets/fonts/tiny5/Tiny5-Regular.ttf" id="2_v55m0"]
+[ext_resource type="Script" uid="uid://bgejy3eyk47oc" path="res://Script/itemDisplay_Shop.gd" id="5_edgqy"]
+[ext_resource type="Texture2D" uid="uid://cvsjnnt4gtiu4" path="res://Assets/imgs/weapons/torch.png" id="6_oqgu1"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_r2re2"]
 texture = ExtResource("1_sclm4")
@@ -21,8 +23,37 @@ bg_color = Color(0.43, 0.43, 0.43, 0.34901962)
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2o6rf"]
 bg_color = Color(0.36, 0.36, 0.36, 0.45490196)
 
-[node name="Shop" type="CanvasLayer" unique_id=287507784 groups=["dialogue"]]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_edgqy"]
+bg_color = Color(0, 0, 0, 0.3137255)
+
+[sub_resource type="Gradient" id="Gradient_ya4er"]
+offsets = PackedFloat32Array(0.91925466, 1)
+colors = PackedColorArray(0.21, 0.13649999, 0.13649999, 1, 1, 0.5503334, 0.29000002, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_dtuwi"]
+gradient = SubResource("Gradient_ya4er")
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pvp4e"]
+texture = SubResource("GradientTexture2D_dtuwi")
+modulate_color = Color(1, 1, 1, 0.39215687)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4nt3j"]
+bg_color = Color(0.21, 0.13649999, 0.13649999, 0.39215687)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bt3o4"]
+bg_color = Color(0.21, 0.13649999, 0.13649999, 0.39215687)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ae5gl"]
+bg_color = Color(0.21, 0.13649999, 0.13649999, 0.39215687)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2colu"]
+bg_color = Color(0.21, 0.13649999, 0.13649999, 0.39215687)
+
+[node name="Shop" type="CanvasLayer" unique_id=287507784 node_paths=PackedStringArray("itemDisplay") groups=["dialogue"]]
 script = ExtResource("1_v55m0")
+itemDisplay = NodePath("Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel")
 shopLootList = ExtResource("2_r2re2")
 
 [node name="Control" type="Control" parent="." unique_id=1769863153]
@@ -73,6 +104,7 @@ layout_mode = 2
 theme_override_constants/separation = 1
 
 [node name="Buy" type="Button" parent="Control/PanelContainer/VBoxContainer/BttnBar/BttnBarH" unique_id=1388749587]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("2_v55m0")
@@ -80,6 +112,7 @@ theme_override_font_sizes/font_size = 24
 text = "Buy"
 
 [node name="Sell" type="Button" parent="Control/PanelContainer/VBoxContainer/BttnBar/BttnBarH" unique_id=1680260992]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("2_v55m0")
@@ -87,6 +120,7 @@ theme_override_font_sizes/font_size = 24
 text = "Sell"
 
 [node name="OptionButton" type="OptionButton" parent="Control/PanelContainer/VBoxContainer/BttnBar/BttnBarH" unique_id=684508104]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_fonts/font = ExtResource("2_v55m0")
@@ -112,14 +146,126 @@ layout_mode = 2
 vertical_scroll_mode = 0
 
 [node name="ItemDisplayH" type="HBoxContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer" unique_id=357703731]
+unique_name_in_owner = true
 clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 
-[node name="ItemPanel" type="Panel" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH" unique_id=1634062475]
+[node name="ItemPanel" type="Panel" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH" unique_id=1634062475 node_paths=PackedStringArray("icon", "nameTxt", "stockTxt", "costTxt", "buyBttn")]
 custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_edgqy")
+script = ExtResource("5_edgqy")
+icon = NodePath("IconPanel/MarginContainer/Icon")
+nameTxt = NodePath("VBoxContainer/NamePanel/Name")
+stockTxt = NodePath("VBoxContainer/StockPanel/MarginContainer/Stock")
+costTxt = NodePath("VBoxContainer/CostPanel/MarginContainer/Cost")
+buyBttn = NodePath("VBoxContainer/BuyPanel/MarginContainer/BuyBttn")
+
+[node name="IconPanel" type="PanelContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel" unique_id=745246949]
+custom_minimum_size = Vector2(0, 250)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 142.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_pvp4e")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/IconPanel" unique_id=286794629]
+layout_mode = 2
+theme_override_constants/margin_left = 25
+theme_override_constants/margin_top = 25
+theme_override_constants/margin_right = 25
+theme_override_constants/margin_bottom = 25
+
+[node name="Icon" type="TextureRect" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/IconPanel/MarginContainer" unique_id=78855329]
+layout_mode = 2
+texture = ExtResource("6_oqgu1")
+stretch_mode = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel" unique_id=863307953]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 0
+offset_top = 250.0
+offset_right = 250.0
+offset_bottom = 451.0
+theme_override_constants/separation = 0
+
+[node name="NamePanel" type="PanelContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer" unique_id=1559725098]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_4nt3j")
+
+[node name="Name" type="RichTextLabel" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/NamePanel" unique_id=1590625107]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_v55m0")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "Test"
+fit_content = true
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpacerPanel" type="PanelContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer" unique_id=575061165]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_bt3o4")
+
+[node name="StockPanel" type="PanelContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer" unique_id=1322059032]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ae5gl")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/StockPanel" unique_id=596917669]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+
+[node name="Stock" type="RichTextLabel" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/StockPanel/MarginContainer" unique_id=1798124307]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_v55m0")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "Stock: 0"
+fit_content = true
+vertical_alignment = 1
+
+[node name="CostPanel" type="PanelContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer" unique_id=1196057076]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ae5gl")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/CostPanel" unique_id=1251992919]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+
+[node name="Cost" type="RichTextLabel" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/CostPanel/MarginContainer" unique_id=2133387762]
+layout_mode = 2
+theme_override_fonts/normal_font = ExtResource("2_v55m0")
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "Cost: $0"
+fit_content = true
+vertical_alignment = 1
+
+[node name="BuyPanel" type="PanelContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer" unique_id=1765240025]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_2colu")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/BuyPanel" unique_id=900217256]
+layout_mode = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 10
+
+[node name="BuyBttn" type="Button" parent="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/BuyPanel/MarginContainer" unique_id=964194838]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_v55m0")
+theme_override_font_sizes/font_size = 32
+text = "Buy"
 
 [node name="Button" type="Button" parent="Control/PanelContainer" unique_id=431028652]
 custom_minimum_size = Vector2(50, 50)
@@ -132,4 +278,7 @@ theme_override_font_sizes/font_size = 32
 text = "X"
 icon_alignment = 1
 
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/BttnBar/BttnBarH/Buy" to="." method="_on_buy_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/BttnBar/BttnBarH/Sell" to="." method="_on_sell_pressed"]
+[connection signal="pressed" from="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel/VBoxContainer/BuyPanel/MarginContainer/BuyBttn" to="Control/PanelContainer/VBoxContainer/ItemDisplay/ScrollContainer/ItemDisplayH/ItemPanel" method="_on_button_pressed"]
 [connection signal="pressed" from="Control/PanelContainer/Button" to="." method="_on_button_pressed"]

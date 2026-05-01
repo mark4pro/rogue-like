@@ -106,6 +106,21 @@ func equip() -> void:
 func unequip() -> void:
 	pass
 
+func buy(amount: int = 1, limited: bool = true) -> void:
+	if not stackable: amount = 1
+	amount = clampi(amount, 1, quantity)
+	
+	var totalCost : int = cost * amount
+	
+	if Global.money < totalCost: return
+	Global.money -= totalCost
+	
+	var newItem : BaseItem = self.duplicate()
+	newItem.quantity = amount
+	
+	Global.inventory.add_item(newItem)
+	if limited: quantity -= amount
+
 func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 	var thisDropPos : Vector2 = Global.player.global_position if not pos else pos
 	

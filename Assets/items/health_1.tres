@@ -11,4 +11,7 @@ itemIcon = ExtResource("1_6wq8w")
 iconScale = 1.2
 groundScale = 0.1
 hotBarType = 2
+rolled = true
+rarity = 0
+cost = 30
 metadata/_custom_type_script = "uid://bocek0w82g3h1"

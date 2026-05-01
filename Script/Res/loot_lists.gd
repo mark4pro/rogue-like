@@ -19,6 +19,10 @@ func getValid() -> void:
 	
 	Global.precalcWeights(list)
 
-func getRandom() -> BaseItem:
+func getRandom(dup: bool = false) -> BaseItem:
 	if valid.is_empty(): getValid()
-	return Global.getRandom(valid)
+	
+	var thisItem = Global.getRandom(valid)
+	if dup: thisItem = thisItem.duplicate()
+	
+	return thisItem
