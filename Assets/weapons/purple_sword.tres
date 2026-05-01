@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://lnyetoolfbcp"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_en3ig"]
+[ext_resource type="Texture2D" uid="uid://cl66wae6xqbqp" path="res://Assets/imgs/weapons/purple_sword.png" id="1_g73x5"]
+[ext_resource type="PackedScene" uid="uid://du41d83aonc8w" path="res://Assets/prefabs/weapons/purple_sword.tscn" id="2_iuft2"]
+
+[resource]
+script = ExtResource("1_en3ig")
+weaponScene = ExtResource("2_iuft2")
+baseDamage = 35.0
+name = "purple sword"
+itemIcon = ExtResource("1_g73x5")
+placedScene = ExtResource("2_iuft2")
+itemType = 1
+equippable = true
+stackable = false
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

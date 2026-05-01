@@ -1,7 +1,6 @@
 [gd_resource type="Resource" script_class="LootList" format=3 uid="uid://bc340l20tpoev"]
 
 [ext_resource type="Script" uid="uid://dl251w1lsyqw4" path="res://Script/Res/item_weighted.gd" id="1_8cx6g"]
-[ext_resource type="Resource" uid="uid://ctrrswfhhu73y" path="res://Assets/weapons/over_grown.tres" id="2_g7ce6"]
 [ext_resource type="Script" uid="uid://c6o5s4fws44bb" path="res://Script/Res/loot_lists.gd" id="2_qoodt"]
 [ext_resource type="Resource" uid="uid://b2o8qtk8lmp71" path="res://Assets/weapons/crystal_sword.tres" id="3_f217l"]
 [ext_resource type="Resource" uid="uid://dwu6vcmregnk8" path="res://Assets/items/health_1.tres" id="4_yf6q6"]
@@ -9,11 +8,10 @@
 [ext_resource type="Resource" uid="uid://t02vo7usiqe5" path="res://Assets/armor/fire_shell.tres" id="6_1tw25"]
 [ext_resource type="Resource" uid="uid://c2xgcsv4g1ihw" path="res://Assets/armor/water_shell.tres" id="7_1iu74"]
 [ext_resource type="Resource" uid="uid://b8144wplbcifh" path="res://Assets/armor/ice_shell.tres" id="8_7pxns"]
+[ext_resource type="Resource" uid="uid://lnyetoolfbcp" path="res://Assets/weapons/purple_sword.tres" id="8_g7ce6"]
 
-[sub_resource type="Resource" id="Resource_xkh2n"]
+[sub_resource type="Resource" id="Resource_f217l"]
 script = ExtResource("1_8cx6g")
-data = ExtResource("2_g7ce6")
-chance = 40.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_5qs7o"]
@@ -52,7 +50,13 @@ data = ExtResource("8_7pxns")
 chance = 20.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
+[sub_resource type="Resource" id="Resource_1hqug"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("8_g7ce6")
+chance = 25.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
 [resource]
 script = ExtResource("2_qoodt")
-list = Array[ExtResource("1_8cx6g")]([SubResource("Resource_xkh2n"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0")])
+list = Array[ExtResource("1_8cx6g")]([SubResource("Resource_f217l"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0"), SubResource("Resource_1hqug")])
 metadata/_custom_type_script = "uid://c6o5s4fws44bb"
