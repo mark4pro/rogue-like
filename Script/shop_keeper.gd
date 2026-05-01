@@ -85,5 +85,5 @@ func _on_idle_timeout() -> void:
 	rest = true
 
 func saying_characters(letter: String, letter_index: int, speed: float) -> void:
-	head.stop()
-	head.play("talking")
+	#head.stop()
+	if head.animation != "talking" or not head.is_playing(): head.play("talking")

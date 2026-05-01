@@ -59,7 +59,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"talking",
-"speed": 5.0
+"speed": 64.0
 }]
 
 [sub_resource type="Curve" id="Curve_see0k"]
@@ -462,7 +462,9 @@ position = Vector2(0, -4.5)
 [node name="Head" type="AnimatedSprite2D" parent="Body/HeadAnchor" unique_id=1196317149]
 position = Vector2(0, -4.5)
 sprite_frames = SubResource("SpriteFrames_see0k")
-frame_progress = 0.32291287
+animation = &"talking"
+frame = 1
+frame_progress = 1.0
 
 [node name="Zzz" type="GPUParticles2D" parent="Body/HeadAnchor/Head" unique_id=985184233]
 position = Vector2(0.018, 8.5)
