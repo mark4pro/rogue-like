@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="EnemyWeighted" format=3 uid="uid://u6fjvl6srosf"]
+
+[ext_resource type="PackedScene" uid="uid://djxahk1v21may" path="res://Assets/prefabs/enemies/flea.tscn" id="1_3kuvq"]
+[ext_resource type="Script" path="res://Script/Res/enemy_weighted.gd" id="2_ffjx8"]
+
+[resource]
+script = ExtResource("2_ffjx8")
+data = ExtResource("1_3kuvq")
+chance = 35.0

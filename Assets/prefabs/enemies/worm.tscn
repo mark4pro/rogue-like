@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://4roj44gdyrwv"]
+
+[ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_cfvkg"]
+[ext_resource type="Texture2D" uid="uid://6kf28gp60ooy" path="res://Assets/imgs/enemies/werm.png" id="1_vco6j"]
+[ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="2_cfvkg"]
+[ext_resource type="Resource" uid="uid://bsrswcnoltxaf" path="res://Assets/weapons/spider_laser.tres" id="2_cjuj2"]
+[ext_resource type="PackedScene" uid="uid://diwkxcopn8e5d" path="res://Assets/prefabs/ui/health_bar.tscn" id="3_cjuj2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gnsyk"]
+size = Vector2(21, 4)
+
+[node name="worm" type="RigidBody2D" unique_id=1409893497 node_paths=PackedStringArray("nav", "eye", "sprite", "coll", "healthBar")]
+script = ExtResource("1_cfvkg")
+nav = NodePath("NavigationAgent2D2")
+eye = NodePath("sprite2D2/eye_1")
+sprite = NodePath("sprite2D2")
+coll = NodePath("CollisionShape2D2")
+healthBar = NodePath("UI2/healthBar")
+weapon = ExtResource("2_cjuj2")
+
+[node name="sprite2D2" type="Sprite2D" parent="." unique_id=585867368]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_vco6j")
+region_rect = Rect2(0, 14, 33, 32)
+
+[node name="Shadow" type="Sprite2D" parent="sprite2D2" unique_id=2131982994]
+modulate = Color(1, 1, 1, 0.39215687)
+show_behind_parent = true
+position = Vector2(1.9999999, 10)
+scale = Vector2(1.1459994, 0.29499996)
+texture = ExtResource("2_cfvkg")
+
+[node name="eye_1" type="Marker2D" parent="sprite2D2" unique_id=1412904119]
+
+[node name="NavigationAgent2D2" type="NavigationAgent2D" parent="." unique_id=1921184439]
+path_postprocessing = 1
+path_search_max_distance = 50.0
+avoidance_enabled = true
+radius = 15.0
+neighbor_distance = 100.0
+max_neighbors = 3
+
+[node name="UI2" type="Control" parent="." unique_id=1530715072]
+layout_mode = 3
+anchors_preset = 0
+offset_top = -15.0
+offset_bottom = -15.0
+scale = Vector2(0.3, 0.3)
+
+[node name="healthBar" parent="UI2" unique_id=924719207 instance=ExtResource("3_cjuj2")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -0.16667175
+offset_right = 50.0
+offset_bottom = 14.833328
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="." unique_id=392866354]
+position = Vector2(0.5, 3)
+shape = SubResource("RectangleShape2D_gnsyk")

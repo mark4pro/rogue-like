@@ -19,7 +19,8 @@ func _ready() -> void:
 	enemies.append(preload("res://Assets/enemies/goo_1.tres"))
 	enemies.append(preload("res://Assets/enemies/watcher.tres"))
 	enemies.append(preload("res://Assets/enemies/walking_eyeballs.tres"))
-	
+	enemies.append(preload("res://Assets/enemies/werm.tres"))
+	enemies.append(preload("res://Assets/enemies/flee.tres"))
 func getCameraRect() -> Rect2:
 	var camera : Camera2D = get_viewport().get_camera_2d()
 	var viewport_size = camera.get_viewport_rect().size

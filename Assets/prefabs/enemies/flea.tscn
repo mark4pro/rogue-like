@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://djxahk1v21may"]
+
+[ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_0soh1"]
+[ext_resource type="Resource" uid="uid://cuamogxy52nlx" path="res://Assets/weapons/enemy_sword.tres" id="2_ebk3l"]
+[ext_resource type="Texture2D" uid="uid://b05u3n78c00pn" path="res://Assets/imgs/enemies/flea.png" id="3_kiyl1"]
+[ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="4_6tgb6"]
+[ext_resource type="PackedScene" uid="uid://diwkxcopn8e5d" path="res://Assets/prefabs/ui/health_bar.tscn" id="5_g55tq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hflpe"]
+size = Vector2(4, 5)
+
+[node name="flea" type="RigidBody2D" unique_id=1683675438 node_paths=PackedStringArray("nav", "eye", "sprite", "coll", "healthBar")]
+script = ExtResource("1_0soh1")
+nav = NodePath("NavigationAgent2D")
+eye = NodePath("sprite2D/eye_1")
+sprite = NodePath("sprite2D")
+coll = NodePath("CollisionShape2D")
+healthBar = NodePath("UI/healthBar")
+weapon = ExtResource("2_ebk3l")
+stopDist = 30.0
+
+[node name="sprite2D" type="Sprite2D" parent="." unique_id=447227787]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_kiyl1")
+region_rect = Rect2(0, 14, 33, 32)
+
+[node name="Shadow" type="Sprite2D" parent="sprite2D" unique_id=1266096714]
+modulate = Color(1, 1, 1, 0.39215687)
+show_behind_parent = true
+position = Vector2(1.1920929e-07, 6.0000005)
+scale = Vector2(1.1459994, 0.29499996)
+texture = ExtResource("4_6tgb6")
+
+[node name="eye_1" type="Marker2D" parent="sprite2D" unique_id=1222580909]
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=765529045]
+path_postprocessing = 1
+path_search_max_distance = 50.0
+avoidance_enabled = true
+radius = 15.0
+neighbor_distance = 100.0
+max_neighbors = 3
+
+[node name="UI" type="Control" parent="." unique_id=1941324247]
+layout_mode = 3
+anchors_preset = 0
+offset_top = -15.0
+offset_bottom = -15.0
+scale = Vector2(0.3, 0.3)
+
+[node name="healthBar" parent="UI" unique_id=924719207 instance=ExtResource("5_g55tq")]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -0.16667175
+offset_right = 50.0
+offset_bottom = 14.833328
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=250009215]
+shape = SubResource("RectangleShape2D_hflpe")
