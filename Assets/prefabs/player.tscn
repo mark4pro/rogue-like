@@ -549,6 +549,25 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_pbh8v")
 
+[node name="Slot_1_Amount" type="Label" parent="UI/HotBar/VBox/Slot_1" unique_id=160308106]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="Slot_2" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1946801337]
 clip_contents = true
 layout_mode = 2
@@ -582,6 +601,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_2_Amount" type="Label" parent="UI/HotBar/VBox/Slot_2" unique_id=1831368735]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Slot_3" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1482883813]
 clip_contents = true
@@ -617,6 +655,25 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_pbh8v")
 
+[node name="Slot_3_Amount" type="Label" parent="UI/HotBar/VBox/Slot_3" unique_id=2094907268]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="Slot_4" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1608861513]
 clip_contents = true
 layout_mode = 2
@@ -650,6 +707,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_4_Amount" type="Label" parent="UI/HotBar/VBox/Slot_4" unique_id=1819676949]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="Slot_5" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1122446900]
 clip_contents = true
@@ -685,6 +761,25 @@ grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_pbh8v")
 
+[node name="Slot_5_Amount" type="Label" parent="UI/HotBar/VBox/Slot_5" unique_id=1279140466]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="Slot_6" type="ColorRect" parent="UI/HotBar/VBox" unique_id=1509881528]
 clip_contents = true
 layout_mode = 2
@@ -718,6 +813,25 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_pbh8v")
+
+[node name="Slot_6_Amount" type="Label" parent="UI/HotBar/VBox/Slot_6" unique_id=2083813511]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -12.0
+offset_top = -27.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("5_ev7rh")
+theme_override_font_sizes/font_size = 24
+text = "0"
+horizontal_alignment = 2
+vertical_alignment = 1
 
 [node name="inventoryUI" type="CanvasLayer" parent="." unique_id=546084464]
 unique_name_in_owner = true
