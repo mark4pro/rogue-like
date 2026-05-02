@@ -1,6 +1,6 @@
 extends Node
 
-@export var enemies : Array[EnemyWeighted] = []
+@export var enemyList : LootList = null
 
 @export var targetFPS : int = 60
 @export var updateSlots : int = 10
@@ -12,15 +12,10 @@ var enemyNode : Node2D = null
 
 var time = 0
 var oldDay = -1
-var validEnemies : Array[EnemyWeighted] = []
 
 func _ready() -> void:
-	enemies.append(preload("res://Assets/enemies/spider_1.tres"))
-	enemies.append(preload("res://Assets/enemies/goo_1.tres"))
-	enemies.append(preload("res://Assets/enemies/watcher.tres"))
-	enemies.append(preload("res://Assets/enemies/walking_eyeballs.tres"))
-	enemies.append(preload("res://Assets/enemies/werm.tres"))
-	enemies.append(preload("res://Assets/enemies/flee.tres"))
+	enemyList = preload("res://Assets/region_1_enemies.tres")
+
 func getCameraRect() -> Rect2:
 	var camera : Camera2D = get_viewport().get_camera_2d()
 	var viewport_size = camera.get_viewport_rect().size
@@ -67,20 +62,6 @@ func getSpawn(center: Vector2, radius: float, chkCamera: bool = false, inFrontOf
 		return pos
 	return Vector2.ZERO
 
-func getValid() -> Array[EnemyWeighted]:
-	var newArr : Array[EnemyWeighted] = []
-	
-	for entry in enemies:
-		var afterStart : bool = entry.day <= Global.runDays
-		var beforeEnd : bool = entry.lastDay == -1 or entry.lastDay >= Global.runDays
-		
-		if afterStart and beforeEnd:
-			newArr.append(entry)
-	
-	Global.precalcWeights(newArr)
-	
-	return newArr
-
 func clearEnemies() -> void:
 	if enemyNode: enemyNode.queue_free()
 
@@ -98,7 +79,7 @@ func _process(delta: float) -> void:
 					if time >= spawnTime:
 						time = 0
 						
-						var enemy : PackedScene = Global.getRandom(validEnemies)
+						var enemy : PackedScene = enemyList.getRandom()
 						
 						if enemy:
 							var newEnemy = enemy.instantiate()
@@ -110,9 +91,7 @@ func _process(delta: float) -> void:
 					time = 0
 			else:
 				oldDay = Global.runDays
-				
-				var newValid : Array[EnemyWeighted] = getValid()
-				if not newValid.is_empty(): validEnemies = newValid
+				enemyList.getValid()
 		else:
 			var newNode : Node2D = Node2D.new()
 			newNode.y_sort_enabled = true

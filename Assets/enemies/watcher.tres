@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="EnemyWeighted" format=3 uid="uid://b0167vfs3es7n"]
-
-[ext_resource type="PackedScene" uid="uid://dsd43o5r6kyb7" path="res://Assets/prefabs/enemies/the_watcher.tscn" id="1_7hab0"]
-[ext_resource type="Script" uid="uid://cd3cv5ncx0kqe" path="res://Script/Res/enemy_weighted.gd" id="1_ln0hj"]
-
-[resource]
-script = ExtResource("1_ln0hj")
-data = ExtResource("1_7hab0")
-chance = 25.0

@@ -8,10 +8,14 @@
 script = ExtResource("1_en3ig")
 weaponScene = ExtResource("2_iuft2")
 baseDamage = 35.0
-name = "purple sword"
+baseKnBck = 40.0
+name = "Purple Sword"
 itemIcon = ExtResource("1_g73x5")
-placedScene = ExtResource("2_iuft2")
+groundScale = 0.5
 itemType = 1
 equippable = true
 stackable = false
+hotBarType = 1
+sortType = 1
+baseCost = 60.0
 metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

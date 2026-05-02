@@ -1,9 +1,9 @@
 extends Resource
 class_name LootList
 
-@export var list : Array[ItemWeighted] = []
+@export var list : Array[Weighted] = []
 
-var valid : Array[ItemWeighted] = []
+var valid : Array[Weighted] = []
 
 func getValid() -> void:
 	valid = []
@@ -19,7 +19,7 @@ func getValid() -> void:
 	
 	Global.precalcWeights(list)
 
-func getRandom(dup: bool = false) -> BaseItem:
+func getRandom(dup: bool = false):
 	if valid.is_empty(): getValid()
 	
 	var thisItem = Global.getRandom(valid)

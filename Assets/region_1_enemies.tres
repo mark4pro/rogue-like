@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="LootList" format=3 uid="uid://nsj3x6vtwf1e"]
+
+[ext_resource type="Script" uid="uid://c6o5s4fws44bb" path="res://Script/Res/loot_lists.gd" id="1_4j56o"]
+[ext_resource type="PackedScene" uid="uid://bvbbpryyaf3xw" path="res://Assets/prefabs/enemies/spider.tscn" id="1_n8i8k"]
+[ext_resource type="Script" uid="uid://cd3cv5ncx0kqe" path="res://Script/Res/enemy_weighted.gd" id="2_qwyng"]
+[ext_resource type="PackedScene" uid="uid://ci5nwumt5ijd3" path="res://Assets/prefabs/enemies/goo_man.tscn" id="3_cbj1o"]
+[ext_resource type="PackedScene" uid="uid://dsd43o5r6kyb7" path="res://Assets/prefabs/enemies/the_watcher.tscn" id="4_fiwae"]
+[ext_resource type="PackedScene" uid="uid://bb8ao82cq1eyp" path="res://Assets/prefabs/enemies/walking_eyeballs.tscn" id="5_ehxvt"]
+[ext_resource type="PackedScene" uid="uid://4roj44gdyrwv" path="res://Assets/prefabs/enemies/worm.tscn" id="6_jdkto"]
+[ext_resource type="PackedScene" uid="uid://djxahk1v21may" path="res://Assets/prefabs/enemies/flea.tscn" id="7_t7ehd"]
+
+[sub_resource type="Resource" id="Resource_65mp6"]
+script = ExtResource("2_qwyng")
+data = ExtResource("1_n8i8k")
+chance = 25.0
+metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
+
+[sub_resource type="Resource" id="Resource_aig10"]
+script = ExtResource("2_qwyng")
+data = ExtResource("3_cbj1o")
+chance = 25.0
+metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
+
+[sub_resource type="Resource" id="Resource_orvej"]
+script = ExtResource("2_qwyng")
+data = ExtResource("4_fiwae")
+chance = 25.0
+metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
+
+[sub_resource type="Resource" id="Resource_6jpik"]
+script = ExtResource("2_qwyng")
+data = ExtResource("5_ehxvt")
+chance = 25.0
+metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
+
+[sub_resource type="Resource" id="Resource_wq4y3"]
+script = ExtResource("2_qwyng")
+data = ExtResource("6_jdkto")
+chance = 15.0
+metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
+
+[sub_resource type="Resource" id="Resource_nu78t"]
+script = ExtResource("2_qwyng")
+data = ExtResource("7_t7ehd")
+chance = 35.0
+metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
+
+[resource]
+script = ExtResource("1_4j56o")
+list = [SubResource("Resource_65mp6"), SubResource("Resource_aig10"), SubResource("Resource_orvej"), SubResource("Resource_6jpik"), SubResource("Resource_wq4y3"), SubResource("Resource_nu78t")]
+metadata/_custom_type_script = "uid://c6o5s4fws44bb"

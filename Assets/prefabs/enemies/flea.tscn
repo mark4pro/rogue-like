@@ -6,10 +6,17 @@
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="4_6tgb6"]
 [ext_resource type="PackedScene" uid="uid://diwkxcopn8e5d" path="res://Assets/prefabs/ui/health_bar.tscn" id="5_g55tq"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_56c4l"]
+friction = 0.0
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hflpe"]
 size = Vector2(4, 5)
 
 [node name="flea" type="RigidBody2D" unique_id=1683675438 node_paths=PackedStringArray("nav", "eye", "sprite", "coll", "healthBar")]
+collision_layer = 4
+collision_mask = 9
+physics_material_override = SubResource("PhysicsMaterial_56c4l")
+lock_rotation = true
 script = ExtResource("1_0soh1")
 nav = NodePath("NavigationAgent2D")
 eye = NodePath("sprite2D/eye_1")
