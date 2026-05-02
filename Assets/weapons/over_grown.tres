@@ -16,5 +16,6 @@ itemType = 1
 equippable = true
 stackable = false
 hotBarType = 1
-cost = 50
+sortType = 1
+baseCost = 50.0
 metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

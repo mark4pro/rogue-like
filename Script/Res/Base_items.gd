@@ -13,6 +13,12 @@ enum hotbar_type {
 	ITEM
 }
 
+enum sort_type {
+	ITEM,
+	WEAPON,
+	ARMOR
+}
+
 @export_category("Base Item")
 @export var name : String = ""
 @export_category("Icon")
@@ -30,6 +36,7 @@ enum hotbar_type {
 @export var throwable : bool = false
 @export var placable : bool = false
 @export var hotBarType : hotbar_type = hotbar_type.NONE
+@export var sortType : sort_type = sort_type.ITEM
 @export_category("Base Item Data")
 @export var weight : float = 1.0
 @export var baseCost : float = 30
@@ -39,6 +46,7 @@ enum hotbar_type {
 @export_category("Rolled Stats")
 @export var rarity : int = -1
 @export var cost : int
+@export var shopPrice : int
 
 var setDay : int = 0
 
@@ -65,6 +73,8 @@ func rollStats() -> void:
 	if cost == 0:
 		var costVariance : float = baseCost * costVar
 		cost = roundi(rng.randf_range(baseCost - costVariance, baseCost + costVariance) * rarityMult * progMult)
+	
+	shopPrice = cost - roundi(cost * 0.15)
 	
 	Global.rng = randi()
 	rolled = true
@@ -120,6 +130,16 @@ func buy(amount: int = 1, limited: bool = true) -> void:
 	
 	Global.inventory.add_item(newItem)
 	if limited: quantity -= amount
+
+func sell(amount: int = 1) -> void:
+	if not stackable: amount = 1
+	amount = clampi(amount, 1, quantity)
+	
+	var totalCost : int = shopPrice * amount
+	
+	Global.money += totalCost
+	unequip()
+	quantity -= amount
 
 func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 	var thisDropPos : Vector2 = Global.player.global_position if not pos else pos

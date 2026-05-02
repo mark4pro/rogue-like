@@ -13,4 +13,5 @@ iconScale = 2.0
 itemType = 2
 equippable = true
 stackable = false
+sortType = 2
 metadata/_custom_type_script = "uid://dajegbj308dnw"

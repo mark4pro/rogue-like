@@ -41,6 +41,8 @@ func rollStats() -> void:
 		var costVariance : float = baseCost * costVar
 		cost = roundi(rng.randf_range(baseCost - costVariance, baseCost + costVariance) * rarityMult * progMult)
 	
+	shopPrice = cost - roundi(cost * 0.15)
+	
 	Global.rng = randi()
 	rolled = true
 

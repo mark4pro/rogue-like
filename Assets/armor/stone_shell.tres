@@ -7,11 +7,11 @@
 [resource]
 script = ExtResource("1_30uwt")
 armorScene = ExtResource("1_kiy12")
-id = 489492
 name = "Stone Shell"
 itemIcon = ExtResource("1_66x1g")
 iconScale = 2.0
 itemType = 2
 equippable = true
 stackable = false
+sortType = 2
 metadata/_custom_type_script = "uid://dajegbj308dnw"

@@ -49,6 +49,28 @@ func remove_items_by_name(name: String = "", amount: int = 1) -> void:
 		amount = clampi(amount, 1, data[index].quantity)
 		data[index].quantity -= amount
 
+func get_sorted(type: int = 0) -> Array[BaseItem]:
+	type = clampi(type, 0, 3)
+	
+	var result : Array[BaseItem]
+	
+	match type:
+		0:
+			return data
+		1:
+			for i in data:
+				if i.sortType == BaseItem.sort_type.WEAPON:
+					result.append(i)
+		2:
+			for i in data:
+				if i.sortType == BaseItem.sort_type.ARMOR:
+					result.append(i)
+		3:
+			for i in data:
+				if i.sortType == BaseItem.sort_type.ITEM:
+					result.append(i)
+	return result
+
 func update() -> void:
 	maxSlots = roundi(grid.x) * roundi(grid.y)
 	
