@@ -2,8 +2,6 @@ extends Node2D
 
 @onready var shopMenu : PackedScene = preload("res://Assets/prefabs/ui/shop.tscn")
 
-@export var list : Array[BaseItem] = []
-
 @onready var idleTimer : Timer = $Idle
 @onready var head : AnimatedSprite2D = $Body/HeadAnchor/Head
 @onready var zPart : GPUParticles2D = $Body/HeadAnchor/Head/Zzz

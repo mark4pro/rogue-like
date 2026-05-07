@@ -20,6 +20,10 @@ var compareUI : PackedScene = preload("res://Assets/prefabs/ui/compare.tscn")
 @export var hotbar_weapons : Array[BaseItem] = []
 @export var hotbar_items : Array[BaseItem] = []
 
+@export_category("Ext Data")
+@export var shopInventory : Array[BaseItem] = []
+@export var hub_groundItems : Array[GroundItem] = []
+
 var messageTimer : Timer = null
 var messageBox : VBoxContainer = null
 @export_category("Messages")
@@ -103,17 +107,30 @@ func saveGame() -> void:
 			DirAccess.make_dir_recursive_absolute(savePath)
 		
 		var save_data : SaveData = SaveData.new()
-		save_data.inventory = inventory
+		
+		#Player
 		save_data.weapon = weapon
 		save_data.armor = armor
 		save_data.money = money
 		save_data.playerStats = playerStats
+		
+		#Inventory
+		save_data.inventory = inventory
 		save_data.hotbar_weapons = hotbar_weapons
 		save_data.hotbar_items = hotbar_items
+		
+		#Time
 		save_data.timeOfDay = timeOfDay
 		save_data.totalDays = totalDays
 		save_data.lastRunDays = lastRunDays
 		save_data.longestRun = longestRun
+		
+		#Ext data
+		save_data.shopInventory = shopInventory
+		storeGroundItemData()
+		save_data.groundItems = hub_groundItems
+		
+		#Debug variables
 		save_data.bloodMoons = bloodMoons
 		save_data.damNumberEnable = damNumberEnable
 		save_data.damAnimRotEnable = damAnimRotEnable
@@ -132,22 +149,32 @@ func loadGame():
 	if ResourceLoader.exists(savePath + "save_data.tres"):
 		var save_data : SaveData = ResourceLoader.load(savePath + "save_data.tres")
 		
-		inventory = save_data.inventory
-		
 		##Reroll newly added stats
 		#for i in inventory.data:
 			#i.rolled = false
 		
+		#Player
 		weapon = save_data.weapon
 		armor = save_data.armor
 		money = save_data.money
 		playerStats = save_data.playerStats
+		
+		#Inventory
+		inventory = save_data.inventory
 		hotbar_weapons = save_data.hotbar_weapons
 		hotbar_items = save_data.hotbar_items
+		
+		#Time
 		timeOfDay = save_data.timeOfDay
 		totalDays = save_data.totalDays
 		lastRunDays = save_data.lastRunDays
 		longestRun = save_data.longestRun
+		
+		#Ext data
+		shopInventory = save_data.shopInventory
+		hub_groundItems = save_data.groundItems
+		
+		#Debug variables
 		bloodMoons = save_data.bloodMoons
 		damNumberEnable = save_data.damNumberEnable
 		damAnimRotEnable = save_data.damAnimRotEnable
@@ -301,6 +328,29 @@ func damageAnim(node: Node2D, damage: float = 10, og_size : Vector2 = Vector2.ON
 func getGroundItems() -> Array[Node]:
 	return get_tree().get_nodes_in_group("items")
 
+func storeGroundItemData() -> void:
+	var itemNodes : Array[Node] = get_tree().get_nodes_in_group("items")
+	
+	for i in itemNodes:
+		var newGroundItem : GroundItem = GroundItem.new()
+		newGroundItem.item = i.item
+		newGroundItem.pos = i.global_position
+		newGroundItem.rot = i.rotation
+		
+		hub_groundItems.append(newGroundItem)
+
+func genGroundItems() -> void:
+	for i in hub_groundItems:
+		var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
+		newGroundItem.name = i.item.name
+		newGroundItem.position = i.pos
+		newGroundItem.rotation = i.rot
+		newGroundItem.item = i.item
+		
+		currentScene.add_child(newGroundItem)
+	
+	hub_groundItems = []
+
 func _process(delta: float) -> void:
 	Global.inventory.update()
 	
@@ -367,6 +417,10 @@ func _process(delta: float) -> void:
 			_:
 				if Global.currentScene and Global.currentScene.get_node_or_null("World"):
 					thisLoading.queue_free()
+	
+	#Reset things for save system
+	if sceneIndex != 0:
+		shopInventory = []
 	
 	#Time of day and light calc
 	timeOfDay += delta / dayLengthSeconds

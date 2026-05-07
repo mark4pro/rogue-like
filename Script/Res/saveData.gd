@@ -25,3 +25,6 @@ class_name SaveData
 @export var damNumberEnable : bool = true
 @export var damAnimRotEnable : bool = true
 @export var debugVision : bool = true
+
+@export var groundItems : Array[GroundItem] = []
+@export var shopInventory : Array[BaseItem] = []

@@ -2,6 +2,17 @@
 
 [ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_ef2bx"]
 [ext_resource type="Texture2D" uid="uid://cl66wae6xqbqp" path="res://Assets/imgs/weapons/purple_sword.png" id="2_j8k4p"]
+[ext_resource type="Shader" uid="uid://b8rek7pxkyq5r" path="res://Assets/shaders/drop_shadow.gdshader" id="2_y2jon"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6up4c"]
+shader = ExtResource("2_y2jon")
+shader_parameter/debug = false
+shader_parameter/border_scale = 1.0
+shader_parameter/shadow_offset = Vector2(5, -5)
+shader_parameter/color = Color(0, 0, 0, 0.23529412)
+shader_parameter/blur_amount = 1.0000000475
+shader_parameter/shadow_scale = 1.5
+shader_parameter/disable_rotating = false
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y2jon"]
 size = Vector2(43, 133)
@@ -12,6 +23,7 @@ col = NodePath("Sprite2D/Area2D")
 sprite = NodePath("Sprite2D")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1257409404]
+material = SubResource("ShaderMaterial_6up4c")
 position = Vector2(0, -10)
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("2_j8k4p")

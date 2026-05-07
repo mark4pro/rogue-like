@@ -10,3 +10,6 @@ func _process(_delta: float) -> void:
 		newPlayer.global_position = spawn.global_position
 		get_tree().current_scene.add_child(newPlayer)
 		newPlayer.rot_point.scale.x = -1 if flipPlayer else 1
+		
+		if not Global.hub_groundItems.is_empty():
+			Global.genGroundItems()

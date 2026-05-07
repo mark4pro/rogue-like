@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c6o5s4fws44bb" path="res://Script/Res/loot_lists.gd" id="1_4j56o"]
 [ext_resource type="PackedScene" uid="uid://bvbbpryyaf3xw" path="res://Assets/prefabs/enemies/spider.tscn" id="1_n8i8k"]
+[ext_resource type="Script" uid="uid://c6xqtx8x1fsel" path="res://Script/Res/base_weighted.gd" id="1_qwyng"]
 [ext_resource type="Script" uid="uid://cd3cv5ncx0kqe" path="res://Script/Res/enemy_weighted.gd" id="2_qwyng"]
 [ext_resource type="PackedScene" uid="uid://ci5nwumt5ijd3" path="res://Assets/prefabs/enemies/goo_man.tscn" id="3_cbj1o"]
 [ext_resource type="PackedScene" uid="uid://dsd43o5r6kyb7" path="res://Assets/prefabs/enemies/the_watcher.tscn" id="4_fiwae"]
@@ -47,5 +48,5 @@ metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
 
 [resource]
 script = ExtResource("1_4j56o")
-list = [SubResource("Resource_65mp6"), SubResource("Resource_aig10"), SubResource("Resource_orvej"), SubResource("Resource_6jpik"), SubResource("Resource_wq4y3"), SubResource("Resource_nu78t")]
+list = Array[ExtResource("1_qwyng")]([SubResource("Resource_65mp6"), SubResource("Resource_aig10"), SubResource("Resource_orvej"), SubResource("Resource_6jpik"), SubResource("Resource_wq4y3"), SubResource("Resource_nu78t")])
 metadata/_custom_type_script = "uid://c6o5s4fws44bb"

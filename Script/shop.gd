@@ -32,7 +32,7 @@ var touching : bool = false
 var selected : BaseItem = null
 
 func _ready() -> void:
-	if shopkeeper.list.is_empty():
+	if Global.shopInventory.is_empty():
 		for i in range(amountOfGlobal):
 			var newItem : BaseItem = Global.lootList.getRandom(true)
 			if newItem.stackable:
@@ -43,9 +43,9 @@ func _ready() -> void:
 			if newItem.stackable:
 				newItem.quantity += randi_range(1, 20)
 			shopInventory.add_item(newItem)
-		shopkeeper.list = shopInventory.data
+		Global.shopInventory = shopInventory.data
 	else:
-		shopInventory.data = shopkeeper.list
+		shopInventory.data = Global.shopInventory
 	
 	itemDisplay.visible = false
 	quantityPanel.visible = false

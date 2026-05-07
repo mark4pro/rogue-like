@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="LootList" format=3 uid="uid://ejl4b7b1qobc"]
 
 [ext_resource type="Script" uid="uid://dl251w1lsyqw4" path="res://Script/Res/item_weighted.gd" id="1_lcwcv"]
+[ext_resource type="Script" uid="uid://c6xqtx8x1fsel" path="res://Script/Res/base_weighted.gd" id="1_luntf"]
 [ext_resource type="Resource" uid="uid://2c0y3bykldm5" path="res://Assets/weapons/banana.tres" id="2_v47xf"]
 [ext_resource type="Script" uid="uid://c6o5s4fws44bb" path="res://Script/Res/loot_lists.gd" id="2_wj7dx"]
 [ext_resource type="Resource" uid="uid://ei7v3sv0c01y" path="res://Assets/weapons/Metal_pipe.tres" id="3_luntf"]
@@ -61,5 +62,5 @@ metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [resource]
 script = ExtResource("2_wj7dx")
-list = Array[ExtResource("1_lcwcv")]([SubResource("Resource_otkig"), SubResource("Resource_q34y3"), SubResource("Resource_8hp14"), SubResource("Resource_wqwv4"), SubResource("Resource_p6w4n"), SubResource("Resource_3fspe"), SubResource("Resource_o8h5s"), SubResource("Resource_juy8b")])
+list = Array[ExtResource("1_luntf")]([SubResource("Resource_otkig"), SubResource("Resource_q34y3"), SubResource("Resource_8hp14"), SubResource("Resource_wqwv4"), SubResource("Resource_p6w4n"), SubResource("Resource_3fspe"), SubResource("Resource_o8h5s"), SubResource("Resource_juy8b")])
 metadata/_custom_type_script = "uid://c6o5s4fws44bb"

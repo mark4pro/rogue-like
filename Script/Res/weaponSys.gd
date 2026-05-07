@@ -15,7 +15,6 @@ var oldWeapon : WeaponItem = null
 var t : float = 0
 var attackDir : int = 1
 var flip : bool = false
-var lockedFlip : bool = false
 
 var spawned : Array[Node] = []
 var excludeList : Array[RID] = []
@@ -25,6 +24,8 @@ var amount : int = 0
 var lastTime : float = 0
 var firingActive : bool = false
 var perT : float = 0
+
+var flipSword : bool = false
 
 func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: int) -> Array[Vector2]:
 	var points : Array[Vector2] = []
@@ -91,22 +92,31 @@ func update(delta: float, target: Vector2) -> void:
 					var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.swingAngleRange
 					var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.swingRadius, angRange, weapon.swingSteps)
 					
+					var index : int = int(t * (points.size() - 1))
+					index = clampi(index, 0, points.size() - 1)
+					
+					var newPos : Vector2 = parentNode.to_local(points[index])
+					var restRot : float = lerp(weapon.swingRestAngle, -(weapon.swingRestAngle - 180), t)
+					
 					if not weaponNode:
 						var newWeapon : Node2D = weapon.weaponScene.instantiate()
 						newWeapon.name = "Weapon"
 						
-						var newPos : Vector2 = parentNode.to_local(points[-1])
-						newWeapon.position = newPos
-						
-						newWeapon.rotation_degrees = weapon.swingRestAngle
+						newWeapon.position = newPos.rotated(rot) + posOffset
+						newWeapon.rotation_degrees = rad_to_deg(rot) + restRot
 						newWeapon.z_as_relative = true
-						newWeapon.z_index = weapon.swingZRange.x
+						newWeapon.z_index = weapon.swingZRange.x if t < 0.5 else weapon.swingZRange.y
 						if "weapSys" in newWeapon: newWeapon.weapSys = self
 						parentNode.add_child(newWeapon)
 					else:
 						if isAttacking:
 							var step : float = delta / weapon.swingDuration
 							t += (step * attackDir) * weapon.swingSpeedMulti
+						
+						if t > 0.5:
+							weaponNode.scale.x = -1
+						if t < 0.5:
+							weaponNode.scale.x = 1
 						
 						if t >= 1.0:
 							t = 1.0
@@ -119,15 +129,8 @@ func update(delta: float, target: Vector2) -> void:
 							isAttacking = false
 							attackDir = 1
 						
-						var index : int = int(t * (points.size() - 1))
-						index = clampi(index, 0, points.size() - 1)
-						
-						var newPos : Vector2 = parentNode.to_local(points[index])
 						weaponNode.position = newPos.rotated(rot) + posOffset
-						
-						var restRot : float = lerp(weapon.swingRestAngle, -(weapon.swingRestAngle - 180), t)
 						weaponNode.rotation_degrees = rad_to_deg(rot) + restRot
-						
 						weaponNode.z_index = weapon.swingZRange.x if t < 0.5 else weapon.swingZRange.y
 				weapon.animType.AIM_LASER:
 					if not spawned.size() == spawnPos.size():
