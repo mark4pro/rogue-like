@@ -68,6 +68,74 @@ func _ready() -> void:
 					str(Global.formatFloat(item.knockback))
 				]
 				stats.add_child(newLabel.duplicate())
+				
+				if item.animationType == WeaponItem.animType.AIM_LASER:
+					var attackSpeed : float = 0
+					if Global.weapon.animationType == WeaponItem.animType.AIM_LASER:
+						attackSpeed = Global.weapon.laserAttackSpeed
+					
+					newLabel.text = "\t\tAttack Speed: ([color=%s]%s[/color] | %s)" % [
+						getCompColor(item.laserAttackSpeed, attackSpeed),
+						str(Global.formatFloat(item.laserAttackSpeed - attackSpeed)),
+						str(Global.formatFloat(item.laserAttackSpeed))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					var attackRange : float = 0
+					if Global.weapon.animationType == WeaponItem.animType.AIM_LASER:
+						attackRange = Global.weapon.laserRange
+					
+					newLabel.text = "\t\tRange: ([color=%s]%s[/color] | %s)" % [
+						getCompColor(item.laserRange, attackRange),
+						str(Global.formatFloat(item.laserRange - attackRange)),
+						str(Global.formatFloat(item.laserRange))
+					]
+					stats.add_child(newLabel.duplicate())
+				
+				if item.animationType == WeaponItem.animType.RANGE:
+					var attackSpeed : float = 0
+					if Global.weapon.animationType == WeaponItem.animType.RANGE:
+						attackSpeed = Global.weapon.rangeFireSpeed
+					
+					newLabel.text = "\t\tAttack Speed: ([color=%s]%s[/color] | %s)" % [
+						getCompColor(item.rangeFireSpeed, attackSpeed),
+						str(Global.formatFloat(item.rangeFireSpeed - attackSpeed)),
+						str(Global.formatFloat(item.rangeFireSpeed))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					var amount : float = 0
+					if Global.weapon.animationType == WeaponItem.animType.RANGE:
+						amount = Global.weapon.rangeSpawnAmount
+					
+					newLabel.text = "\t\tAmount: ([color=%s]%s[/color] | %s)" % [
+						getCompColor(item.rangeSpawnAmount, amount),
+						str(Global.formatFloat(item.rangeSpawnAmount - amount)),
+						str(Global.formatFloat(item.rangeSpawnAmount))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					var spread : float = 0
+					if Global.weapon.animationType == WeaponItem.animType.RANGE:
+						spread = Global.weapon.rangeSpreadAngle
+					
+					newLabel.text = "\t\tSpread: ([color=%s]%s[/color] | %s)" % [
+						getCompColor(item.rangeSpreadAngle, spread),
+						str(Global.formatFloat(item.rangeSpreadAngle - spread)),
+						str(Global.formatFloat(item.rangeSpreadAngle))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					var speed : float = 0
+					if Global.weapon.animationType == WeaponItem.animType.RANGE:
+						speed = Global.weapon.rangeSpeed
+					
+					newLabel.text = "\t\tProjectile Speed: ([color=%s]%s[/color] | %s)" % [
+						getCompColor(item.rangeSpeed, speed),
+						str(Global.formatFloat(item.rangeSpeed - speed)),
+						str(Global.formatFloat(item.rangeSpeed))
+					]
+					stats.add_child(newLabel.duplicate())
 			
 			if not Global.weapon or item == Global.weapon:
 				newLabel.text = "\t\tDamage: (%s, %s)" % [
@@ -90,6 +158,38 @@ func _ready() -> void:
 					str(Global.formatFloat(item.knockback))
 				]
 				stats.add_child(newLabel.duplicate())
+				
+				if item.animationType == WeaponItem.animType.AIM_LASER:
+					newLabel.text = "\t\tAttack Speed: %s" % [
+						str(Global.formatFloat(item.laserAttackSpeed))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					newLabel.text = "\t\tRange: %s" % [
+						str(Global.formatFloat(item.laserRange))
+					]
+					stats.add_child(newLabel.duplicate())
+				
+				if item.animationType == WeaponItem.animType.RANGE:
+					newLabel.text = "\t\tAttack Speed: %s" % [
+						str(Global.formatFloat(item.rangeFireSpeed))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					newLabel.text = "\t\tAmount: %s" % [
+						str(Global.formatFloat(item.rangeSpawnAmount))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					newLabel.text = "\t\tSpread: %s" % [
+						str(Global.formatFloat(item.rangeSpreadAngle))
+					]
+					stats.add_child(newLabel.duplicate())
+					
+					newLabel.text = "\t\tProjectile Speed: %s" % [
+						str(Global.formatFloat(item.rangeSpeed))
+					]
+					stats.add_child(newLabel.duplicate())
 			
 			newLabel.text = "\t\tRarity: [color=%s]%s[/color]" % [
 				item.getRarity().color.to_html(),
