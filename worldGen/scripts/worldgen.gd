@@ -16,29 +16,30 @@ var player : RigidBody2D = null
 
 var loaded : bool = false
 
-enum TileType {
-	EMPTY,
-	FLOOR,
-	WALL,
-	GRASS,
-	PLANT,
-	TREE,
-	WATER
-}
+var sepBiomes : Dictionary = {}
 
-enum Biome {
-	CAVE,
-	FOREST,
-	MIXED
-}
-
-var biomeMap = [] # biome_map[chunk_y][chunk_x]
-var world = [] # world[y][x] = TileType
+var world = [] # world[y][x] = WorldTile
 var layers = {}
 
 var worldNode : Node2D = null
 var isTestEnv : Node2D = null
 var freeCam : Camera2D = null
+
+var biome_debug : bool = false
+
+var ground_remap : Dictionary = {
+	0: Vector2(0, 0), #Grass
+	1: Vector2(0, 3), #Cave floor
+}
+
+var wall_remap : Dictionary = {
+	0: Vector2(1, 3), #Cave wall
+}
+
+var debug_remap : Dictionary = {
+	0: Vector2(0, 0), #Forest
+	1: Vector2(1, 0), #Cave
+}
 
 func genLayers(parent: Node2D) -> Dictionary:
 	var newLayers = {}
@@ -67,15 +68,29 @@ func genLayers(parent: Node2D) -> Dictionary:
 	parent.add_child(walls)
 	newLayers.walls = walls
 	
+	var debug : TileMapLayer = TileMapLayer.new()
+	debug.name = "Debug"
+	debug.z_index = 10
+	debug.modulate.a = 0.5
+	debug.visible = false
+	parent.add_child(debug)
+	newLayers.debug = debug
+	
 	return newLayers
 
-func initArrays() -> void:
-	biomeMap.clear()
-	for y in range(chunkSize.y):
-		biomeMap.append([])
-		for x in range(chunkSize.x):
-			biomeMap[y].append(Biome.FOREST)
-
+func genArrays() -> void:
+	var biome_noise := FastNoiseLite.new()
+	biome_noise.seed = currentSeed
+	
+	var moisture_noise := FastNoiseLite.new()
+	moisture_noise.seed = currentSeed
+	
+	var cave_noise := FastNoiseLite.new()
+	cave_noise.seed = currentSeed
+	cave_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	cave_noise.fractal_octaves = 3
+	cave_noise.frequency = 0.01
+	
 	var world_w = chunkSize.x * chunkTiles
 	var world_h = chunkSize.y * chunkTiles
 
@@ -83,61 +98,91 @@ func initArrays() -> void:
 	for y in range(world_h):
 		world.append([])
 		for x in range(world_w):
-			world[y].append(TileType.EMPTY)
-
-func genDungeon() -> void:
-	pass
-
-func genCave() -> void:
-	pass
-
-func mixGen() -> void:
-	pass
+			var newWorldTile : WorldTile = WorldTile.new()
+			
+			newWorldTile.tilePos = Vector2i(x, y)
+			
+			newWorldTile.biome = biome_noise.get_noise_2d(x, y)
+			newWorldTile.moisture = moisture_noise.get_noise_2d(x, y)
+			newWorldTile.cave = cave_noise.get_noise_2d(x, y)
+			
+			var forest_strength = clamp(newWorldTile.moisture + newWorldTile.biome, 0.0, 1.0)
+			
+			if newWorldTile.cave > 0.3:
+				newWorldTile.is_cave = true
+				newWorldTile.biome_type = 1
+				
+				newWorldTile.ground_type = 1
+				
+				if newWorldTile.cave < 0.5:
+					newWorldTile.wall_type = 0
+				
+				if not sepBiomes.find_key("cave"):
+					sepBiomes.cave = []
+				sepBiomes.cave.append(newWorldTile)
+			else:
+				if not sepBiomes.find_key("forest"):
+					sepBiomes.forest = []
+				sepBiomes.forest.append(newWorldTile)
+			
+			world[y].append(newWorldTile)
 
 #gens the actual map in the tileMapLayer
 func mapGen() -> void:
 	var ground : TileMapLayer = layers.ground
 	var props : TileMapLayer = layers.props
 	var trees : Node2D = layers.trees
-	var walls : TileMapLayer = layers.walls 
+	var walls : TileMapLayer = layers.walls
+	var debug : TileMapLayer = layers.debug
 	
-	var tileSet = load("res://Assets/tilesets/forest_test.tres")
+	var tileSet : TileSet = load("res://Assets/tilesets/forest_test.tres")
 	
 	ground.tile_set = tileSet
 	props.tile_set = tileSet
 	walls.tile_set = tileSet
+	debug.tile_set = tileSet
 	
 	ground.tile_set.tile_size = Vector2i(tileSize, tileSize)
 	props.tile_set.tile_size = Vector2i(tileSize, tileSize)
 	walls.tile_set.tile_size = Vector2i(tileSize, tileSize)
+	debug.tile_set.tile_size = Vector2i(tileSize, tileSize)
 	
 	ground.clear()
 	props.clear()
 	walls.clear()
+	debug.clear()
 	
 	for y in range(world.size()):
 		for x in range(world[y].size()):
-			match world[y][x]:
-				TileType.GRASS:
-					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+			var thisTile : WorldTile = world[y][x]
+			
+			ground.set_cell(Vector2i(x, y), 0, ground_remap[thisTile.ground_type])
+			
+			if thisTile.wall_type != -1:
+				walls.set_cell(Vector2i(x, y), 0, wall_remap[thisTile.wall_type])
+			
+			debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type])
+			
+				#TileType.GRASS:
+					#ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
+					#
+				#TileType.PLANT:
+					#ground.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
+				#
+				#TileType.TREE:
+					#ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
 					
-				TileType.PLANT:
-					ground.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
+					#var newTree : Sprite2D = treeRes.instantiate()
+					#trees.add_child(newTree)
+					#newTree.name = "Tree1"
+					#newTree.rotation_degrees = randf_range(0, 360)
+					#newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
 				
-				TileType.TREE:
-					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-					
-					var newTree : Sprite2D = treeRes.instantiate()
-					trees.add_child(newTree)
-					newTree.name = "Tree1"
-					newTree.rotation_degrees = randf_range(0, 360)
-					newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
-				
-				TileType.FLOOR:
-					ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 3))
-				
-				TileType.WALL:
-					walls.set_cell(Vector2i(x, y), 0, Vector2i(1, 3))
+				#TileType.FLOOR:
+					#ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 3))
+				#
+				#TileType.WALL:
+					#walls.set_cell(Vector2i(x, y), 0, Vector2i(1, 3))
 	
 	#Gen world bounds
 	var used_rect := ground.get_used_rect()
@@ -196,20 +241,25 @@ func _process(_delta: float) -> void:
 			newWorldNode.name = "World"
 			layers = genLayers(newWorldNode)
 			#Generate map
-			initArrays()
-			worldData.biomeGenerator.gen()
-			for s in worldData.generators:
-				s.gen()
+			genArrays()
+			#for s in worldData.generators:
+				#s.gen()
 			mapGen()
 		
 		#Engine only
 		#regen map
 		if OS.has_feature("editor") and freeCam:
-			if Input.is_action_just_pressed("regen_map") and not Global.player:
-				regen()
-			if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT) and not Global.player:
-				var newPlayer : RigidBody2D = Global.playerRes.instantiate()
-				newPlayer.position = freeCam.get_global_mouse_position()
-				Global.currentScene.add_child(newPlayer)
-			if Input.is_action_just_pressed("free_cam") and not Global.player == null:
-				Global.player.queue_free()
+			if not Global.player:
+				if Input.is_action_just_pressed("regen_map"):
+					regen()
+				
+				if Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT):
+					var newPlayer : RigidBody2D = Global.playerRes.instantiate()
+					newPlayer.position = freeCam.get_global_mouse_position()
+					Global.currentScene.add_child(newPlayer)
+				
+				if Input.is_action_just_pressed("debug_biome"):
+					layers.debug.visible = not layers.debug.visible
+			else:
+				if Input.is_action_just_pressed("free_cam"):
+					Global.player.queue_free()
