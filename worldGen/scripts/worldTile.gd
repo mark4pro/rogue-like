@@ -1,6 +1,7 @@
 class_name WorldTile
 
 var tilePos : Vector2i = Vector2i.ZERO
+var globalPos : Vector2 = Vector2.ZERO
 
 #Types
 var ground_type : int = 0

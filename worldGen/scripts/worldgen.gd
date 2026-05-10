@@ -127,6 +127,14 @@ func genArrays() -> void:
 			
 			world[y].append(newWorldTile)
 
+func is_cave_wall(tile: WorldTile) -> bool:
+	return tile.wall_type == 0 and tile.ground_type == 1
+
+func is_cave_floor(tile: WorldTile) -> bool:
+	return tile.wall_type == -1 and tile.ground_type == 1
+
+
+
 #gens the actual map in the tileMapLayer
 func mapGen() -> void:
 	var ground : TileMapLayer = layers.ground
