@@ -26,34 +26,6 @@ vec4 sample_texture_safe(sampler2D tex, vec2 uv) {
 	return texture(tex, uv);
 }
 
-vec4 apply_box_blur(sampler2D tex, vec2 uv) {
-	if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)
-		return vec4(0.0);
-	
-	const int blur_kernel_max = 8;
-	
-	vec2 texel = 1.0 / vec2(textureSize(tex, 0)) * blur_amount;
-	int kernel_size = min(int(blur_amount * 2.0), blur_kernel_max);
-
-	vec4 color_blur = vec4(0.0);
-	float total_weight = 0.0;
-
-	for (int x = -blur_kernel_max; x <= blur_kernel_max; x++) {
-		if (abs(x) > kernel_size) continue;
-		for (int y = -blur_kernel_max; y <= blur_kernel_max; y++) {
-			if (abs(y) > kernel_size) continue;
-			vec2 sample_uv = uv + vec2(float(x), float(y)) * texel;
-			total_weight += 1.0;
-			if (sample_uv.x >= 0.0 && sample_uv.x <= 1.0 &&
-				sample_uv.y >= 0.0 && sample_uv.y <= 1.0)
-				color_blur += texture(tex, sample_uv);
-		}
-	}
-
-	if (total_weight <= 0.0) return vec4(0.0);
-	return clamp(color_blur / total_weight, 0.0, 1.0);
-}
-
 vec4 apply_gaussian_blur(sampler2D tex, vec2 uv) {
 	if (blur_amount <= 0.0)
 		return sample_texture_safe(tex, uv);
@@ -114,7 +86,7 @@ void fragment() {
 		vec2 shadow_uv = sprite_uv + adjusted_offset * TEXTURE_PIXEL_SIZE;
 
 		vec4 blurred = blur_amount > 0.0
-			? apply_box_blur(TEXTURE, shadow_uv)
+			? apply_gaussian_blur(TEXTURE, shadow_uv)
 			: sample_texture_safe(TEXTURE, shadow_uv);
 		vec4 shadow = vec4(color.rgb, blurred.a * color.a * modulate.a);
 		
