@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://7yvf1s7rogy5" path="res://Assets/imgs/Hub/Hub_Shop_Desk_Bottom.png" id="3_qi2g6"]
 [ext_resource type="Texture2D" uid="uid://c85grcryitbld" path="res://Assets/imgs/Hub/Hub_Shop_Desk_Top.png" id="4_7gm0b"]
 [ext_resource type="TileSet" uid="uid://b42gidbr1gvoe" path="res://Assets/tilesets/forest_test.tres" id="4_imdk4"]
+[ext_resource type="Texture2D" uid="uid://ci6y80ar5gr7y" path="res://Assets/imgs/Hub/Hub_Shop_Desk.png" id="4_kud3j"]
 [ext_resource type="Shader" uid="uid://o3kdvw704xr4" path="res://Assets/shaders/drop_shadow_no_texture.gdshader" id="4_vkujn"]
 [ext_resource type="Texture2D" uid="uid://ck5ur4lqomjcd" path="res://Assets/imgs/Hub/Hub_Door_Top.png" id="5_4vksb"]
 [ext_resource type="Texture2D" uid="uid://oyvy6kab4ex8" path="res://Assets/imgs/Lights/Light_1.png" id="6_f11wv"]
@@ -18,18 +19,6 @@
 [ext_resource type="Script" uid="uid://vrbdmd6n1uor" path="res://Script/Hub_exit.gd" id="9_y6p6t"]
 [ext_resource type="PackedScene" uid="uid://csunnqftn32r0" path="res://Assets/prefabs/objects/dummy.tscn" id="11_3du0j"]
 [ext_resource type="PackedScene" uid="uid://cglxhp67imaqr" path="res://Assets/prefabs/grass.tscn" id="20_hy0h5"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_3du0j"]
-shader = ExtResource("4_vkujn")
-shader_parameter/debug = false
-shader_parameter/border_scale = 1.0
-shader_parameter/shadow_offset = Vector2(-2.5, 0)
-shader_parameter/color = Color(0, 0, 0, 0.3137255)
-shader_parameter/blur_amount = 1.5000000712500001
-shader_parameter/shadow_scale = 1.2
-shader_parameter/disable_rotating = true
-shader_parameter/blur_kernel_max = 2
-shader_parameter/disable_shadow = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
 shader = ExtResource("4_vkujn")
@@ -128,15 +117,11 @@ z_index = 5
 position = Vector2(0, -19)
 texture = ExtResource("4_7gm0b")
 
-[node name="Shadow" type="Sprite2D" parent="World/House/ShopDesk/DeskTop" unique_id=946651958]
-show_behind_parent = true
-material = SubResource("ShaderMaterial_3du0j")
-texture = ExtResource("4_7gm0b")
-
 [node name="Shadow" type="Sprite2D" parent="World/House/ShopDesk" unique_id=712580405]
 show_behind_parent = true
 material = SubResource("ShaderMaterial_4vksb")
-texture = ExtResource("3_qi2g6")
+position = Vector2(0, -11)
+texture = ExtResource("4_kud3j")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="World/House/ShopDesk" unique_id=1977051041 groups=["Exclude_From_Bullets", "Exclude_From_Lasers"]]
 visible = false
