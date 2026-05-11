@@ -7,7 +7,6 @@ uniform vec4 color : source_color;
 uniform float blur_amount : hint_range(0.0, 10.0) = 0.0;
 uniform float shadow_scale = 1.5;
 uniform bool disable_rotating = false;
-uniform int blur_kernel_max : hint_range(1, 24) = 8;
 uniform bool disable_shadow = false;
 
 varying flat vec4 modulate;

@@ -30,7 +30,6 @@ shader_parameter/color = Color(0, 0, 0, 0.3137255)
 shader_parameter/blur_amount = 1.5000000712500001
 shader_parameter/shadow_scale = 1.2
 shader_parameter/disable_rotating = true
-shader_parameter/blur_kernel_max = 2
 shader_parameter/disable_shadow = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f11wv"]
@@ -42,7 +41,6 @@ shader_parameter/color = Color(0, 0, 0, 0.30588236)
 shader_parameter/blur_amount = 1.5000000712500001
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
-shader_parameter/blur_kernel_max = 8
 shader_parameter/disable_shadow = false
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f11wv"]
@@ -73,7 +71,6 @@ shader_parameter/color = Color(0, 0, 0, 0.30588236)
 shader_parameter/blur_amount = 0.0
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
-shader_parameter/blur_kernel_max = 8
 shader_parameter/disable_shadow = false
 
 [node name="Hub" type="Node2D" unique_id=1948641179]
