@@ -22,24 +22,24 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3du0j"]
 shader = ExtResource("4_vkujn")
 shader_parameter/debug = false
-shader_parameter/border_scale = 2.0
-shader_parameter/shadow_offset = Vector2(-5, 0)
+shader_parameter/border_scale = 1.0
+shader_parameter/shadow_offset = Vector2(-2.5, 0)
 shader_parameter/color = Color(0, 0, 0, 0.3137255)
 shader_parameter/blur_amount = 1.5000000712500001
-shader_parameter/shadow_scale = 1.5
+shader_parameter/shadow_scale = 1.2
 shader_parameter/disable_rotating = true
 shader_parameter/blur_kernel_max = 2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
 shader = ExtResource("4_vkujn")
 shader_parameter/debug = false
-shader_parameter/border_scale = 2.0
+shader_parameter/border_scale = 1.0
 shader_parameter/shadow_offset = Vector2(-2.5, 0)
 shader_parameter/color = Color(0, 0, 0, 0.3137255)
-shader_parameter/blur_amount = 3.0000001425
-shader_parameter/shadow_scale = 1.5
+shader_parameter/blur_amount = 1.5000000712500001
+shader_parameter/shadow_scale = 1.2
 shader_parameter/disable_rotating = true
-shader_parameter/blur_kernel_max = 4
+shader_parameter/blur_kernel_max = 2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f11wv"]
 shader = ExtResource("4_vkujn")
