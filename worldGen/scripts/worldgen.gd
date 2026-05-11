@@ -35,17 +35,17 @@ var dirs : Array[Vector2i] = [
 ]
 
 var ground_remap : Dictionary = {
-	0: Vector2(0, 0), #Grass
-	1: Vector2(0, 3), #Cave floor
+	0: Vector2i(0, 0), #Grass
+	1: Vector2i(0, 3), #Cave floor
 }
 
 var wall_remap : Dictionary = {
-	0: Vector2(1, 3), #Cave wall
+	0: Vector2i(1, 3), #Cave wall
 }
 
 var debug_remap : Dictionary = {
-	0: Vector2(0, 0), #Forest
-	1: Vector2(1, 0), #Cave
+	0: Vector2i(0, 0), #Forest
+	1: Vector2i(1, 0), #Cave
 }
 
 func genLayers(parent: Node2D) -> Dictionary:
@@ -357,6 +357,12 @@ func genTileMap() -> void:
 				walls.set_cell(Vector2i(x, y), 0, wall_remap[thisTile.wall_type])
 			
 			debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type])
+			if thisTile.is_cave and thisTile.wall_type != -1:
+				debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type] + Vector2i(0, 2))
+			if thisTile.is_edge:
+				debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type] + Vector2i(0, 1))
+				if thisTile.is_cave and thisTile.wall_type != -1:
+					debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type] + Vector2i(0, 3))
 			
 				#TileType.GRASS:
 					#ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
