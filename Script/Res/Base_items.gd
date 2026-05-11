@@ -41,6 +41,7 @@ enum sort_type {
 @export var weight : float = 1.0
 @export var baseCost : float = 30
 @export var costVar : float = 0.2
+@export var sellable : bool = true
 @export var rolled : bool = false
 @export var quantity : int = 1
 @export_category("Rolled Stats")

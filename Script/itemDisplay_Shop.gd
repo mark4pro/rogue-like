@@ -27,7 +27,6 @@ func _ready() -> void:
 			costTxt.text = "Cost: $" + str(item.shopPrice)
 
 func _process(delta: float) -> void:
-	
 	if item:
 		buyBttn.disabled = item.quantity <= 0
 		stockTxt.text = "Stock: " + str(item.quantity)

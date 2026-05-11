@@ -44,6 +44,7 @@ func getSpawn(center: Vector2, radius: float, chkCamera: bool = false, inFrontOf
 	for i in maxAtt:
 		var angle = 0
 		var dist = randf_range(960, 960 + radius)
+		
 		var pos : Vector2 = Vector2.ZERO
 		
 		if inFrontOfPlayer and Global.player and playerDir != Vector2.ZERO:
@@ -58,6 +59,12 @@ func getSpawn(center: Vector2, radius: float, chkCamera: bool = false, inFrontOf
 			continue
 		if not isWalkable(pos):
 			continue
+		
+		var space : PhysicsDirectSpaceState2D = enemyNode.get_world_2d().direct_space_state
+		var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(center, pos)
+		query.collide_with_areas = true
+		query.collide_with_bodies = true
+		if space.intersect_ray(query): continue
 		
 		return pos
 	return Vector2.ZERO
