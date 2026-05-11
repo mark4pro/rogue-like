@@ -28,39 +28,44 @@ vec4 sample_texture_safe(sampler2D tex, vec2 uv) {
 }
 
 vec4 apply_gaussian_blur(sampler2D tex, vec2 uv) {
+	if (blur_amount <= 0.0)
+		return sample_texture_safe(tex, uv);
 	if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0)
 		return vec4(0.0);
 
 	vec2 texel = 1.0 / vec2(textureSize(tex, 0)) * blur_amount;
-	int kernel_size = min(int(blur_amount * 2.0), blur_kernel_max);
-	float inv_sigma = -0.5 / (blur_amount * blur_amount);
 
-	// Precompute symmetric 1D weights — exp() called k+1 times not (2k+1)²
-	const int MAX_K = 24;
-	float weights[MAX_K + 1];
-	for (int i = 0; i <= MAX_K; i++) {
-		float f = float(i);
-		weights[i] = (i <= kernel_size) ? exp(f * f * inv_sigma) : 0.0;
-	}
+	// Hardcoded 5x5 Gaussian weights (sigma~1.0, normalized)
+	// Only 13 unique samples exploiting symmetry
+	vec4 c = vec4(0.0);
+	float tw = 0.0;
 
-	vec4 color_blur = vec4(0.0);
-	float total_weight = 0.0;
-	for (int x = -MAX_K; x <= MAX_K; x++) {
-		if (abs(x) > kernel_size) continue;
-		float wx = weights[abs(x)];
-		for (int y = -MAX_K; y <= MAX_K; y++) {
-			if (abs(y) > kernel_size) continue;
-			float weight = wx * weights[abs(y)];
-			vec2 sample_uv = uv + vec2(float(x), float(y)) * texel;
-			total_weight += weight;
-			if (sample_uv.x >= 0.0 && sample_uv.x <= 1.0 &&
-				sample_uv.y >= 0.0 && sample_uv.y <= 1.0)
-				color_blur += texture(tex, sample_uv) * weight;
-		}
-	}
+	// center
+	c += texture(tex, uv) * 0.2270;
+	tw += 0.2270;
 
-	if (total_weight <= 0.0) return vec4(0.0);
-	return clamp(color_blur / total_weight, 0.0, 1.0);
+	// cardinal 1
+	vec2 o1 = vec2(texel.x, 0.0);
+	vec2 o2 = vec2(0.0, texel.y);
+	c += (sample_texture_safe(tex, uv + o1) + sample_texture_safe(tex, uv - o1)) * 0.1945;
+	c += (sample_texture_safe(tex, uv + o2) + sample_texture_safe(tex, uv - o2)) * 0.1945;
+	tw += 0.1945 * 4.0;
+
+	// cardinal 2
+	vec2 o3 = vec2(texel.x * 2.0, 0.0);
+	vec2 o4 = vec2(0.0, texel.y * 2.0);
+	c += (sample_texture_safe(tex, uv + o3) + sample_texture_safe(tex, uv - o3)) * 0.1210;
+	c += (sample_texture_safe(tex, uv + o4) + sample_texture_safe(tex, uv - o4)) * 0.1210;
+	tw += 0.1210 * 4.0;
+
+	// diagonal 1
+	vec2 d1 = vec2( texel.x,  texel.y);
+	vec2 d2 = vec2(-texel.x,  texel.y);
+	c += (sample_texture_safe(tex, uv + d1) + sample_texture_safe(tex, uv - d1)) * 0.0833;
+	c += (sample_texture_safe(tex, uv + d2) + sample_texture_safe(tex, uv - d2)) * 0.0833;
+	tw += 0.0833 * 4.0;
+
+	return clamp(c / tw, 0.0, 1.0);
 }
 
 vec2 rotate_point(vec2 point, float angle) {
