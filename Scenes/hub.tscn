@@ -29,6 +29,7 @@ shader_parameter/blur_amount = 1.5000000712500001
 shader_parameter/shadow_scale = 1.2
 shader_parameter/disable_rotating = true
 shader_parameter/blur_kernel_max = 2
+shader_parameter/disable_shadow = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
 shader = ExtResource("4_vkujn")
@@ -40,6 +41,7 @@ shader_parameter/blur_amount = 1.5000000712500001
 shader_parameter/shadow_scale = 1.2
 shader_parameter/disable_rotating = true
 shader_parameter/blur_kernel_max = 2
+shader_parameter/disable_shadow = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f11wv"]
 shader = ExtResource("4_vkujn")
@@ -51,6 +53,7 @@ shader_parameter/blur_amount = 1.5000000712500001
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
 shader_parameter/blur_kernel_max = 8
+shader_parameter/disable_shadow = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_7gm0b"]
 shader = ExtResource("4_vkujn")
@@ -62,6 +65,7 @@ shader_parameter/blur_amount = 2.50000011875
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
 shader_parameter/blur_kernel_max = 8
+shader_parameter/disable_shadow = false
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f11wv"]
 closed = false
@@ -92,6 +96,7 @@ shader_parameter/blur_amount = 0.0
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
 shader_parameter/blur_kernel_max = 8
+shader_parameter/disable_shadow = false
 
 [node name="Hub" type="Node2D" unique_id=1948641179]
 y_sort_enabled = true
