@@ -4,8 +4,7 @@ extends Node
 @onready var worldData : World = preload("res://worldGen/Worlds/default.tres").duplicate(true)
 
 @export var thisSeed : int = -1 # -1 use random seed
-@export var chunkSize : Vector2i = Vector2i(10, 10)
-@export var chunkTiles : int = 30
+@export var worldSize : Vector2i = Vector2i(300, 300)
 @export var tileSize : int = 32
 
 var currentSeed : int = randi()
@@ -14,18 +13,26 @@ var hasWorldNode : Node2D = null
 
 var player : RigidBody2D = null
 
+var preGen : bool = false
 var loaded : bool = false
-
-var sepBiomes : Dictionary = {}
 
 var world = [] # world[y][x] = WorldTile
 var layers = {}
+var sepBiomes : Dictionary = {}
+var regions : Dictionary = {}
 
 var worldNode : Node2D = null
 var isTestEnv : Node2D = null
 var freeCam : Camera2D = null
 
 var biome_debug : bool = false
+
+var dirs : Array[Vector2i] = [
+	Vector2i.LEFT,
+	Vector2i.RIGHT,
+	Vector2i.UP,
+	Vector2i.DOWN
+]
 
 var ground_remap : Dictionary = {
 	0: Vector2(0, 0), #Grass
@@ -91,16 +98,19 @@ func genArrays() -> void:
 	cave_noise.fractal_octaves = 3
 	cave_noise.frequency = 0.01
 	
-	var world_w = chunkSize.x * chunkTiles
-	var world_h = chunkSize.y * chunkTiles
-
+	var halfTileSize : float = tileSize * 0.5
+	
 	world.clear()
-	for y in range(world_h):
+	sepBiomes.clear()
+	regions.clear()
+	
+	for y in range(worldSize.y):
 		world.append([])
-		for x in range(world_w):
+		for x in range(worldSize.x):
 			var newWorldTile : WorldTile = WorldTile.new()
 			
 			newWorldTile.tilePos = Vector2i(x, y)
+			newWorldTile.globalPos = Global.currentScene.to_global(Vector2(newWorldTile.tilePos) * tileSize + Vector2(halfTileSize, halfTileSize))
 			
 			newWorldTile.biome = biome_noise.get_noise_2d(x, y)
 			newWorldTile.moisture = moisture_noise.get_noise_2d(x, y)
@@ -128,15 +138,192 @@ func genArrays() -> void:
 			world[y].append(newWorldTile)
 
 func is_cave_wall(tile: WorldTile) -> bool:
-	return tile.wall_type == 0 and tile.ground_type == 1
+	return tile.wall_type == 0 and tile.biome_type == 1
 
 func is_cave_floor(tile: WorldTile) -> bool:
-	return tile.wall_type == -1 and tile.ground_type == 1
+	return tile.wall_type == -1 and tile.biome_type == 1
 
+func is_forest(tile: WorldTile) -> bool:
+	return tile.biome_type == 0
 
+func flood_region(start: Vector2, temp: Dictionary, type: int) -> Region:
+	var newRegion : Region = Region.new()
+	
+	match type:
+		0:
+			newRegion.type = Region.regionType.FOREST
+		1:
+			newRegion.type = Region.regionType.CAVE
+	
+	var queue : Array[Vector2i] = [start]
+	temp[start] = true
+	
+	var total_global : Vector2 = Vector2.ZERO
+	var total_tile : Vector2i = Vector2i.ZERO
+	var count : int = 0
+	
+	while not queue.is_empty():
+		var pos : Vector2i = queue.pop_front()
+		
+		var tile : WorldTile = world[pos.y][pos.x]
+		
+		if not newRegion.tile_lookup.has(pos):
+			newRegion.tiles.append(tile)
+			
+			total_global += tile.globalPos
+			total_tile += pos
+			count += 1
+			
+			newRegion.tile_lookup[pos] = tile
+		
+		var is_edge : bool = false
+		
+		for dir in dirs:
+			var next : Vector2i = pos + dir
+			
+			#Bounds check
+			if next.x < 0 or next.y < 0 \
+			or next.y >= world.size() \
+			or next.x >= world[next.y].size():
+				is_edge = true
+				continue
+			
+			var next_tile = world[next.y][next.x]
+			
+			match type:
+				0:
+					if is_forest(next_tile):
+						if not temp.has(next):
+							temp[next] = true
+							queue.append(next)
+					else:
+						is_edge = true
+				1:
+					if next_tile.is_cave:
+						if not temp.has(next):
+							temp[next] = true
+							queue.append(next)
+					else:
+						is_edge = true
+		
+		if is_edge and not newRegion.edgeTile_lookup.has(pos):
+			tile.is_edge = true
+			newRegion.edgeTiles.append(tile)
+			newRegion.edgeTile_lookup[pos] = tile
+	
+	newRegion.avgPos_global = total_global / count
+	newRegion.avgPos_tile = total_tile / count
+	
+	return newRegion
+
+func flood_subregion(start: Vector2i, temp: Dictionary, parent: Region) -> SubRegion:
+	var sub := SubRegion.new()
+	
+	var queue : Array[Vector2i] = [start]
+	temp[start] = true
+	
+	var total_global : Vector2 = Vector2.ZERO
+	var total_tile : Vector2i = Vector2i.ZERO
+	var count : int = 0
+	
+	while not queue.is_empty():
+		var pos = queue.pop_front()
+		
+		var tile : WorldTile = world[pos.y][pos.x]
+		
+		if not sub.tile_lookup.has(pos):
+			sub.tiles.append(tile)
+			
+			total_global += tile.globalPos
+			total_tile += pos
+			count += 1
+			
+			sub.tile_lookup[pos] = tile
+		
+		var is_edge : bool = false
+		
+		for dir in dirs:
+			var next = pos + dir
+			
+			#Bounds and outside region check
+			if next.x < 0 or next.y < 0 \
+			or next.y >= world.size() \
+			or next.x >= world[next.y].size() \
+			or not parent.tile_lookup.has(next):
+				is_edge = true
+				continue
+			
+			var next_tile = world[next.y][next.x]
+			
+			match parent.type:
+				Region.regionType.FOREST:
+					pass
+				Region.regionType.CAVE:
+					if is_cave_floor(next_tile):
+						if not temp.has(next):
+							temp[next] = true
+							queue.append(next)
+					else:
+						is_edge = true
+		
+		if is_edge and not sub.edgeTile_lookup.has(pos):
+			tile.is_edge = true
+			sub.edgeTiles.append(tile)
+			sub.edgeTile_lookup[pos] = tile
+	
+	sub.avgPos_global = total_global / count
+	sub.avgPos_tile = total_tile / count
+	
+	return sub
+
+func gen_cave_regions() -> void:
+	var temp : Dictionary = {}
+	
+	for y in range(world.size()):
+		for x in range(world[y].size()):
+			var pos : Vector2i = Vector2i(x, y)
+			
+			if temp.has(pos) or not world[y][x].is_cave:
+				continue
+			
+			var thisRegion : Region = flood_region(pos, temp, 1)
+			if not regions.has("cave"): regions.cave = []
+			regions.cave.append(thisRegion)
+
+func gen_cave_subRegions() -> void:
+	if not regions.has("cave"):
+		return
+	
+	for r in regions.cave:
+		var temp : Dictionary = {}
+		
+		for tile in r.tiles:
+			var pos : Vector2i = tile.tilePos
+			
+			if temp.has(pos) or not is_cave_floor(tile):
+				continue
+			
+			var thisSub : SubRegion = flood_subregion(pos, temp, r)
+			
+			if thisSub.tiles.size() > 0:
+				r.subRegions.append(thisSub)
+
+func gen_forest_regions() -> void:
+	var temp : Dictionary = {}
+	
+	for y in range(world.size()):
+		for x in range(world[y].size()):
+			var pos : Vector2i = Vector2i(x, y)
+			
+			if temp.has(pos) or not is_forest(world[y][x]):
+				continue
+			
+			var thisRegion : Region = flood_region(pos, temp, 0)
+			if not regions.has("forest"): regions.forest = []
+			regions.forest.append(thisRegion)
 
 #gens the actual map in the tileMapLayer
-func mapGen() -> void:
+func genTileMap() -> void:
 	var ground : TileMapLayer = layers.ground
 	var props : TileMapLayer = layers.props
 	var trees : Node2D = layers.trees
@@ -220,18 +407,29 @@ func mapGen() -> void:
 	Global.currentScene.get_node("World").add_child(newStaticBody)
 	Global.currentScene.get_node("World/Bounds").add_child(newCollisionPoly)
 
+func genWorld() -> void:
+	#Generate map
+	genArrays()
+	gen_cave_regions()
+	gen_cave_subRegions()
+	gen_forest_regions()
 
 func regen() -> void:
 	currentSeed = randi()
 	if not thisSeed == -1: currentSeed = thisSeed
 	seed(currentSeed)
 	if hasWorldNode: Global.currentScene.get_node("World").free()
+	world.clear()
 	EnemySpawner.clearEnemies()
 
 func _process(_delta: float) -> void:
 	if Global.player:
 		var playerCamera : Camera2D = Global.player.get_node_or_null("Camera2D")
 		if playerCamera and playerCamera.is_inside_tree(): playerCamera.make_current()
+	
+	if Global.sceneIndex == 0 and not preGen:
+		genWorld()
+		preGen = true
 	
 	if Global.currentScene:
 		freeCam = Global.currentScene.get_node_or_null("FreeCam")
@@ -248,11 +446,9 @@ func _process(_delta: float) -> void:
 			worldNode = newWorldNode
 			newWorldNode.name = "World"
 			layers = genLayers(newWorldNode)
-			#Generate map
-			genArrays()
-			#for s in worldData.generators:
-				#s.gen()
-			mapGen()
+			if world.is_empty(): genWorld()
+			genTileMap()
+			preGen = false
 		
 		#Engine only
 		#regen map
