@@ -34,8 +34,6 @@ vec4 apply_gaussian_blur(sampler2D tex, vec2 uv) {
 
 	vec2 texel = 1.0 / vec2(textureSize(tex, 0)) * blur_amount;
 
-	// Hardcoded 5x5 Gaussian weights (sigma~1.0, normalized)
-	// Only 13 unique samples exploiting symmetry
 	vec4 c = vec4(0.0);
 	float tw = 0.0;
 
@@ -43,21 +41,18 @@ vec4 apply_gaussian_blur(sampler2D tex, vec2 uv) {
 	c += texture(tex, uv) * 0.2270;
 	tw += 0.2270;
 
-	// cardinal 1
 	vec2 o1 = vec2(texel.x, 0.0);
 	vec2 o2 = vec2(0.0, texel.y);
 	c += (sample_texture_safe(tex, uv + o1) + sample_texture_safe(tex, uv - o1)) * 0.1945;
 	c += (sample_texture_safe(tex, uv + o2) + sample_texture_safe(tex, uv - o2)) * 0.1945;
 	tw += 0.1945 * 4.0;
 
-	// cardinal 2
 	vec2 o3 = vec2(texel.x * 2.0, 0.0);
 	vec2 o4 = vec2(0.0, texel.y * 2.0);
 	c += (sample_texture_safe(tex, uv + o3) + sample_texture_safe(tex, uv - o3)) * 0.1210;
 	c += (sample_texture_safe(tex, uv + o4) + sample_texture_safe(tex, uv - o4)) * 0.1210;
 	tw += 0.1210 * 4.0;
 
-	// diagonal 1
 	vec2 d1 = vec2( texel.x,  texel.y);
 	vec2 d2 = vec2(-texel.x,  texel.y);
 	c += (sample_texture_safe(tex, uv + d1) + sample_texture_safe(tex, uv - d1)) * 0.0833;

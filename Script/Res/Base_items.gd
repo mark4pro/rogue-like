@@ -163,7 +163,7 @@ func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 					if decrement: quantity -= amount
 					return
 	
-	var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
+	var newGroundItem : Node2D = load("uid://b5eq6i6you4bx").instantiate()
 	newGroundItem.name = name
 	newGroundItem.position = thisDropPos
 	var newItem : BaseItem = self.duplicate()
@@ -174,7 +174,7 @@ func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 
 func place(pos: Vector2) -> void:
 	if placable and equippable:
-		var newPlacedScene : Node2D = placedScene.instantiate()
+		var newPlacedScene : Node2D = load("uid://b5eq6i6you4bx").instantiate()
 		newPlacedScene.name = name
 		newPlacedScene.global_position = pos
 		newPlacedScene.z_index = 3
