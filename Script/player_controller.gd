@@ -29,6 +29,9 @@ extends RigidBody2D
 @onready var pauseMenu : CanvasLayer = %pauseMenu
 @onready var deathScreen : CanvasLayer = %deathMenu
 
+@onready var messageBox : VBoxContainer = %MessageBox
+@onready var messageTimer : Timer = %MessageTimer
+
 var pStats : stats = Global.playerStats
 
 @export_category("Stats")
@@ -93,13 +96,14 @@ func _ready():
 	weapSys.spawnPos.resize(eyes.size())
 	
 	#Store start local positions
-	for i in eyes: defaultEyePos.append(i.position)
+	for i in eyes:
+		defaultEyePos.append(i.position)
 	
 	if bounds:
-		var minX = INF
-		var maxX = -INF
-		var minY = INF
-		var maxY = -INF
+		var minX : float = INF
+		var maxX : float = -INF
+		var minY : float = INF
+		var maxY : float = -INF
 		
 		for p in bounds.polygon:
 			minX = min(minX, p.x)
@@ -107,8 +111,8 @@ func _ready():
 			minY = min(minY, p.y)
 			maxY = max(maxY, p.y)
 		
-		var topLeft = bounds.to_global(Vector2(minX, minY))
-		var bottomRight = bounds.to_global(Vector2(maxX, maxY))
+		var topLeft : Vector2 = bounds.to_global(Vector2(minX, minY))
+		var bottomRight : Vector2 = bounds.to_global(Vector2(maxX, maxY))
 		
 		camera.limit_left = int(topLeft.x)
 		camera.limit_top = int(topLeft.y)
@@ -117,10 +121,13 @@ func _ready():
 
 func calc_defense() -> float:
 	var result : float = pStats.base_defense
-	if Global.armor: result + Global.armor.defense
+	
+	if Global.armor:
+		result += Global.armor.defense
+	
 	return result
 
-func take_damage(data: Dictionary, attacker: Node):
+func take_damage(data: Dictionary, _attacker: Node):
 	if not is_rolling and not get_tree().paused:
 		health -= data.value * (100 / (100 + calc_defense()))
 		Global.damageAnim(sprite, data.value, ogScale)
@@ -302,11 +309,11 @@ func _process(delta: float) -> void:
 	
 	if Global.armor and shell.get_child_count() == 0:
 		oldArmor = Global.armor
-		var newArmor = Global.armor.armorScene.instantiate()
+		var newArmor : Node = Global.armor.armorScene.instantiate()
 		shell.add_child(newArmor)
 	
 	if not Global.armor and shell.get_child_count() == 0:
-		var newArmor = default_shell.instantiate()
+		var newArmor : Node = default_shell.instantiate()
 		shell.add_child(newArmor)
 	
 	#Place item
@@ -380,7 +387,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible \
 		 and not inDialogue:
 			if not dbck:
-				var dbmenu : CanvasLayer = load("res://Assets/prefabs/ui/debug.tscn").instantiate()
+				var dbmenu : CanvasLayer = load("uid://vuvv7u5owupe").instantiate()
 				dbmenu.name = "debugMenu"
 				add_child(dbmenu)
 			else:

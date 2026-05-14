@@ -82,5 +82,5 @@ func _on_area_2d_body_exited(body: Node2D) -> void:
 func _on_idle_timeout() -> void:
 	rest = true
 
-func saying_characters(letter: String, letter_index: int, speed: float) -> void:
+func saying_characters(_letter: String, _letter_index: int, _speed: float) -> void:
 	if head.animation != "talking" or not head.is_playing(): head.play("talking")

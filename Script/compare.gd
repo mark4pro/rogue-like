@@ -1,14 +1,14 @@
 extends Control
 
-@onready var bg : ColorRect = $BG
-@onready var nameTxt : Label = $BG/Name
-@onready var stats : VBoxContainer = $BG/Stats
+@onready var bg : ColorRect = %BG
+@onready var nameTxt : Label = %Name
+@onready var weapStats : VBoxContainer = %Stats
 
 var item : BaseItem = null
 
 func getCompColor(thisProperty, equippedProperty) -> String:
 	var comp : float = thisProperty - equippedProperty
-				
+	
 	var result : Color = Color.GREEN
 	if comp == 0: result = Color.WHITE
 	if comp < 0: result = Color.RED
@@ -20,7 +20,7 @@ func _ready() -> void:
 		nameTxt.text = " Name: " + item.name
 		
 		var newLabel : RichTextLabel = RichTextLabel.new()
-		var fontFile = load("res://Assets/fonts/tiny5/Tiny5-Regular.ttf") as FontFile
+		var fontFile : FontFile = load("uid://dv68j0l4djo44") as FontFile
 		newLabel.add_theme_font_override("normal_font", fontFile)
 		newLabel.add_theme_font_size_override("font_size", 18)
 		newLabel.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -29,12 +29,12 @@ func _ready() -> void:
 		
 		if item is HealthItem:
 			newLabel.text = "\t\tHeals: %s" % [str(Global.formatFloat(item.healthAmount))]
-			stats.add_child(newLabel.duplicate())
+			weapStats.add_child(newLabel.duplicate())
 			
 			newLabel.text = "\t\tCost: %s" % [
 				str(Global.formatFloat(item.cost))
 			]
-			stats.add_child(newLabel.duplicate())
+			weapStats.add_child(newLabel.duplicate())
 		
 		if item is WeaponItem:
 			if Global.weapon and not item == Global.weapon:
@@ -46,28 +46,28 @@ func _ready() -> void:
 					str(Global.formatFloat(item.damage.y - Global.weapon.damage.y)),
 					str(Global.formatFloat(item.damage.y))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				newLabel.text = "\t\tCrit Chance: ([color=%s]%s[/color] | %s)" % [
 					getCompColor(item.critChance, Global.weapon.critChance),
 					str(Global.formatFloat(item.critChance - Global.weapon.critChance)),
 					str(Global.formatFloat(item.critChance))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				newLabel.text = "\t\tCrit Multiplier: ([color=%s]%s[/color] | %s)" % [
 					getCompColor(item.critMulti, Global.weapon.critMulti),
 					str(Global.formatFloat(item.critMulti - Global.weapon.critMulti)),
 					str(Global.formatFloat(item.critMulti))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				newLabel.text = "\t\tKnockback: ([color=%s]%s[/color] | %s)" % [
 					getCompColor(item.knockback, Global.weapon.knockback),
 					str(Global.formatFloat(item.knockback - Global.weapon.knockback)),
 					str(Global.formatFloat(item.knockback))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				if item.animationType == WeaponItem.animType.AIM_LASER:
 					var attackSpeed : float = 0
@@ -79,7 +79,7 @@ func _ready() -> void:
 						str(Global.formatFloat(item.laserAttackSpeed - attackSpeed)),
 						str(Global.formatFloat(item.laserAttackSpeed))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					var attackRange : float = 0
 					if Global.weapon.animationType == WeaponItem.animType.AIM_LASER:
@@ -90,7 +90,7 @@ func _ready() -> void:
 						str(Global.formatFloat(item.laserRange - attackRange)),
 						str(Global.formatFloat(item.laserRange))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 				
 				if item.animationType == WeaponItem.animType.RANGE:
 					var attackSpeed : float = 0
@@ -102,7 +102,7 @@ func _ready() -> void:
 						str(Global.formatFloat(item.rangeFireSpeed - attackSpeed)),
 						str(Global.formatFloat(item.rangeFireSpeed))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					var amount : float = 0
 					if Global.weapon.animationType == WeaponItem.animType.RANGE:
@@ -113,7 +113,7 @@ func _ready() -> void:
 						str(Global.formatFloat(item.rangeSpawnAmount - amount)),
 						str(Global.formatFloat(item.rangeSpawnAmount))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					var spread : float = 0
 					if Global.weapon.animationType == WeaponItem.animType.RANGE:
@@ -124,7 +124,7 @@ func _ready() -> void:
 						str(Global.formatFloat(item.rangeSpreadAngle - spread)),
 						str(Global.formatFloat(item.rangeSpreadAngle))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					var speed : float = 0
 					if Global.weapon.animationType == WeaponItem.animType.RANGE:
@@ -135,72 +135,72 @@ func _ready() -> void:
 						str(Global.formatFloat(item.rangeSpeed - speed)),
 						str(Global.formatFloat(item.rangeSpeed))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 			
 			if not Global.weapon or item == Global.weapon:
 				newLabel.text = "\t\tDamage: (%s, %s)" % [
 					str(Global.formatFloat(item.damage.x)),
 					str(Global.formatFloat(item.damage.y))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				newLabel.text = "\t\tCrit Chance: %s" % [
 					str(Global.formatFloat(item.critChance))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				newLabel.text = "\t\tCrit Multiplier: %s" % [
 					str(Global.formatFloat(item.critMulti))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				newLabel.text = "\t\tKnockback: %s" % [
 					str(Global.formatFloat(item.knockback))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 				
 				if item.animationType == WeaponItem.animType.AIM_LASER:
 					newLabel.text = "\t\tAttack Speed: %s" % [
 						str(Global.formatFloat(item.laserAttackSpeed))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					newLabel.text = "\t\tRange: %s" % [
 						str(Global.formatFloat(item.laserRange))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 				
 				if item.animationType == WeaponItem.animType.RANGE:
 					newLabel.text = "\t\tAttack Speed: %s" % [
 						str(Global.formatFloat(item.rangeFireSpeed))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					newLabel.text = "\t\tAmount: %s" % [
 						str(Global.formatFloat(item.rangeSpawnAmount))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					newLabel.text = "\t\tSpread: %s" % [
 						str(Global.formatFloat(item.rangeSpreadAngle))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 					
 					newLabel.text = "\t\tProjectile Speed: %s" % [
 						str(Global.formatFloat(item.rangeSpeed))
 					]
-					stats.add_child(newLabel.duplicate())
+					weapStats.add_child(newLabel.duplicate())
 			
 			newLabel.text = "\t\tRarity: [color=%s]%s[/color]" % [
 				item.getRarity().color.to_html(),
 				str(item.getRarity().txt)
 			]
-			stats.add_child(newLabel.duplicate())
+			weapStats.add_child(newLabel.duplicate())
 			
 			newLabel.text = "\t\tCost: %s" % [
 				str(Global.formatFloat(item.cost))
 			]
-			stats.add_child(newLabel.duplicate())
+			weapStats.add_child(newLabel.duplicate())
 		
 		if item is ArmorItem:
 			if Global.armor and not item == Global.armor:
@@ -209,28 +209,28 @@ func _ready() -> void:
 					str(Global.formatFloat(item.defense - Global.armor.defense)),
 					str(Global.formatFloat(item.defense))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 			
 			if not Global.armor or item == Global.armor:
 				newLabel.text = "\t\tDefense: %s" % [
 					str(Global.formatFloat(item.defense))
 				]
-				stats.add_child(newLabel.duplicate())
+				weapStats.add_child(newLabel.duplicate())
 			
 			newLabel.text = "\t\tRarity: [color=%s]%s[/color]" % [
 				item.getRarity().color.to_html(),
 				str(item.getRarity().txt)
 			]
-			stats.add_child(newLabel.duplicate())
+			weapStats.add_child(newLabel.duplicate())
 			
 			newLabel.text = "\t\tCost: %s" % [
 				str(Global.formatFloat(item.cost))
 			]
-			stats.add_child(newLabel.duplicate())
-	bg.size.y = stats.size.y + 30
+			weapStats.add_child(newLabel.duplicate())
+	bg.size.y = weapStats.size.y + 30
 
 func _process(_delta: float) -> void:
 	global_position = get_global_mouse_position()
-	bg.size.y = stats.size.y + 30
+	bg.size.y = weapStats.size.y + 30
 	nameTxt.size.x = bg.size.x
-	stats.size.x = bg.size.x
+	weapStats.size.x = bg.size.x

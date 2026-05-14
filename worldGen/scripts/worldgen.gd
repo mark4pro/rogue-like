@@ -83,7 +83,7 @@ func genArrays() -> void:
 			newWorldTile.moisture = moisture_noise.get_noise_2d(x, y)
 			newWorldTile.cave = cave_noise.get_noise_2d(x, y)
 			
-			var forest_strength = clamp(newWorldTile.moisture + newWorldTile.biome, 0.0, 1.0)
+			var _forest_strength = clamp(newWorldTile.moisture + newWorldTile.biome, 0.0, 1.0)
 			
 			if newWorldTile.cave > 0.3:
 				newWorldTile.is_cave = true
@@ -178,8 +178,8 @@ func flood_region(start: Vector2, temp: Dictionary, type: int) -> Region:
 			newRegion.edgeTiles.append(tile)
 			newRegion.edgeTile_lookup[pos] = tile
 	
-	newRegion.avgPos_global = total_global / count
-	newRegion.avgPos_tile = total_tile / count
+	newRegion.avgPos_global = total_global / float(count)
+	newRegion.avgPos_tile = Vector2i(Vector2(total_tile) / float(count))
 	
 	return newRegion
 
@@ -238,8 +238,8 @@ func flood_subregion(start: Vector2i, temp: Dictionary, parent: Region) -> SubRe
 			sub.edgeTiles.append(tile)
 			sub.edgeTile_lookup[pos] = tile
 	
-	sub.avgPos_global = total_global / count
-	sub.avgPos_tile = total_tile / count
+	sub.avgPos_global = total_global / float(count)
+	sub.avgPos_tile = Vector2i(Vector2(total_tile) / float(count))
 	
 	return sub
 
@@ -292,8 +292,8 @@ func gen_forest_regions() -> void:
 #gens the actual map in the tileMapLayer
 func genTileMap() -> void:
 	var ground : TileMapLayer = worldNode.ground
-	var props : TileMapLayer = worldNode.props
-	var trees : Node2D = worldNode.trees
+	var _props : TileMapLayer = worldNode.props
+	var _trees : Node2D = worldNode.trees
 	var walls : TileMapLayer = worldNode.walls
 	var debug : TileMapLayer = worldNode.debug
 	

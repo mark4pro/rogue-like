@@ -27,12 +27,12 @@ var perT : float = 0
 
 var flipSword : bool = false
 
-func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: int) -> Array[Vector2]:
-	var points : Array[Vector2] = []
+func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: int) -> PackedVector2Array:
+	var points : PackedVector2Array = []
 	
 	for i in range(steps + 1):
-		var t : float = float(i) / steps
-		var angle : float = lerp(deg_to_rad(angleRange.y), deg_to_rad(angleRange.x), t)
+		var t_e : float = float(i) / float(steps)
+		var angle : float = lerp(deg_to_rad(angleRange.y), deg_to_rad(angleRange.x), t_e)
 		
 		var point : Vector2 = Vector2(cos(angle) * radius.x, sin(angle) * radius.y)
 		
@@ -41,10 +41,10 @@ func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: in
 	
 	return points
 
-func raycastTo(start: Vector2, dir: Vector2, dist: float, range: float) -> Dictionary:
+func raycastTo(start: Vector2, dir: Vector2, dist: float, r: float) -> Dictionary:
 	var space : PhysicsDirectSpaceState2D = parentNode.get_world_2d().direct_space_state
 	
-	var trueDist : float = min(dist, range)
+	var trueDist : float = min(dist, r)
 	var to : Vector2 = start + dir * trueDist
 	
 	var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(start, to)
@@ -90,7 +90,7 @@ func update(delta: float, target: Vector2) -> void:
 				weapon.animType.SWING:
 					var rot : float = (target - (parentNode.global_position + posOffset)).angle() + rotOffset
 					var angRange : Vector2 = Vector2.UP.rotated(rot) + weapon.swingAngleRange
-					var points : Array[Vector2] = ellipseArc(parentNode.global_position, weapon.swingRadius, angRange, weapon.swingSteps)
+					var points : PackedVector2Array = ellipseArc(parentNode.global_position, weapon.swingRadius, angRange, weapon.swingSteps)
 					
 					var index : int = int(t * (points.size() - 1))
 					index = clampi(index, 0, points.size() - 1)
@@ -149,7 +149,7 @@ func update(delta: float, target: Vector2) -> void:
 							spawned.append(newWeapon)
 					else:
 						for index in range(spawned.size()):
-							var i = spawned[index]
+							var i : Node = spawned[index]
 							
 							i.global_position = spawnPos[index].global_position
 							
@@ -197,7 +197,7 @@ func update(delta: float, target: Vector2) -> void:
 					firingActive = t == 1
 					
 					if firingActive:
-						var avgPos = spawnPos.reduce(func(a, b): return a.global_position + b.global_position) / spawnPos.size()
+						var avgPos : Vector2 = spawnPos.reduce(func(a, b): return a.global_position + b.global_position) / spawnPos.size()
 						var dir : Vector2 = (target - avgPos).normalized()
 						
 						if weapon.rangePerSpawnDelay == 0:
@@ -238,7 +238,7 @@ func update(delta: float, target: Vector2) -> void:
 						isAttacking = false
 
 func spawnBullet(index: int, pos: Vector2, dir: Vector2, delta: float) -> void:
-	var newBullet = weapon.weaponScene.instantiate()
+	var newBullet : Node = weapon.weaponScene.instantiate()
 	
 	# angle offset for spread
 	var angleOffset : float = 0

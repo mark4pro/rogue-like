@@ -23,8 +23,8 @@ func getCameraRect() -> Rect2:
 	return Rect2(camera.global_position - half_size, half_size * 2.0)
 
 func isWalkable(pos: Vector2) -> bool:
-	var walls : TileMapLayer = get_tree().current_scene.get_node("World/Walls")
-	var ground : TileMapLayer = get_tree().current_scene.get_node("World/Ground")
+	var walls : TileMapLayer = Worldgen.worldNode.walls
+	var ground : TileMapLayer = Worldgen.worldNode.ground
 	var cell = walls.local_to_map(walls.to_local(pos))
 	var wallTileData = walls.get_cell_tile_data(cell)
 	var groundTileData = ground.get_cell_tile_data(cell)

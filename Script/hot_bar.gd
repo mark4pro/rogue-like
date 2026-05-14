@@ -30,7 +30,7 @@ extends PanelContainer
 @export var color_item : Color = Color.DARK_GREEN
 @export var color_item_equipped : Color = Color.GREEN
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var wHBar : Array[BaseItem] = Global.hotbar_weapons
 	var iHBar : Array[BaseItem] = Global.hotbar_items
 	

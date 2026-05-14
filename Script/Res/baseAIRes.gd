@@ -25,7 +25,7 @@ var isFlipped : bool = false
 var cone = null
 
 func newConeShape() -> ConvexPolygonShape2D:
-	var shape : ConvexPolygonShape2D = ConvexPolygonShape2D.new()
+	var newShape : ConvexPolygonShape2D = ConvexPolygonShape2D.new()
 	
 	var points : PackedVector2Array = []
 	points.append(Vector2.ZERO) # cone origin
@@ -38,8 +38,8 @@ func newConeShape() -> ConvexPolygonShape2D:
 		var dir : Vector2 = Vector2.RIGHT.rotated(angle)
 		points.append(dir * visionRange)
 	
-	shape.points = points
-	return shape
+	newShape.points = points
+	return newShape
 
 func canSeeTarget():
 	var closest : Node = null
@@ -90,5 +90,5 @@ func visionCone() -> void:
 	else:
 		if cone: cone.queue_free()
 
-func update(delta: float) -> void:
+func update(_delta: float) -> void:
 	pass

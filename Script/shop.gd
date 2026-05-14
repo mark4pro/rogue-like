@@ -50,7 +50,7 @@ func _ready() -> void:
 	itemDisplay.visible = false
 	quantityPanel.visible = false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	buyBttn.disabled = mode == 0
 	sellBttn.disabled = mode == 1
 	
@@ -64,15 +64,19 @@ func _process(delta: float) -> void:
 			if c.visible: c.queue_free()
 		
 		if mode == 0:
-			for i in shopInventory.get_sorted(optionDrop.selected):
-				var newItemDisplay = itemDisplay.duplicate()
+			var sortedItems : Array[BaseItem] = shopInventory.get_sorted(optionDrop.selected)
+			
+			for i in sortedItems:
+				var newItemDisplay : Panel = itemDisplay.duplicate()
 				newItemDisplay.item = i
 				newItemDisplay.visible = true
 				
 				itemHBox.add_child(newItemDisplay)
 		else:
-			for i in Global.inventory.get_sorted(optionDrop.selected, false):
-				var newItemDisplay = itemDisplay.duplicate()
+			var sortedItems : Array[BaseItem] = Global.inventory.get_sorted(optionDrop.selected, false)
+			
+			for i in sortedItems:
+				var newItemDisplay : Panel = itemDisplay.duplicate()
 				newItemDisplay.item = i
 				newItemDisplay.visible = true
 				
@@ -93,7 +97,7 @@ func _process(delta: float) -> void:
 	
 	if selected:
 		var thisCost : int = selected.cost if mode == 0 else selected.shopPrice
-		var total : int = thisCost * quantitySlider.value
+		var total : int = thisCost * int(quantitySlider.value)
 		
 		quantitySlider.max_value = selected.quantity
 		quantityTxt.text = str(int(quantitySlider.value)) + "/" + str(selected.quantity) + " | $" + str(total)
@@ -117,10 +121,10 @@ func _on_sell_pressed() -> void:
 
 func _on_confirm_pressed() -> void:
 	if mode == 0:
-		selected.buy(quantitySlider.value)
+		selected.buy(int(quantitySlider.value))
 		selected = null
 	else:
-		selected.sell(quantitySlider.value)
+		selected.sell(int(quantitySlider.value))
 		selected = null
 
 func _on_close_quantity_pressed() -> void:

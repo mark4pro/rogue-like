@@ -444,6 +444,7 @@ theme_override_styles/fill = SubResource("StyleBoxFlat_mbpd7")
 value = 100.0
 
 [node name="MessageBox" type="VBoxContainer" parent="UI" unique_id=1016118236]
+unique_name_in_owner = true
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -457,6 +458,7 @@ theme_override_constants/separation = 0
 alignment = 2
 
 [node name="MessageTimer" type="Timer" parent="UI" unique_id=1616340881]
+unique_name_in_owner = true
 wait_time = 2.0
 
 [node name="FPS" type="Label" parent="UI" unique_id=450200885]
@@ -837,7 +839,7 @@ vertical_alignment = 1
 unique_name_in_owner = true
 visible = false
 
-[node name="inventory" type="Control" parent="inventoryUI" unique_id=637673965]
+[node name="inventory" type="Control" parent="inventoryUI" unique_id=637673965 node_paths=PackedStringArray("grid_container", "rect", "txt")]
 unique_name_in_owner = true
 process_mode = 3
 modulate = Color(1, 1, 1, 0.5647059)
@@ -854,6 +856,9 @@ offset_bottom = -280.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("5_w0l5f")
+grid_container = NodePath("ColorRect/GridContainer")
+rect = NodePath("ColorRect")
+txt = NodePath("ColorRect/Label")
 menuSize = Vector2(1000, 600)
 
 [node name="ColorRect" type="ColorRect" parent="inventoryUI/inventory" unique_id=1208581209]

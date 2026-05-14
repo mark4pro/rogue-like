@@ -22,7 +22,7 @@ func getValid() -> void:
 func getRandom(dup: bool = false):
 	if valid.is_empty(): getValid()
 	
-	var thisItem = Global.getRandom(valid)
+	var thisItem : Variant = Global.getRandom(valid)
 	if dup: thisItem = thisItem.duplicate()
 	
 	return thisItem

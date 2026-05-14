@@ -41,7 +41,7 @@ func _ready() -> void:
 	area.connect("area_entered", bulletArea)
 	connect("body_entered", bulletCol)
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if get_contact_count() == 0: 
 		dir = linear_velocity.normalized()
 	
@@ -84,10 +84,10 @@ func bulletCol(body: Node):
 		
 		queue_free()
 
-func bulletArea(area: Area2D) -> void:
-	var parent = area.get_parent()
+func bulletArea(thisArea: Area2D) -> void:
+	var parent = thisArea.get_parent()
 	
-	if not area.is_in_group("Exclude_From_Bullets"):
+	if not thisArea.is_in_group("Exclude_From_Bullets"):
 		linear_velocity = Vector2.ZERO
 		
 		#Raycast to the colliding body to get the collision normal

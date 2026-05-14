@@ -18,5 +18,5 @@ func extUpdate() -> void:
 func _ready() -> void:
 	extUpdate()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	extUpdate()

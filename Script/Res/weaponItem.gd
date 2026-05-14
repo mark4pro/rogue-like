@@ -23,7 +23,7 @@ enum animType {
 @export var swingRadius : Vector2 = Vector2(5, 5)
 @export var swingAngleRange : Vector2 = Vector2(30, -30)
 @export var swingRestAngle : float = -45
-@export var swingZRange : Vector2 = Vector2(-1, 1)
+@export var swingZRange : Vector2i = Vector2i(-1, 1)
 @export var swingSteps : int = 30
 @export var swingDuration : float = 1
 @export var swingSpeedMulti : float = 2

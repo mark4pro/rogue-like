@@ -1,6 +1,8 @@
 extends Control
 
-@onready var grid_container = $ColorRect/GridContainer
+@export var grid_container : GridContainer
+@export var rect : ColorRect
+@export var txt : Label
 
 @export var menuSize : Vector2 = Vector2(1920, 1080)
 
@@ -43,12 +45,12 @@ func _process(_delta: float) -> void:
 		if menuSize.x < menuMinSize.x: menuSize.x = menuMinSize.x
 		if menuSize.y < menuMinSize.y: menuSize.y = menuMinSize.y
 		
-		$ColorRect.size = menuSize
-		$ColorRect/Label.size.x = menuSize.x
+		rect.size = menuSize
+		txt.size.x = menuSize.x
 		
 		var gridSize : Vector2 = menuSize - Vector2(120, 120)
 		var gridPosX : float = (menuSize.x - grid_container.size.x) / 2
-		var gridPosY : float = $ColorRect/Label.size.y
+		var gridPosY : float = txt.size.y
 		grid_container.position = Vector2(gridPosX, gridPosY)
 		grid_container.size = gridSize
 		
@@ -58,6 +60,6 @@ func _process(_delta: float) -> void:
 			for i in grid_container.get_children():
 				i.custom_minimum_size = cellSize
 			
-			oldSize = Vector2(menuSize)
+			oldSize = menuSize
 	else:
 		gen_inventory()

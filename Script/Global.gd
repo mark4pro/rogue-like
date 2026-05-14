@@ -266,25 +266,24 @@ func getRandomPosFromColShap(colShape) -> Vector2:
 		var shape : Shape2D = colShape.shape
 		
 		if shape is RectangleShape2D:
-			var extents = shape.size * 0.5
-			var local_pos = Vector2(
+			var extents : Vector2 = shape.size * 0.5
+			var local_pos : Vector2 = Vector2(
 				randf_range(-extents.x, extents.x),
 				randf_range(-extents.y, extents.y)
 			)
 			randomPos = colShape.to_global(local_pos)
 		elif shape is CircleShape2D:
-			var r = shape.radius
-			var angle = randf() * TAU
-			var dist = sqrt(randf()) * r
-			var local_pos = Vector2(cos(angle), sin(angle)) * dist
+			var r : float = shape.radius
+			var angle : float = randf() * TAU
+			var dist : float = sqrt(randf()) * r
+			var local_pos : Vector2 = Vector2(cos(angle), sin(angle)) * dist
 			randomPos = colShape.to_global(local_pos)
 	elif colShape is CollisionPolygon2D:
-		var points = colShape.polygon
+		var points : PackedVector2Array = colShape.polygon
 		if not points.size() == 0:
-			var index = randi() % points.size()
-			var next_index = (index + 1) % points.size()
-			var t = randf()
-			var local_pos = points[index].lerp(points[next_index], t)
+			var index : int = randi() % points.size()
+			var next_index : int = (index + 1) % points.size()
+			var local_pos : Vector2 = points[index].lerp(points[next_index], randf())
 			randomPos = colShape.to_global(local_pos)
 	
 	return randomPos
@@ -344,7 +343,7 @@ func storeGroundItemData() -> void:
 
 func genGroundItems() -> void:
 	for i in hub_groundItems:
-		var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
+		var newGroundItem : Node2D = load("uid://b5eq6i6you4bx").instantiate()
 		newGroundItem.name = i.item.name
 		newGroundItem.position = i.pos
 		newGroundItem.rotation = i.rot
@@ -364,16 +363,17 @@ func _process(delta: float) -> void:
 	if not currentScene:
 		currentScene = get_tree().current_scene
 	
-	var playerChk = get_tree().get_nodes_in_group("Player")
-	if not playerChk.is_empty(): player = playerChk[0]
+	if not player:
+		var playerChk : Array[Node] = get_tree().get_nodes_in_group("Player")
+		if not playerChk.is_empty(): player = playerChk[0]
 	
 	#Message system
 	if player:
 		if not messageBox:
-			messageBox = player.get_node("UI/MessageBox")
+			messageBox = player.messageBox
 		
 		if not messageTimer:
-			messageTimer = player.get_node("UI/MessageTimer")
+			messageTimer = player.messageTimer
 		
 		if messageBox:
 			messageBox.position.y = 1080 - (maxMessages * 50)
@@ -392,15 +392,15 @@ func _process(delta: float) -> void:
 					messages[0].pBar.value = (messageTimer.time_left / messageTimer.wait_time) * 100
 			
 			for i in messageCount:
-				var c = messages[i]
-				var inverted_index = messageCount - 1 - i
+				var c : ColorRect = messages[i]
+				var inverted_index : int = messageCount - 1 - i
 				
 				c.pBar.visible = i == 0
 				
-				var m_t = (float(inverted_index) / float(maxMessages - 1))
+				var m_t : float = (float(inverted_index) / float(maxMessages - 1))
 				c.modulate.a = clampf(1.0 - m_t, 0.1, 0.9)
 	
-	var thisLoading = get_tree().root.get_node_or_null("loading")
+	var thisLoading : CanvasLayer = get_tree().root.get_node_or_null("loading")
 	
 	#Scene manager
 	sceneIndex = clamp(sceneIndex, 0, scenes.keys().size() - 1)
@@ -418,7 +418,7 @@ func _process(delta: float) -> void:
 				if player:
 					thisLoading.queue_free()
 			_:
-				if Global.currentScene and Global.currentScene.get_node_or_null("World"):
+				if Global.currentScene and Worldgen.loaded:
 					thisLoading.queue_free()
 	
 	#Reset things for save system

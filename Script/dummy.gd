@@ -8,6 +8,6 @@ var ogScale : Vector2 = Vector2.ONE
 func _ready() -> void:
 	ogScale = sprite.scale
 
-func take_damage(data: Dictionary, attacker: Node):
+func take_damage(data: Dictionary, _attacker: Node):
 	Global.damageAnim(sprite, data.value, ogScale)
 	Global.damNumbers(coll, data)
