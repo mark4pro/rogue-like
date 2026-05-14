@@ -13,6 +13,7 @@
 [ext_resource type="Resource" uid="uid://bsayoiuskvl42" path="res://Assets/armor/face_shell.tres" id="10_1hqug"]
 [ext_resource type="Resource" uid="uid://ko13b3k2q7bl" path="res://Assets/armor/retina_burning_shell.tres" id="11_1tw25"]
 [ext_resource type="Resource" uid="uid://cnu87jku40qi8" path="res://Assets/armor/weird_armor.tres" id="12_1iu74"]
+[ext_resource type="Resource" uid="uid://srefmmahqlcr" path="res://Assets/weapons/rock.tres" id="13_7pxns"]
 
 [sub_resource type="Resource" id="Resource_f217l"]
 script = ExtResource("1_8cx6g")
@@ -77,7 +78,13 @@ script = ExtResource("1_8cx6g")
 data = ExtResource("12_1iu74")
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
+[sub_resource type="Resource" id="Resource_15lor"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("13_7pxns")
+chance = 45.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
 [resource]
 script = ExtResource("2_qoodt")
-list = Array[ExtResource("1_f217l")]([SubResource("Resource_f217l"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0"), SubResource("Resource_1iu74"), SubResource("Resource_7pxns"), SubResource("Resource_vxhft"), SubResource("Resource_n55rq")])
+list = Array[ExtResource("1_f217l")]([SubResource("Resource_f217l"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0"), SubResource("Resource_1iu74"), SubResource("Resource_7pxns"), SubResource("Resource_vxhft"), SubResource("Resource_n55rq"), SubResource("Resource_15lor")])
 metadata/_custom_type_script = "uid://c6o5s4fws44bb"

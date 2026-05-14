@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://srefmmahqlcr"]
+
+[ext_resource type="Texture2D" uid="uid://cofx7jtg72o2s" path="res://Assets/imgs/weapons/rock.png" id="1_d4266"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_jypjq"]
+[ext_resource type="PackedScene" uid="uid://c0a45tjeei0da" path="res://Assets/prefabs/weapons/rock.tscn" id="2_3tqjh"]
+
+[resource]
+script = ExtResource("1_jypjq")
+weaponScene = ExtResource("2_3tqjh")
+baseDamage = 30.0
+KnBckVar = 0.6
+animationType = 3
+rangeSpawnAmount = 2
+rangeSpreadAngle = 2.0
+rangeFireSpeed = 5.0
+name = "rock"
+itemIcon = ExtResource("1_d4266")
+iconScale = 0.5
+placedScene = ExtResource("2_3tqjh")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"
