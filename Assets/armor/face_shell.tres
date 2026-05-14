@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://bsayoiuskvl42"]
+
+[ext_resource type="PackedScene" uid="uid://csq7bj7gmthff" path="res://Assets/prefabs/armor/face_shell.tscn" id="1_qfp6d"]
+[ext_resource type="Texture2D" uid="uid://bl4qouoe6komi" path="res://Assets/imgs/armor/face_shell.png" id="2_xh7pk"]
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="3_7ixj7"]
+
+[resource]
+script = ExtResource("3_7ixj7")
+armorScene = ExtResource("1_qfp6d")
+baseDefense = 35.0
+name = "face shell"
+itemIcon = ExtResource("2_xh7pk")
+iconScale = 2.0
+placedScene = ExtResource("1_qfp6d")
+itemType = 2
+equippable = true
+stackable = false
+sortType = 2
+metadata/_custom_type_script = "uid://dajegbj308dnw"

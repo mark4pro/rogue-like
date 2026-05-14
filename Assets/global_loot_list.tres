@@ -10,6 +10,9 @@
 [ext_resource type="Resource" uid="uid://c2xgcsv4g1ihw" path="res://Assets/armor/water_shell.tres" id="7_1iu74"]
 [ext_resource type="Resource" uid="uid://b8144wplbcifh" path="res://Assets/armor/ice_shell.tres" id="8_7pxns"]
 [ext_resource type="Resource" uid="uid://lnyetoolfbcp" path="res://Assets/weapons/purple_sword.tres" id="8_g7ce6"]
+[ext_resource type="Resource" uid="uid://bsayoiuskvl42" path="res://Assets/armor/face_shell.tres" id="10_1hqug"]
+[ext_resource type="Resource" uid="uid://ko13b3k2q7bl" path="res://Assets/armor/retina_burning_shell.tres" id="11_1tw25"]
+[ext_resource type="Resource" uid="uid://cnu87jku40qi8" path="res://Assets/armor/weird_armor.tres" id="12_1iu74"]
 
 [sub_resource type="Resource" id="Resource_f217l"]
 script = ExtResource("1_8cx6g")
@@ -51,13 +54,30 @@ data = ExtResource("8_7pxns")
 chance = 20.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
-[sub_resource type="Resource" id="Resource_1hqug"]
+[sub_resource type="Resource" id="Resource_1iu74"]
 script = ExtResource("1_8cx6g")
 data = ExtResource("8_g7ce6")
 chance = 25.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
+[sub_resource type="Resource" id="Resource_7pxns"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("10_1hqug")
+chance = 3.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_vxhft"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("11_1tw25")
+chance = 80.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_n55rq"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("12_1iu74")
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
 [resource]
 script = ExtResource("2_qoodt")
-list = Array[ExtResource("1_f217l")]([SubResource("Resource_f217l"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0"), SubResource("Resource_1hqug")])
+list = Array[ExtResource("1_f217l")]([SubResource("Resource_f217l"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0"), SubResource("Resource_1iu74"), SubResource("Resource_7pxns"), SubResource("Resource_vxhft"), SubResource("Resource_n55rq")])
 metadata/_custom_type_script = "uid://c6o5s4fws44bb"
