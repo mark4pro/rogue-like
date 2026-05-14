@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bj23wat4576eb"]
+
+[ext_resource type="Texture2D" uid="uid://mrtj7pbnuk84" path="res://Assets/imgs/armor/weird_armor.png" id="1_s1j38"]
+
+[node name="armor" type="Sprite2D" unique_id=1430597826]
+texture = ExtResource("1_s1j38")

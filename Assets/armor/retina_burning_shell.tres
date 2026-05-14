@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://ko13b3k2q7bl"]
+
+[ext_resource type="PackedScene" uid="uid://c483semms1j1g" path="res://Assets/prefabs/armor/retina_burning_shell.tscn" id="1_ukleh"]
+[ext_resource type="Texture2D" uid="uid://dtxaqxyvajme5" path="res://Assets/imgs/armor/retina_burning_shell.png" id="2_uvk7o"]
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="3_vgnun"]
+
+[resource]
+script = ExtResource("3_vgnun")
+armorScene = ExtResource("1_ukleh")
+baseDefense = 50.0
+name = "bright shell"
+itemIcon = ExtResource("2_uvk7o")
+iconScale = 2.0
+placedScene = ExtResource("1_ukleh")
+itemType = 2
+equippable = true
+stackable = false
+sortType = 2
+metadata/_custom_type_script = "uid://dajegbj308dnw"

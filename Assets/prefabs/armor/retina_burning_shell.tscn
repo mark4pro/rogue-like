@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c483semms1j1g"]
+
+[ext_resource type="Texture2D" uid="uid://dtxaqxyvajme5" path="res://Assets/imgs/armor/retina_burning_shell.png" id="1_qo058"]
+
+[node name="armor" type="Sprite2D" unique_id=820617855]
+texture = ExtResource("1_qo058")

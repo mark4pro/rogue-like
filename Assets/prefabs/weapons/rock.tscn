@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://c0a45tjeei0da"]
+
+[ext_resource type="Script" uid="uid://bjg2u60uhe2ss" path="res://Script/weapons/basic_range.gd" id="1_y1fa4"]
+[ext_resource type="Texture2D" uid="uid://cofx7jtg72o2s" path="res://Assets/imgs/weapons/rock.png" id="2_wgelv"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_oyyb5"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hjhc3"]
+radius = 3.0
+
+[node name="rock" type="RigidBody2D" unique_id=1931082800]
+script = ExtResource("1_y1fa4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=869905483]
+visible = false
+shape = SubResource("CircleShape2D_oyyb5")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=859454246]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("2_wgelv")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=791925323]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=161359618]
+shape = SubResource("CircleShape2D_hjhc3")

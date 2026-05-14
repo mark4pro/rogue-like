@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://cnu87jku40qi8"]
+
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="1_dvwkg"]
+[ext_resource type="PackedScene" uid="uid://bj23wat4576eb" path="res://Assets/prefabs/armor/weird_armor.tscn" id="1_h1bhv"]
+[ext_resource type="Texture2D" uid="uid://mrtj7pbnuk84" path="res://Assets/imgs/armor/weird_armor.png" id="2_a81bu"]
+
+[resource]
+script = ExtResource("1_dvwkg")
+armorScene = ExtResource("1_h1bhv")
+baseDefense = 800.0
+name = "weird_armor"
+itemIcon = ExtResource("2_a81bu")
+iconScale = 2.0
+placedScene = ExtResource("1_h1bhv")
+itemType = 2
+equippable = true
+stackable = false
+sortType = 2
+metadata/_custom_type_script = "uid://dajegbj308dnw"
