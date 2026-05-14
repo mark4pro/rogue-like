@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("2_djkui")
 weaponScene = ExtResource("3_4fynq")
-name = "metalPipe"
+name = "Metal Pipe"
 itemIcon = ExtResource("1_n1gc8")
 itemType = 1
 equippable = true

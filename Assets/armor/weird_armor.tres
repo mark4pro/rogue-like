@@ -7,8 +7,8 @@
 [resource]
 script = ExtResource("1_dvwkg")
 armorScene = ExtResource("1_h1bhv")
-baseDefense = 800.0
-name = "weird_armor"
+baseDefense = 80.0
+name = "Weird Shell"
 itemIcon = ExtResource("2_a81bu")
 iconScale = 2.0
 placedScene = ExtResource("1_h1bhv")
@@ -16,4 +16,5 @@ itemType = 2
 equippable = true
 stackable = false
 sortType = 2
+baseCost = 60.0
 metadata/_custom_type_script = "uid://dajegbj308dnw"

@@ -8,7 +8,7 @@
 script = ExtResource("3_7ixj7")
 armorScene = ExtResource("1_qfp6d")
 baseDefense = 35.0
-name = "face shell"
+name = "Face Shell"
 itemIcon = ExtResource("2_xh7pk")
 iconScale = 2.0
 placedScene = ExtResource("1_qfp6d")
@@ -16,4 +16,5 @@ itemType = 2
 equippable = true
 stackable = false
 sortType = 2
+baseCost = 40.0
 metadata/_custom_type_script = "uid://dajegbj308dnw"

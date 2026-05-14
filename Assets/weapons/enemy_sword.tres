@@ -8,7 +8,7 @@
 script = ExtResource("1_ms8iv")
 weaponScene = ExtResource("3_yl14b")
 baseDamage = 5.0
-name = "Enemy Weapon"
+name = "Emerald Sword"
 itemIcon = ExtResource("1_jbfpi")
 itemType = 1
 equippable = true
