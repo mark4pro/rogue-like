@@ -12,6 +12,7 @@ shader_parameter/color = Color(0, 0, 0, 0.30588236)
 shader_parameter/blur_amount = 0.0
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = false
+shader_parameter/disable_shadow = false
 
 [node name="Tree" type="Sprite2D" unique_id=1628725339]
 modulate = Color(1, 1, 1, 0.9411765)

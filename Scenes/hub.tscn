@@ -18,17 +18,19 @@
 [ext_resource type="PackedScene" uid="uid://biahn66yel13i" path="res://Assets/prefabs/objects/tree.tscn" id="9_f11wv"]
 [ext_resource type="Script" uid="uid://vrbdmd6n1uor" path="res://Script/Hub_exit.gd" id="9_y6p6t"]
 [ext_resource type="PackedScene" uid="uid://csunnqftn32r0" path="res://Assets/prefabs/objects/dummy.tscn" id="11_3du0j"]
+[ext_resource type="Texture2D" uid="uid://3a1uh58usvji" path="res://Assets/imgs/Hub/Hub_Walls_Full.png" id="11_hy0h5"]
 [ext_resource type="PackedScene" uid="uid://cglxhp67imaqr" path="res://Assets/prefabs/grass.tscn" id="20_hy0h5"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_4vksb"]
 shader = ExtResource("4_vkujn")
 shader_parameter/debug = false
 shader_parameter/border_scale = 1.0
-shader_parameter/shadow_offset = Vector2(-5, 0)
-shader_parameter/color = Color(0, 0, 0, 0.30588236)
-shader_parameter/blur_amount = 3.0000001425
-shader_parameter/shadow_scale = 1.5
+shader_parameter/shadow_offset = Vector2(-2.5, 0)
+shader_parameter/color = Color(0, 0, 0, 0.3137255)
+shader_parameter/blur_amount = 1.5000000712500001
+shader_parameter/shadow_scale = 1.2
 shader_parameter/disable_rotating = true
+shader_parameter/disable_shadow = false
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f11wv"]
 shader = ExtResource("4_vkujn")
@@ -36,19 +38,10 @@ shader_parameter/debug = false
 shader_parameter/border_scale = 2.0
 shader_parameter/shadow_offset = Vector2(-10, -10)
 shader_parameter/color = Color(0, 0, 0, 0.30588236)
-shader_parameter/blur_amount = 3.0000001425
+shader_parameter/blur_amount = 1.5000000712500001
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_7gm0b"]
-shader = ExtResource("4_vkujn")
-shader_parameter/debug = false
-shader_parameter/border_scale = 2.0
-shader_parameter/shadow_offset = Vector2(-10, -10)
-shader_parameter/color = Color(0, 0, 0, 0.5529412)
-shader_parameter/blur_amount = 3.0000001425
-shader_parameter/shadow_scale = 1.5
-shader_parameter/disable_rotating = true
+shader_parameter/disable_shadow = false
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_f11wv"]
 closed = false
@@ -78,6 +71,7 @@ shader_parameter/color = Color(0, 0, 0, 0.30588236)
 shader_parameter/blur_amount = 0.0
 shader_parameter/shadow_scale = 1.5
 shader_parameter/disable_rotating = true
+shader_parameter/disable_shadow = false
 
 [node name="Hub" type="Node2D" unique_id=1948641179]
 y_sort_enabled = true
@@ -116,6 +110,7 @@ position = Vector2(0, -11)
 texture = ExtResource("4_kud3j")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="World/House/ShopDesk" unique_id=1977051041 groups=["Exclude_From_Bullets", "Exclude_From_Lasers"]]
+visible = false
 position = Vector2(0, -11)
 collision_layer = 2
 
@@ -127,6 +122,7 @@ z_index = 5
 position = Vector2(0, -20)
 
 [node name="Laser_Col" type="Area2D" parent="World/House/ShopDesk" unique_id=251341535]
+visible = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="World/House/ShopDesk/Laser_Col" unique_id=2002442400]
 position = Vector2(0, -11)
@@ -138,23 +134,16 @@ z_index = 1
 position = Vector2(16, 16)
 texture = ExtResource("2_oc3mp")
 
-[node name="Shadow" type="Sprite2D" parent="World/House/Wall" unique_id=265458230]
-show_behind_parent = true
-z_index = 4
-material = SubResource("ShaderMaterial_f11wv")
-texture = ExtResource("2_oc3mp")
-
 [node name="DoorTop" type="Sprite2D" parent="World/House/Wall" unique_id=1310866641]
 z_index = 5
 position = Vector2(-27, 151.5)
 texture = ExtResource("5_4vksb")
 
-[node name="Shadow" type="Sprite2D" parent="World/House/Wall/DoorTop" unique_id=1810004405]
+[node name="Shadow" type="Sprite2D" parent="World/House/Wall" unique_id=265458230]
 show_behind_parent = true
-material = SubResource("ShaderMaterial_7gm0b")
-position = Vector2(-5, 1.5)
-scale = Vector2(0.8, 1)
-texture = ExtResource("5_4vksb")
+z_index = 4
+material = SubResource("ShaderMaterial_f11wv")
+texture = ExtResource("11_hy0h5")
 
 [node name="SunOccluder" type="LightOccluder2D" parent="World/House" unique_id=793715342]
 occluder = SubResource("OccluderPolygon2D_f11wv")

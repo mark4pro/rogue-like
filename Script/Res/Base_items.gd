@@ -41,6 +41,7 @@ enum sort_type {
 @export var weight : float = 1.0
 @export var baseCost : float = 30
 @export var costVar : float = 0.2
+@export var sellable : bool = true
 @export var rolled : bool = false
 @export var quantity : int = 1
 @export_category("Rolled Stats")
@@ -162,7 +163,7 @@ func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 					if decrement: quantity -= amount
 					return
 	
-	var newGroundItem : Node2D = load("res://Assets/prefabs/objects/groundItem.tscn").instantiate()
+	var newGroundItem : Node2D = load("uid://b5eq6i6you4bx").instantiate()
 	newGroundItem.name = name
 	newGroundItem.position = thisDropPos
 	var newItem : BaseItem = self.duplicate()

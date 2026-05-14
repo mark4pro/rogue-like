@@ -1,29 +1,30 @@
 extends Node
 
-@onready var treeRes : PackedScene = preload("res://Assets/prefabs/objects/tree.tscn")
-@onready var worldData : World = preload("res://worldGen/Worlds/default.tres").duplicate(true)
+@onready var treeRes : PackedScene = preload("uid://biahn66yel13i")
+#@onready var worldData : World = preload("uid://bjciwkufbj1c").duplicate(true)
 
 @export var thisSeed : int = -1 # -1 use random seed
+@export var tileSize : Vector2i = Vector2i(32, 32)
 @export var worldSize : Vector2i = Vector2i(300, 300)
-@export var tileSize : int = 32
 
 var currentSeed : int = randi()
 
-var hasWorldNode : Node2D = null
-
-var player : RigidBody2D = null
-
+#State
 var preGen : bool = false
 var loaded : bool = false
 
+#Noise
+var biome_noise : FastNoiseLite = FastNoiseLite.new()
+var moisture_noise : FastNoiseLite = FastNoiseLite.new()
+var cave_noise : FastNoiseLite = FastNoiseLite.new()
+
+#World data
 var world = [] # world[y][x] = WorldTile
-var layers = {}
 var sepBiomes : Dictionary = {}
 var regions : Dictionary = {}
 
 var worldNode : Node2D = null
-var isTestEnv : Node2D = null
-var freeCam : Camera2D = null
+var freeCam : Camera2D = null #Make it spawn this in if you press f6 and the player is loaded
 
 var biome_debug : bool = false
 
@@ -44,61 +45,27 @@ var wall_remap : Dictionary = {
 }
 
 var debug_remap : Dictionary = {
-	0: Vector2i(0, 0), #Forest
-	1: Vector2i(1, 0), #Cave
+	0: {
+		"norm": Vector2i(0, 0), #Forest
+		"edge": Vector2i(0, 1)  #Forest edge
+	},
+	1: {
+		"norm": Vector2i(1, 0), #Cave
+		"edge": Vector2i(1, 1), #Cave edge
+		"wall_norm": Vector2i(1, 2), #Cave wall
+		"wall_edge": Vector2i(1, 3)  #Cave wall edge
+	}
 }
 
-func genLayers(parent: Node2D) -> Dictionary:
-	var newLayers = {}
-
-	var ground : TileMapLayer = TileMapLayer.new()
-	ground.name = "Ground"
-	ground.z_index = 0
-	parent.add_child(ground)
-	newLayers.ground = ground
-
-	var props : TileMapLayer = TileMapLayer.new()
-	props.name = "Props"
-	props.z_index = 1
-	parent.add_child(props)
-	newLayers.props = props
-	
-	var trees : Node2D = Node2D.new()
-	trees.name = "Trees"
-	trees.z_index = 4
-	parent.add_child(trees)
-	newLayers.trees = trees
-	
-	var walls : TileMapLayer = TileMapLayer.new()
-	walls.name = "Walls"
-	walls.z_index = 3
-	parent.add_child(walls)
-	newLayers.walls = walls
-	
-	var debug : TileMapLayer = TileMapLayer.new()
-	debug.name = "Debug"
-	debug.z_index = 10
-	debug.modulate.a = 0.5
-	debug.visible = false
-	parent.add_child(debug)
-	newLayers.debug = debug
-	
-	return newLayers
-
 func genArrays() -> void:
-	var biome_noise := FastNoiseLite.new()
 	biome_noise.seed = currentSeed
-	
-	var moisture_noise := FastNoiseLite.new()
 	moisture_noise.seed = currentSeed
-	
-	var cave_noise := FastNoiseLite.new()
 	cave_noise.seed = currentSeed
 	cave_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
 	cave_noise.fractal_octaves = 3
 	cave_noise.frequency = 0.01
 	
-	var halfTileSize : float = tileSize * 0.5
+	var halfTileSize : Vector2i = tileSize * 0.5
 	
 	world.clear()
 	sepBiomes.clear()
@@ -110,7 +77,7 @@ func genArrays() -> void:
 			var newWorldTile : WorldTile = WorldTile.new()
 			
 			newWorldTile.tilePos = Vector2i(x, y)
-			newWorldTile.globalPos = Global.currentScene.to_global(Vector2(newWorldTile.tilePos) * tileSize + Vector2(halfTileSize, halfTileSize))
+			newWorldTile.globalPos = Global.currentScene.to_global(Vector2(newWorldTile.tilePos * tileSize + halfTileSize))
 			
 			newWorldTile.biome = biome_noise.get_noise_2d(x, y)
 			newWorldTile.moisture = moisture_noise.get_noise_2d(x, y)
@@ -324,94 +291,58 @@ func gen_forest_regions() -> void:
 
 #gens the actual map in the tileMapLayer
 func genTileMap() -> void:
-	var ground : TileMapLayer = layers.ground
-	var props : TileMapLayer = layers.props
-	var trees : Node2D = layers.trees
-	var walls : TileMapLayer = layers.walls
-	var debug : TileMapLayer = layers.debug
+	var ground : TileMapLayer = worldNode.ground
+	var props : TileMapLayer = worldNode.props
+	var trees : Node2D = worldNode.trees
+	var walls : TileMapLayer = worldNode.walls
+	var debug : TileMapLayer = worldNode.debug
 	
-	var tileSet : TileSet = load("res://Assets/tilesets/forest_test.tres")
-	
-	ground.tile_set = tileSet
-	props.tile_set = tileSet
-	walls.tile_set = tileSet
-	debug.tile_set = tileSet
-	
-	ground.tile_set.tile_size = Vector2i(tileSize, tileSize)
-	props.tile_set.tile_size = Vector2i(tileSize, tileSize)
-	walls.tile_set.tile_size = Vector2i(tileSize, tileSize)
-	debug.tile_set.tile_size = Vector2i(tileSize, tileSize)
-	
-	ground.clear()
-	props.clear()
-	walls.clear()
-	debug.clear()
-	
-	for y in range(world.size()):
-		for x in range(world[y].size()):
+	for y in range(worldSize.x):
+		for x in range(worldSize.y):
 			var thisTile : WorldTile = world[y][x]
 			
+			#Set ground
 			ground.set_cell(Vector2i(x, y), 0, ground_remap[thisTile.ground_type])
 			
+			#Set walls if there is any
 			if thisTile.wall_type != -1:
 				walls.set_cell(Vector2i(x, y), 0, wall_remap[thisTile.wall_type])
 			
-			debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type])
-			if thisTile.is_cave and thisTile.wall_type != -1:
-				debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type] + Vector2i(0, 2))
-			if thisTile.is_edge:
-				debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type] + Vector2i(0, 1))
-				if thisTile.is_cave and thisTile.wall_type != -1:
-					debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type] + Vector2i(0, 3))
+			#Set debug for non edge ground
+			debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type].norm)
 			
-				#TileType.GRASS:
-					#ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-					#
-				#TileType.PLANT:
-					#ground.set_cell(Vector2i(x, y), 0, Vector2i(1, 0))
-				#
-				#TileType.TREE:
-					#ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 0))
-					
-					#var newTree : Sprite2D = treeRes.instantiate()
-					#trees.add_child(newTree)
-					#newTree.name = "Tree1"
-					#newTree.rotation_degrees = randf_range(0, 360)
-					#newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
+			#Set debug for non edge walls if any
+			if thisTile.is_cave and thisTile.wall_type != -1:
+				debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type].wall_norm)
+			
+			if thisTile.is_edge:
+				#Sets edge ground
+				debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type].edge)
 				
-				#TileType.FLOOR:
-					#ground.set_cell(Vector2i(x, y), 0, Vector2i(0, 3))
-				#
-				#TileType.WALL:
-					#walls.set_cell(Vector2i(x, y), 0, Vector2i(1, 3))
+				#Sets edge walls if any
+				if thisTile.is_cave and thisTile.wall_type != -1:
+					debug.set_cell(Vector2i(x, y), 1, debug_remap[thisTile.biome_type].wall_edge)
+			
+			#var newTree : Sprite2D = treeRes.instantiate()
+			#trees.add_child(newTree)
+			#newTree.name = "Tree1"
+			#newTree.rotation_degrees = randf_range(0, 360)
+			#newTree.position = ground.map_to_local(Vector2i(x, y)) + Vector2(randf_range(-16, 16), randf_range(-16, 16))
 	
-	#Gen world bounds
-	var used_rect := ground.get_used_rect()
-	var tile_size := ground.tile_set.tile_size
+	#Set world bounds
+	var used_rect_size : Vector2i = ground.get_used_rect().size
 	
-	var size_in_pixels = used_rect.size * tile_size
-	size_in_pixels = Vector2(size_in_pixels)
+	var size_in_pixels : Vector2 = Vector2(used_rect_size * tileSize)
 	size_in_pixels *= ground.scale
 	
-	var newStaticBody : StaticBody2D = StaticBody2D.new()
-	newStaticBody.name = "Bounds"
-	newStaticBody.add_to_group("Bounds")
-	
-	var newCollisionPoly : CollisionPolygon2D = CollisionPolygon2D.new()
-	newCollisionPoly.name = "CollisionPolygon2D"
-	
-	var points := PackedVector2Array()
+	var points : PackedVector2Array = PackedVector2Array()
 	
 	points.append(Vector2.ZERO)
 	points.append(Vector2(size_in_pixels.x, 0))
-	points.append(Vector2(size_in_pixels.x, size_in_pixels.y))
+	points.append(size_in_pixels)
 	points.append(Vector2(0, size_in_pixels.y))
 	
-	newCollisionPoly.polygon = points
-	newCollisionPoly.build_mode = CollisionPolygon2D.BUILD_SEGMENTS
-	
-	Global.currentScene.get_node("World").add_child(newStaticBody)
-	Global.currentScene.get_node("World/Bounds").add_child(newCollisionPoly)
+	worldNode.coll.polygon = points
 
 func genWorld() -> void:
 	#Generate map
@@ -424,40 +355,48 @@ func regen() -> void:
 	currentSeed = randi()
 	if not thisSeed == -1: currentSeed = thisSeed
 	seed(currentSeed)
-	if hasWorldNode: Global.currentScene.get_node("World").free()
 	world.clear()
 	EnemySpawner.clearEnemies()
+	loaded = false
 
 func _process(_delta: float) -> void:
 	if Global.player:
-		var playerCamera : Camera2D = Global.player.get_node_or_null("Camera2D")
+		var playerCamera : Camera2D = Global.player.camera
 		if playerCamera and playerCamera.is_inside_tree(): playerCamera.make_current()
 	
 	if Global.sceneIndex == 0 and not preGen:
+		if worldNode:
+			worldNode.queue_free()
+			worldNode = null
 		genWorld()
+		loaded = false
 		preGen = true
 	
 	if Global.currentScene:
 		freeCam = Global.currentScene.get_node_or_null("FreeCam")
-		hasWorldNode = Global.currentScene.get_node_or_null("World")
 		
 		#Enable/Disable free cam
 		if not Global.player and freeCam and freeCam.is_inside_tree(): freeCam.make_current()
 		
 		#Create world node
-		if not hasWorldNode and Global.scenes[Global.sceneIndex].worldGen:
-			if Global.currentScene: Global.currentScene.y_sort_enabled = true
-			var newWorldNode : Node2D = Node2D.new()
-			Global.currentScene.add_child(newWorldNode)
-			worldNode = newWorldNode
-			newWorldNode.name = "World"
-			layers = genLayers(newWorldNode)
-			if world.is_empty(): genWorld()
-			genTileMap()
-			preGen = false
+		if not loaded and Global.scenes[Global.sceneIndex].worldGen:
+			var worldChk : Node2D = Global.currentScene.get_node_or_null("World")
+			
+			#Create world node
+			if not worldChk:
+				Global.currentScene.y_sort_enabled = true
+				var newWorldNode : Node2D = load("uid://didgtbe1q6t4k").instantiate()
+				Global.currentScene.add_child(newWorldNode)
+				worldNode = newWorldNode
+			
+			if worldNode:
+				worldNode.clearLayers()
+				if world.is_empty(): genWorld()
+				genTileMap()
+				preGen = false
+				loaded = true
 		
 		#Engine only
-		#regen map
 		if OS.has_feature("editor") and freeCam:
 			if not Global.player:
 				if Input.is_action_just_pressed("regen_map"):
@@ -469,7 +408,7 @@ func _process(_delta: float) -> void:
 					Global.currentScene.add_child(newPlayer)
 				
 				if Input.is_action_just_pressed("debug_biome"):
-					layers.debug.visible = not layers.debug.visible
+					worldNode.debug.visible = not worldNode.debug.visible
 			else:
 				if Input.is_action_just_pressed("free_cam"):
 					Global.player.queue_free()

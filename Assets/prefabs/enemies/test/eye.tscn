@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://bo6a7iyf781ub"]
+
+[ext_resource type="Shader" uid="uid://ciqpp6tl786tv" path="res://Assets/shaders/eye.gdshader" id="1_c0mxf"]
+[ext_resource type="Texture2D" uid="uid://dxvwmrvqmmeic" path="res://Assets/imgs/enemies/testing/1174-diffuse.jpg" id="2_3ln87"]
+[ext_resource type="Texture2D" uid="uid://dmsbondt0rbqn" path="res://Assets/imgs/enemies/testing/1174-diffuse_n.jpg" id="3_uyb8h"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_3tlax"]
+viewport_path = NodePath("SubViewport")
+
+[sub_resource type="Curve" id="Curve_c0mxf"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.40703517, 0.41573036), 0.78258425, 0.78258425, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Curve" id="Curve_3ln87"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_uyb8h"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.60301507, 0.516854), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_3tlax"]
+curve_x = SubResource("Curve_c0mxf")
+curve_y = SubResource("Curve_3ln87")
+curve_z = SubResource("Curve_uyb8h")
+
+[sub_resource type="Environment" id="Environment_ea74d"]
+ambient_light_source = 2
+ambient_light_color = Color(0.78449714, 0.783523, 0.78086627, 1)
+reflected_light_source = 1
+tonemap_mode = 3
+sdfgi_enabled = true
+glow_enabled = true
+glow_intensity = 1.1
+glow_bloom = 0.11
+glow_blend_mode = 4
+fog_enabled = true
+fog_light_energy = 10.6
+fog_height = -465.45
+adjustment_enabled = true
+adjustment_brightness = 1.25
+adjustment_contrast = 1.1
+adjustment_saturation = 1.3
+adjustment_color_correction = SubResource("CurveXYZTexture_3tlax")
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_e3xaa"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ea74d"]
+render_priority = 0
+shader = ExtResource("1_c0mxf")
+shader_parameter/diffuse_texture = ExtResource("2_3ln87")
+shader_parameter/normal_map = ExtResource("3_uyb8h")
+shader_parameter/normal_strength = 1.0
+shader_parameter/cornea_radius = 0.35
+shader_parameter/cornea_sharpness = 8.0
+shader_parameter/specular_strength = 1.0
+shader_parameter/specular_shininess = 128.0
+shader_parameter/specular_color = Color(1, 1, 1, 1)
+shader_parameter/wetness = 0.4
+shader_parameter/wetness_falloff = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_e3xaa"]
+lightmap_size_hint = Vector2i(17, 9)
+material = SubResource("ShaderMaterial_ea74d")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f5n1n"]
+radius = 32.0
+
+[node name="Eye" type="Sprite2D" unique_id=537094001]
+texture = SubResource("ViewportTexture_3tlax")
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=2077644472]
+transparent_bg = true
+anisotropic_filtering_level = 0
+canvas_item_default_texture_filter = 0
+size = Vector2i(64, 64)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport" unique_id=750844964]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.825)
+environment = SubResource("Environment_ea74d")
+attributes = SubResource("CameraAttributesPractical_e3xaa")
+projection = 1
+current = true
+
+[node name="Node3D" type="Node3D" parent="SubViewport" unique_id=747373035]
+transform = Transform3D(-1, 0, 0, 0, -1, 0, 0, 0, -1, 0, 0, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SubViewport/Node3D" unique_id=806102508]
+mesh = SubResource("SphereMesh_e3xaa")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1972701454]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1427377431]
+shape = SubResource("CircleShape2D_f5n1n")

@@ -24,3 +24,4 @@ var is_walkable : bool = false
 var is_cave : bool = false
 var is_breakable : bool = false
 var is_edge : bool = false
+var is_connection : bool = false

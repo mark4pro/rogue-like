@@ -1,12 +1,12 @@
 extends Node
 
-var playerRes : PackedScene = preload("res://Assets/prefabs/player.tscn")
-var inventoryItem : PackedScene = preload("res://Assets/prefabs/ui/inventoryItem.tscn")
-var contextMenu : PackedScene = preload("res://Assets/prefabs/ui/context_menu.tscn")
-var massageUI : PackedScene = preload("res://Assets/prefabs/ui/message.tscn")
-var loading : PackedScene = preload("res://Assets/prefabs/ui/loading.tscn")
-var damNum : PackedScene = preload("res://Assets/prefabs/ui/damage_label.tscn")
-var compareUI : PackedScene = preload("res://Assets/prefabs/ui/compare.tscn")
+var playerRes : PackedScene = preload("uid://bjts4lj4357yt")
+var inventoryItem : PackedScene = preload("uid://tlobv0bfa6bo")
+var contextMenu : PackedScene = preload("uid://cl2m3dpyfhdty")
+var massageUI : PackedScene = preload("uid://ckm4t02r3wbh6")
+var loading : PackedScene = preload("uid://bdxva4d6mjjnc")
+var damNum : PackedScene = preload("uid://ccn6wcxen3txi")
+var compareUI : PackedScene = preload("uid://bdiwb0lraqgm1")
 
 @export_category("Player")
 @export var inventory : Inventory = Inventory.new()
@@ -97,7 +97,7 @@ var rollBloodMoon : bool = true
 var ambientLight : CanvasModulate = null
 var ambientColor : Color = Color.WHITE
 
-var savePath : String = "user://saves/"
+const savePath : String = "user://saves/"
 
 func saveGame() -> void:
 	if sceneIndex == 0:
@@ -220,10 +220,13 @@ func resetRunDays() -> void:
 	timeOfDay = SUNRISE
 	lootList.getValid()
 
+#TODO store totalChance somewhere so it can be used with getRandom
 func precalcWeights(list: Array) -> void:
 	var totalChance : float = 0
+	
 	for entry in list:
 		totalChance += max(entry.chance, 0)
+	
 	for entry in list:
 		entry.calcWeight(totalChance)
 

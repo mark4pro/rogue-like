@@ -71,7 +71,7 @@ func _process(delta: float) -> void:
 				
 				itemHBox.add_child(newItemDisplay)
 		else:
-			for i in Global.inventory.get_sorted(optionDrop.selected):
+			for i in Global.inventory.get_sorted(optionDrop.selected, false):
 				var newItemDisplay = itemDisplay.duplicate()
 				newItemDisplay.item = i
 				newItemDisplay.visible = true

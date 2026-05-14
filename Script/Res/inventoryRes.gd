@@ -49,26 +49,43 @@ func remove_items_by_name(name: String = "", amount: int = 1) -> void:
 		amount = clampi(amount, 1, data[index].quantity)
 		data[index].quantity -= amount
 
-func get_sorted(type: int = 0) -> Array[BaseItem]:
+func get_sorted(type: int = 0, include_non_sellable: bool = true) -> Array[BaseItem]:
 	type = clampi(type, 0, 3)
 	
 	var result : Array[BaseItem]
 	
 	match type:
 		0:
-			return data
+			if include_non_sellable:
+				return data
+			
+			for i in data:
+				if i.sellable:
+					result.append(i)
 		1:
 			for i in data:
-				if i.sortType == BaseItem.sort_type.WEAPON:
-					result.append(i)
+				if include_non_sellable:
+					if i.sortType == BaseItem.sort_type.WEAPON:
+						result.append(i)
+				else:
+					if i.sortType == BaseItem.sort_type.WEAPON and i.sellable:
+						result.append(i)
 		2:
 			for i in data:
-				if i.sortType == BaseItem.sort_type.ARMOR:
-					result.append(i)
+				if include_non_sellable:
+					if i.sortType == BaseItem.sort_type.ARMOR:
+						result.append(i)
+				else:
+					if i.sortType == BaseItem.sort_type.ARMOR and i.sellable:
+						result.append(i)
 		3:
 			for i in data:
-				if i.sortType == BaseItem.sort_type.ITEM:
-					result.append(i)
+				if include_non_sellable:
+					if i.sortType == BaseItem.sort_type.ITEM:
+						result.append(i)
+				else:
+					if i.sortType == BaseItem.sort_type.ITEM and i.sellable:
+						result.append(i)
 	return result
 
 func update() -> void:
