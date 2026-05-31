@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://dj2uanxfx2iow"]
+
+[ext_resource type="Texture2D" uid="uid://bfe4fk3ehbxia" path="res://Assets/imgs/weapons/eyeball.png" id="1_gu1r1"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_hohpu"]
+[ext_resource type="PackedScene" uid="uid://da2487i42682k" path="res://Assets/prefabs/weapons/eyeball.tscn" id="2_4cmxb"]
+
+[resource]
+script = ExtResource("1_hohpu")
+weaponScene = ExtResource("2_4cmxb")
+baseDamage = 50.0
+animationType = 3
+rangeSpawnAmount = 4
+rangeSpreadAngle = 20.0
+rangeFireSpeed = 5.0
+name = "eyeball"
+itemIcon = ExtResource("1_gu1r1")
+groundScale = 0.5
+placedScene = ExtResource("2_4cmxb")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

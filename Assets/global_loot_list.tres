@@ -14,6 +14,15 @@
 [ext_resource type="Resource" uid="uid://ko13b3k2q7bl" path="res://Assets/armor/retina_burning_shell.tres" id="11_1tw25"]
 [ext_resource type="Resource" uid="uid://cnu87jku40qi8" path="res://Assets/armor/weird_armor.tres" id="12_1iu74"]
 [ext_resource type="Resource" uid="uid://srefmmahqlcr" path="res://Assets/weapons/rock.tres" id="13_7pxns"]
+[ext_resource type="Resource" uid="uid://bkonfaikkg0kw" path="res://Assets/weapons/shadow_swoard.tres" id="14_o4ngj"]
+[ext_resource type="Resource" uid="uid://dj2uanxfx2iow" path="res://Assets/weapons/eyeball.tres" id="15_kex7k"]
+[ext_resource type="Resource" uid="uid://bughdejjeyp0c" path="res://Assets/weapons/fireball.tres" id="16_qk06m"]
+[ext_resource type="Resource" uid="uid://behgf5chx0xrk" path="res://Assets/weapons/egg.tres" id="17_jw4l0"]
+[ext_resource type="Resource" uid="uid://dtloht75o8c5p" path="res://Assets/weapons/purple_ball.tres" id="18_vxhft"]
+[ext_resource type="Resource" uid="uid://dbnapw2t8n60e" path="res://Assets/weapons/shadow_ball.tres" id="19_n55rq"]
+[ext_resource type="Resource" uid="uid://c0xwr07dbdodf" path="res://Assets/weapons/slimeball.tres" id="20_15lor"]
+[ext_resource type="Resource" uid="uid://b32573tqfvrua" path="res://Assets/weapons/rectangle.tres" id="21_scya4"]
+[ext_resource type="Resource" uid="uid://bntwej254djn2" path="res://Assets/weapons/snowball.tres" id="22_2cxnn"]
 
 [sub_resource type="Resource" id="Resource_f217l"]
 script = ExtResource("1_8cx6g")
@@ -84,7 +93,61 @@ data = ExtResource("13_7pxns")
 chance = 45.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
+[sub_resource type="Resource" id="Resource_scya4"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("14_o4ngj")
+chance = 15.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_2cxnn"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("15_kex7k")
+chance = 20.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_iy7ug"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("16_qk06m")
+chance = 45.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_i853n"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("17_jw4l0")
+chance = 5.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_5vdba"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("18_vxhft")
+chance = 35.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_rxwt3"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("19_n55rq")
+chance = 10.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_tw57u"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("20_15lor")
+chance = 30.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_7v236"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("21_scya4")
+chance = 5.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
+[sub_resource type="Resource" id="Resource_fx1j3"]
+script = ExtResource("1_8cx6g")
+data = ExtResource("22_2cxnn")
+chance = 40.0
+metadata/_custom_type_script = "uid://dl251w1lsyqw4"
+
 [resource]
 script = ExtResource("2_qoodt")
-list = Array[ExtResource("1_f217l")]([SubResource("Resource_f217l"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0"), SubResource("Resource_1iu74"), SubResource("Resource_7pxns"), SubResource("Resource_vxhft"), SubResource("Resource_n55rq"), SubResource("Resource_15lor")])
+list = Array[ExtResource("1_f217l")]([SubResource("Resource_f217l"), SubResource("Resource_5qs7o"), SubResource("Resource_5conb"), SubResource("Resource_o4ngj"), SubResource("Resource_kex7k"), SubResource("Resource_qk06m"), SubResource("Resource_jw4l0"), SubResource("Resource_1iu74"), SubResource("Resource_7pxns"), SubResource("Resource_vxhft"), SubResource("Resource_n55rq"), SubResource("Resource_15lor"), SubResource("Resource_scya4"), SubResource("Resource_2cxnn"), SubResource("Resource_iy7ug"), SubResource("Resource_i853n"), SubResource("Resource_5vdba"), SubResource("Resource_rxwt3"), SubResource("Resource_tw57u"), SubResource("Resource_7v236"), SubResource("Resource_fx1j3")])
 metadata/_custom_type_script = "uid://c6o5s4fws44bb"

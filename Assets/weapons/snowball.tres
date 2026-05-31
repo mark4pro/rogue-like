@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://bntwej254djn2"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_hmqeb"]
+[ext_resource type="Texture2D" uid="uid://i24t4pca7rya" path="res://Assets/imgs/weapons/snowball.png" id="1_jiwri"]
+[ext_resource type="PackedScene" uid="uid://ckc5w5udn747c" path="res://Assets/prefabs/weapons/snowball.tscn" id="2_eo4wu"]
+
+[resource]
+script = ExtResource("1_hmqeb")
+weaponScene = ExtResource("2_eo4wu")
+baseDamage = 5.0
+animationType = 3
+name = "snowball"
+itemIcon = ExtResource("1_jiwri")
+groundScale = 0.5
+placedScene = ExtResource("2_eo4wu")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://behgf5chx0xrk"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_ldmbk"]
+[ext_resource type="Texture2D" uid="uid://te7vx44rcj4t" path="res://Assets/imgs/weapons/funny_egg.png" id="1_t1esk"]
+[ext_resource type="PackedScene" uid="uid://drjm8bhf6rt2b" path="res://Assets/prefabs/weapons/egg.tscn" id="2_c2pki"]
+
+[resource]
+script = ExtResource("1_ldmbk")
+weaponScene = ExtResource("2_c2pki")
+baseDamage = 50.0
+baseKnBck = 40.0
+animationType = 3
+rangeSpawnAmount = 10
+rangeSpreadAngle = 30.0
+name = "egg"
+itemIcon = ExtResource("1_t1esk")
+groundScale = 0.5
+placedScene = ExtResource("2_c2pki")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+baseCost = 70.0
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://ckc5w5udn747c"]
+
+[ext_resource type="Script" uid="uid://bjg2u60uhe2ss" path="res://Script/weapons/basic_range.gd" id="1_bfig0"]
+[ext_resource type="PackedScene" uid="uid://ddtkbysspg0ai" path="res://Assets/prefabs/effects/hit_sparks.tscn" id="2_pm8pn"]
+[ext_resource type="Texture2D" uid="uid://i24t4pca7rya" path="res://Assets/imgs/weapons/snowball.png" id="3_5wul6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fr2y2"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lg55v"]
+radius = 3.0
+
+[node name="Node2D" type="RigidBody2D" unique_id=808517550 node_paths=PackedStringArray("area")]
+script = ExtResource("1_bfig0")
+area = NodePath("Area2D")
+hitEffect = ExtResource("2_pm8pn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1910251516]
+visible = false
+shape = SubResource("CircleShape2D_fr2y2")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=316269010]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_5wul6")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=549332146]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1724525574]
+shape = SubResource("CircleShape2D_lg55v")

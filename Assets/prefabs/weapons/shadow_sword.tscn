@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cf6slghfvsjim"]
+
+[ext_resource type="Script" uid="uid://jqjjso8ubn4h" path="res://Script/weapons/basic_sword.gd" id="1_e4351"]
+[ext_resource type="Texture2D" uid="uid://bawyoknki2der" path="res://Assets/imgs/weapons/shadow_sword.png" id="1_mbyti"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_e4351"]
+size = Vector2(7, 31)
+
+[node name="Node2D" type="Node2D" unique_id=875910528 node_paths=PackedStringArray("col", "sprite")]
+script = ExtResource("1_e4351")
+col = NodePath("Sprite2D/Area2D")
+sprite = NodePath("Sprite2D")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=27546738]
+texture_filter = 1
+position = Vector2(0, -18)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("1_mbyti")
+
+[node name="Area2D" type="Area2D" parent="Sprite2D" unique_id=725861956]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/Area2D" unique_id=490368986]
+position = Vector2(-0.5, -1.5)
+shape = SubResource("RectangleShape2D_e4351")

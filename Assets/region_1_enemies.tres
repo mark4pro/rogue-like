@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://c6o5s4fws44bb" path="res://Script/Res/loot_lists.gd" id="1_4j56o"]
 [ext_resource type="PackedScene" uid="uid://bvbbpryyaf3xw" path="res://Assets/prefabs/enemies/spider.tscn" id="1_n8i8k"]
 [ext_resource type="Script" uid="uid://c6xqtx8x1fsel" path="res://Script/Res/base_weighted.gd" id="1_qwyng"]
-[ext_resource type="Script" uid="uid://cd3cv5ncx0kqe" path="res://Script/Res/enemy_weighted.gd" id="2_qwyng"]
+[ext_resource type="Script" path="res://Script/Res/enemy_weighted.gd" id="2_qwyng"]
 [ext_resource type="PackedScene" uid="uid://ci5nwumt5ijd3" path="res://Assets/prefabs/enemies/goo_man.tscn" id="3_cbj1o"]
 [ext_resource type="PackedScene" uid="uid://dsd43o5r6kyb7" path="res://Assets/prefabs/enemies/the_watcher.tscn" id="4_fiwae"]
 [ext_resource type="PackedScene" uid="uid://bb8ao82cq1eyp" path="res://Assets/prefabs/enemies/walking_eyeballs.tscn" id="5_ehxvt"]

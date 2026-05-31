@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://bkonfaikkg0kw"]
+
+[ext_resource type="Texture2D" uid="uid://bawyoknki2der" path="res://Assets/imgs/weapons/shadow_sword.png" id="1_bxx5e"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_cwjbn"]
+[ext_resource type="PackedScene" uid="uid://cf6slghfvsjim" path="res://Assets/prefabs/weapons/shadow_sword.tscn" id="2_nbdr7"]
+
+[resource]
+script = ExtResource("1_cwjbn")
+weaponScene = ExtResource("2_nbdr7")
+baseDamage = 70.0
+baseKnBck = 30.0
+name = "shadow sword"
+itemIcon = ExtResource("1_bxx5e")
+groundScale = 0.7
+placedScene = ExtResource("2_nbdr7")
+itemType = 1
+equippable = true
+stackable = false
+hotBarType = 1
+sortType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"
