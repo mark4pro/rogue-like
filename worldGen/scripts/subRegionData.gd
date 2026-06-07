@@ -20,7 +20,7 @@ func get_closest_tile_to(pos: Vector2) -> WorldTile:
 	var result : Dictionary = {"dist":INF, "data":null}
 	
 	for i in tiles:
-		var dist : float = i.globalPos.distance_to(pos)
+		var dist : float = i.globalPos.distance_squared_to(pos)
 		
 		if dist <= result.dist:
 			result.dist = dist

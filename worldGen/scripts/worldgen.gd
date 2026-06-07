@@ -275,6 +275,9 @@ func gen_cave_subRegions() -> void:
 			if thisSub.tiles.size() > 0:
 				r.subRegions.append(thisSub)
 
+func connect_caves() -> void:
+	pass
+
 func gen_forest_regions() -> void:
 	var temp : Dictionary = {}
 	
