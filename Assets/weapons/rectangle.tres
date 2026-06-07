@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://b32573tqfvrua"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_avi8m"]
+[ext_resource type="Texture2D" uid="uid://d0x4bi4m6nbau" path="res://Assets/imgs/weapons/small_rectangle.png" id="1_o76rj"]
+[ext_resource type="PackedScene" uid="uid://78gq4wqsgloq" path="res://Assets/prefabs/weapons/rectangle.tscn" id="2_ec1lu"]
+
+[resource]
+script = ExtResource("1_avi8m")
+weaponScene = ExtResource("2_ec1lu")
+baseDamage = 100000.0
+animationType = 3
+rangeSpawnAmount = 30
+rangeSpreadAngle = 50.0
+name = "rectangle"
+itemIcon = ExtResource("1_o76rj")
+placedScene = ExtResource("2_ec1lu")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://dtloht75o8c5p"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_6dj15"]
+[ext_resource type="Texture2D" uid="uid://i78wrpr7i7gs" path="res://Assets/imgs/weapons/purple_ball.png" id="1_njonl"]
+[ext_resource type="PackedScene" uid="uid://cmyj3jjdtam5q" path="res://Assets/prefabs/weapons/purple.tscn" id="2_kugf0"]
+
+[resource]
+script = ExtResource("1_6dj15")
+weaponScene = ExtResource("2_kugf0")
+baseDamage = 30.0
+animationType = 3
+name = "purple ball"
+itemIcon = ExtResource("1_njonl")
+groundScale = 0.5
+placedScene = ExtResource("2_kugf0")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

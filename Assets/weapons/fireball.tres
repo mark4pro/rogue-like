@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://bughdejjeyp0c"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_rqbwg"]
+[ext_resource type="Texture2D" uid="uid://dxnt3wsxku6lk" path="res://Assets/imgs/weapons/fireball.png" id="1_vlpkh"]
+[ext_resource type="PackedScene" uid="uid://m6a1870krj42" path="res://Assets/prefabs/weapons/fireball.tscn" id="2_7wf7e"]
+
+[resource]
+script = ExtResource("1_rqbwg")
+weaponScene = ExtResource("2_7wf7e")
+baseDamage = 65.0
+baseKnBck = 30.0
+animationType = 3
+rangeSpawnAmount = 2
+rangeSpreadAngle = 20.0
+name = "fireball"
+itemIcon = ExtResource("1_vlpkh")
+groundScale = 0.5
+placedScene = ExtResource("2_7wf7e")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+baseCost = 50.0
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

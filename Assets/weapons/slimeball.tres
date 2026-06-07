@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://c0xwr07dbdodf"]
+
+[ext_resource type="Texture2D" uid="uid://bwhb48lr4s1nf" path="res://Assets/imgs/weapons/slimeball.png" id="1_1tp61"]
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_s2sdv"]
+[ext_resource type="PackedScene" uid="uid://c0sxgohsce47i" path="res://Assets/prefabs/weapons/slimeball.tscn" id="2_vih7o"]
+
+[resource]
+script = ExtResource("1_s2sdv")
+weaponScene = ExtResource("2_vih7o")
+baseDamage = 45.0
+animationType = 3
+rangeSpawnAmount = 3
+rangeSpreadAngle = 10.0
+name = "slimeball"
+itemIcon = ExtResource("1_1tp61")
+groundScale = 0.5
+placedScene = ExtResource("2_vih7o")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+baseCost = 25.0
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

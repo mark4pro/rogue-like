@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="WeaponItem" format=3 uid="uid://dbnapw2t8n60e"]
+
+[ext_resource type="Script" uid="uid://8d6fyj0lrxpo" path="res://Script/Res/weaponItem.gd" id="1_hwtg2"]
+[ext_resource type="Texture2D" uid="uid://1dmh6x3ol1s3" path="res://Assets/imgs/weapons/shadow_ball.png" id="1_swtyi"]
+[ext_resource type="PackedScene" uid="uid://ybwikj3p1ope" path="res://Assets/prefabs/weapons/shadow_ball.tscn" id="2_ilquy"]
+
+[resource]
+script = ExtResource("1_hwtg2")
+weaponScene = ExtResource("2_ilquy")
+baseDamage = 62.0
+animationType = 3
+rangeSpawnAmount = 20
+rangeSpreadAngle = 50.0
+name = "shadow ball"
+itemIcon = ExtResource("1_swtyi")
+groundScale = 0.5
+placedScene = ExtResource("2_ilquy")
+itemType = 1
+equippable = true
+stackable = false
+sortType = 1
+baseCost = 100.0
+metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

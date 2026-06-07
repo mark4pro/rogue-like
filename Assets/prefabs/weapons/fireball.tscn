@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://m6a1870krj42"]
+
+[ext_resource type="Script" uid="uid://bjg2u60uhe2ss" path="res://Script/weapons/basic_range.gd" id="1_jthqg"]
+[ext_resource type="PackedScene" uid="uid://ddtkbysspg0ai" path="res://Assets/prefabs/effects/hit_sparks.tscn" id="2_o6jpf"]
+[ext_resource type="Texture2D" uid="uid://dxnt3wsxku6lk" path="res://Assets/imgs/weapons/fireball.png" id="3_cncuc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_34yqd"]
+radius = 3.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_cvslm"]
+radius = 3.0
+
+[node name="Node2D" type="RigidBody2D" unique_id=971776534 node_paths=PackedStringArray("area")]
+script = ExtResource("1_jthqg")
+area = NodePath("Area2D")
+hitEffect = ExtResource("2_o6jpf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1606418929]
+visible = false
+shape = SubResource("CircleShape2D_34yqd")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1707148701]
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("3_cncuc")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1070609598]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1498845285]
+shape = SubResource("CircleShape2D_cvslm")
