@@ -53,6 +53,12 @@ const CUTOUT_CANVAS_GROUP : StringName = &"tree_cutout_canvas" # hand-placed Can
 @export var room_torch_clearance : int = 5                     # min tiles between a room torch and any other torch
 @export var torch_wall_inset : float = 0.45                    # how far towards the wall a wall torch sits (0 = tile centre, 0.5 = wall edge)
 
+@export_group("Ground blending")
+@export var blend_ground : bool = true                 # blend floor types with a shader instead of transition tiles
+@export var ground_blend_shader : Shader = preload("res://Assets/shaders/ground_blend.gdshader")
+@export_range(0.0, 1.5) var ground_blend_strength : float = 0.6 # 0 = straight tile edges, higher = more ragged border
+@export var ground_blend_feature_px : float = 24.0     # rough size of the border wobbles in pixels
+
 @export_group("Player spawn")
 @export var spawn_clear_radius : int = 2    # no trees within this many tiles of the spawn (a small clearing)
 @export var spawn_cave_distance : int = 10  # min tiles from any cave tile
@@ -1085,6 +1091,61 @@ func _update_cave_darkness() -> void:
 
 #endregion
 
+#region Ground blending
+
+# Puts ground_blend.gdshader on the Ground layer: a 1-texel-per-tile mask says which floor
+# type each tile is (one colour channel per type, up to 4) and the shader draws a noisy,
+# pixel-snapped border between them, so no hand-made transition tiles are needed.
+func _apply_ground_blend() -> void:
+	var ground : TileMapLayer = worldNode.ground
+	if not blend_ground or not ground_blend_shader:
+		ground.material = null
+		return
+	
+	var type_count : int = mini(ground_remap.size(), 4)
+	var img : Image = Image.create_empty(worldSize.x, worldSize.y, false, Image.FORMAT_RGBA8)
+	for y in worldSize.y:
+		for x in worldSize.x:
+			var c : Color = Color(0, 0, 0, 0)
+			var gt : int = world[y][x].ground_type
+			if gt >= 0 and gt < 4:
+				c[gt] = 1.0
+			img.set_pixel(x, y, c)
+	
+	var tiles : PackedVector2Array = PackedVector2Array()
+	for i in 4:
+		tiles.append(Vector2(ground_remap.get(i, Vector2i.ZERO)))
+	
+	var atlas : TileSetAtlasSource = ground.tile_set.get_source(0) as TileSetAtlasSource
+	
+	var noise : FastNoiseLite = FastNoiseLite.new()
+	noise.seed = currentSeed + 4
+	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	noise.fractal_octaves = 1 # one smooth octave: wavy border without stray single pixels
+	noise.frequency = 1.0 / maxf(ground_blend_feature_px, 1.0)
+	var noise_tex : NoiseTexture2D = NoiseTexture2D.new()
+	noise_tex.width = 256
+	noise_tex.height = 256
+	noise_tex.seamless = true
+	noise_tex.noise = noise
+	
+	var mat : ShaderMaterial = ShaderMaterial.new()
+	mat.shader = ground_blend_shader
+	mat.set_shader_parameter("ground_mask", ImageTexture.create_from_image(img))
+	mat.set_shader_parameter("mask_size", Vector2(worldSize))
+	mat.set_shader_parameter("tile_px", Vector2(tileSize))
+	mat.set_shader_parameter("atlas_padding", 1.0 if atlas.use_texture_padding else 0.0)
+	mat.set_shader_parameter("type_tiles", tiles)
+	mat.set_shader_parameter("type_count", type_count)
+	mat.set_shader_parameter("ground_origin", ground.global_position)
+	mat.set_shader_parameter("ground_scale", ground.global_scale)
+	mat.set_shader_parameter("edge_noise", noise_tex)
+	mat.set_shader_parameter("noise_tex_px", 256.0)
+	mat.set_shader_parameter("noise_strength", ground_blend_strength)
+	ground.material = mat
+
+#endregion
+
 #region Player spawn
 
 # Picks the run's start tile from the seeded rng (same seed = same spot).
@@ -1277,6 +1338,7 @@ func genTileMap() -> void:
 	_build_tree_multimeshes(trees, tree_chunks)
 	_spawn_torches()
 	_build_cave_darkness()
+	_apply_ground_blend()
 	
 	#Set world bounds
 	var used_rect_size : Vector2i = ground.get_used_rect().size
