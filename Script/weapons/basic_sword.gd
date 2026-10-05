@@ -25,6 +25,13 @@ func _ready() -> void:
 			col.set_collision_layer_value(5, true)
 			col.set_collision_mask_value(2, true)
 		col.connect("area_entered", _on_col_area_entered)
+	elif col:
+		# Placed in the world (no wielder): take the hit area off every layer so it
+		# doesn't stop bullets/lasers or get detected as something to hit
+		col.collision_layer = 0
+		col.collision_mask = 0
+		col.monitoring = false
+		col.monitorable = false
 
 func _process(_delta: float) -> void:
 	if weapSys and weapSys.parentNode:

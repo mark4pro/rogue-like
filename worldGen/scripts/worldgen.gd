@@ -43,6 +43,22 @@ const CUTOUT_CANVAS_GROUP : StringName = &"tree_cutout_canvas" # hand-placed Can
 @export var cutout_softness : float = 24.0
 @export_range(0.0, 1.0) var cutout_alpha : float = 0.25
 
+@export_group("Cave lighting")
+@export var cave_dark_color : Color = Color(0.14, 0.13, 0.17) # how bright cave tiles get (forest keeps the normal day/night light)
+@export var cave_dark_blur : int = 1                           # tiles of soft fade at cave edges/mouths (0 = hard edge)
+@export var torch_item : WeaponItem = preload("res://Assets/weapons/torch.tres")
+@export var wall_torch_spacing : int = 9                       # min tiles between wall torches
+@export_range(0.0, 1.0) var wall_torch_chance : float = 0.35   # chance a wall spot that fits the spacing gets a torch
+@export var room_torch_min_size : int = 80                     # pockets with at least this many floor tiles get a centre torch
+@export var room_torch_clearance : int = 5                     # min tiles between a room torch and any other torch
+@export var torch_wall_inset : float = 0.45                    # how far towards the wall a wall torch sits (0 = tile centre, 0.5 = wall edge)
+
+@export_group("Player spawn")
+@export var spawn_clear_radius : int = 2    # no trees within this many tiles of the spawn (a small clearing)
+@export var spawn_cave_distance : int = 10  # min tiles from any cave tile
+@export var spawn_border_margin : int = 12  # min tiles from the map edge
+@export var spawn_tries : int = 600         # random picks before relaxing the rules
+
 var currentSeed : int = randi()
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
@@ -63,6 +79,12 @@ var sepBiomes : Dictionary = {}
 var regions : Dictionary = {}
 var cave_openings : Array[Vector2i] = [] # forest tile just outside each cave mouth
 var no_tree_zone : Dictionary = {}       # Vector2i -> true
+var torch_spots : Array[Dictionary] = [] # {"cell": Vector2i, "wall": Vector2i} (wall = ZERO for a free-standing room torch)
+
+var cave_dark_light : PointLight2D = null # subtractive light shaped like the caves (see _build_cave_darkness)
+
+var spawn_cell : Vector2i = Vector2i(-1, -1) # picked in genWorld() from the seed
+var spawn_on_load : bool = false             # set when a run's world node is created, cleared once the player is placed
 
 #Tree rendering (built once from treeRes)
 var tree_mesh : ArrayMesh = null
@@ -882,6 +904,254 @@ func _build_tree_multimeshes(trees: Node2D, chunks: Dictionary) -> void:
 
 #endregion
 
+#region Cave torches
+
+# Picks torch spots: one in the middle of every big pocket, then wall torches along cave walls.
+# Only data here; _spawn_torches() turns them into pickup-able placed torches.
+func gen_torches() -> void:
+	torch_spots.clear()
+	var grid : Dictionary = {} # spatial hash: Vector2i bucket -> Array[Vector2i], for spacing checks
+	var bucket : int = maxi(wall_torch_spacing, room_torch_clearance)
+	
+	# Room centres first so wall torches keep their distance from them
+	for r in regions.cave:
+		for sub in r.subRegions:
+			if sub.tiles.size() < room_torch_min_size:
+				continue
+			# Interior tile closest to the pocket's average (the average itself can be in a wall for odd shapes)
+			var best : WorldTile = null
+			var best_d : float = INF
+			for t in sub.tiles:
+				if t.is_edge:
+					continue
+				var d : float = Vector2(t.tilePos).distance_squared_to(Vector2(sub.avgPos_tile))
+				if d < best_d:
+					best_d = d
+					best = t
+			if best and _torch_fits(best.tilePos, room_torch_clearance, grid, bucket):
+				_add_torch(best.tilePos, Vector2i.ZERO, grid, bucket)
+	
+	# Wall torches: cave floor next to cave wall, shuffled so spacing doesn't follow scan order
+	var candidates : Array[Vector2i] = []
+	for r in regions.cave:
+		for t in r.tiles:
+			if is_cave_floor(t) and not _wall_dirs(t.tilePos).is_empty():
+				candidates.append(t.tilePos)
+	for i in range(candidates.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp := candidates[i]
+		candidates[i] = candidates[j]
+		candidates[j] = tmp
+	
+	for c in candidates:
+		if rng.randf() >= wall_torch_chance:
+			continue
+		if not _torch_fits(c, wall_torch_spacing, grid, bucket):
+			continue
+		var walls : Array[Vector2i] = _wall_dirs(c)
+		_add_torch(c, walls[rng.randi_range(0, walls.size() - 1)], grid, bucket)
+
+# Cardinal directions from `cell` that hit a cave wall
+func _wall_dirs(cell: Vector2i) -> Array[Vector2i]:
+	var out : Array[Vector2i] = []
+	for dir in dirs:
+		var n : Vector2i = cell + dir
+		if in_bounds(n) and is_cave_wall(get_tile(n)):
+			out.append(dir)
+	return out
+
+func _torch_fits(cell: Vector2i, spacing: int, grid: Dictionary, bucket: int) -> bool:
+	var b : Vector2i = Vector2i((Vector2(cell) / float(bucket)).floor())
+	var sq : int = spacing * spacing
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			for other in grid.get(b + Vector2i(dx, dy), []):
+				if (other - cell).length_squared() < sq:
+					return false
+	return true
+
+func _add_torch(cell: Vector2i, wall: Vector2i, grid: Dictionary, bucket: int) -> void:
+	torch_spots.append({"cell": cell, "wall": wall})
+	var b : Vector2i = Vector2i((Vector2(cell) / float(bucket)).floor())
+	if not grid.has(b): grid[b] = []
+	grid[b].append(cell)
+
+# Builds each torch the same way BaseItem.place() does, so the pickup menu sees it as a placed torch
+func _spawn_torches() -> void:
+	var torches : Node2D = worldNode.get_node_or_null("Torches")
+	if torches:
+		torches.free() # free now so the new node can take the name
+	torches = Node2D.new()
+	torches.name = "Torches"
+	worldNode.add_child(torches)
+	
+	if not torch_item or not torch_item.placedScene:
+		push_warning("torch_item has no placedScene, no cave torches spawned")
+		return
+	
+	var ground : TileMapLayer = worldNode.ground
+	var tile_local : Vector2 = Vector2(tileSize)
+	
+	for i in torch_spots.size():
+		var spot : Dictionary = torch_spots[i]
+		var wall : Vector2i = spot.wall
+		var local : Vector2 = ground.map_to_local(spot.cell) + Vector2(wall) * tile_local * torch_wall_inset
+		
+		var t : Node2D = torch_item.placedScene.instantiate()
+		t.name = "CaveTorch_%d" % i
+		t.position = torches.to_local(ground.to_global(local))
+		if wall != Vector2i.ZERO:
+			t.rotation = Vector2(-wall).angle() + PI * 0.5 # flame points away from the wall
+		t.z_index = 4 # above the wall layer (3)
+		t.add_to_group("items")
+		
+		var item : BaseItem = torch_item.duplicate()
+		item.quantity = 1
+		if "item" in t:
+			t.item = item
+		if "weapSys" in t:
+			var ws : WeaponSys = WeaponSys.new()
+			ws.weapon = item
+			t.weapSys = ws
+		
+		torches.add_child(t)
+
+# Cave-only darkness: one big SUBTRACT light whose texture is a per-tile mask of the caves
+# (1 texel = 1 tile). It darkens everything standing on cave tiles (ground, walls, enemies,
+# items, the player) and leaves the forest alone. Torch lights are ADD lights, so they still
+# light caves up. The CanvasModulate keeps doing day/night for the whole map as before.
+func _build_cave_darkness() -> void:
+	var old : Node = worldNode.get_node_or_null("CaveDarkness")
+	if old:
+		old.free()
+	
+	var img : Image = Image.create_empty(worldSize.x, worldSize.y, false, Image.FORMAT_RGBA8)
+	for y in worldSize.y:
+		for x in worldSize.x:
+			if world[y][x].is_cave:
+				img.set_pixel(x, y, Color(1, 1, 1, 1))
+			else:
+				img.set_pixel(x, y, Color(0, 0, 0, 0))
+	
+	# Soft edges: a few box-blur passes spread the mask ~1 tile per pass into cave mouths/edges
+	for pass_i in cave_dark_blur:
+		var src : Image = img.duplicate()
+		for y in worldSize.y:
+			for x in worldSize.x:
+				var sum : float = 0.0
+				var n : int = 0
+				for dy in range(-1, 2):
+					for dx in range(-1, 2):
+						var sx : int = x + dx
+						var sy : int = y + dy
+						if sx >= 0 and sy >= 0 and sx < worldSize.x and sy < worldSize.y:
+							sum += src.get_pixel(sx, sy).a
+							n += 1
+				var a : float = sum / float(n)
+				img.set_pixel(x, y, Color(a, a, a, a))
+	
+	# Light textures are sampled without filtering (they live in the light atlas), so upscale the
+	# mask with bilinear interpolation; otherwise the fade shows up as tile-sized steps
+	const MASK_RES : int = 4 # texels per tile
+	img.resize(worldSize.x * MASK_RES, worldSize.y * MASK_RES, Image.INTERPOLATE_BILINEAR)
+	
+	var ground : TileMapLayer = worldNode.ground
+	var light : PointLight2D = PointLight2D.new()
+	light.name = "CaveDarkness"
+	light.texture = ImageTexture.create_from_image(img)
+	light.blend_mode = Light2D.BLEND_MODE_SUB
+	light.shadow_enabled = false
+	light.texture_scale = float(tileSize.x) * ground.global_scale.x / float(MASK_RES)
+	light.range_z_min = RenderingServer.CANVAS_ITEM_Z_MIN
+	light.range_z_max = RenderingServer.CANVAS_ITEM_Z_MAX
+	worldNode.add_child(light)
+	# Texture is centred on the light, so sit it in the middle of the map
+	light.global_position = ground.to_global(Vector2(worldSize * tileSize) * 0.5)
+	cave_dark_light = light
+	_update_cave_darkness()
+
+# Lit result in a cave = albedo * (ambient - sub) + torches, so subtracting (ambient - cave_dark_color)
+# lands caves on cave_dark_color whatever the time of day (and never brightens them at night).
+func _update_cave_darkness() -> void:
+	if not cave_dark_light or not is_instance_valid(cave_dark_light):
+		return
+	var a : Color = Global.ambientColor
+	cave_dark_light.color = Color(
+		maxf(a.r - cave_dark_color.r, 0.0),
+		maxf(a.g - cave_dark_color.g, 0.0),
+		maxf(a.b - cave_dark_color.b, 0.0)
+	)
+	cave_dark_light.energy = 1.0
+
+#endregion
+
+#region Player spawn
+
+# Picks the run's start tile from the seeded rng (same seed = same spot).
+# Wants: main forest region, no trees within spawn_clear_radius, at least spawn_cave_distance
+# from caves, away from the map edge. Relaxes those rules step by step if nothing fits.
+func gen_spawn() -> void:
+	spawn_cell = Vector2i(-1, -1)
+	if regions.forest.is_empty():
+		spawn_cell = worldSize / 2
+		return
+	
+	# Biggest forest region: everything else is guaranteed to connect to it (connect_forests)
+	var main : Region = regions.forest[0]
+	for r in regions.forest:
+		if r.tiles.size() > main.tiles.size():
+			main = r
+	
+	var rules : Array = [
+		[spawn_clear_radius, spawn_cave_distance, spawn_border_margin],
+		[1, spawn_cave_distance / 2, spawn_border_margin / 2],
+		[0, 0, 0],
+	]
+	for rule in rules:
+		for i in spawn_tries:
+			var t : WorldTile = main.tiles[rng.randi_range(0, main.tiles.size() - 1)]
+			if _spawn_ok(t, rule[0], rule[1], rule[2]):
+				spawn_cell = t.tilePos
+				return
+	
+	spawn_cell = main.avgPos_tile # last resort
+
+func _spawn_ok(t: WorldTile, clear_r: int, cave_d: int, margin: int) -> bool:
+	var p : Vector2i = t.tilePos
+	if t.has_tree or not t.is_walkable or no_tree_zone.has(p):
+		return false
+	if p.x < margin or p.y < margin or p.x >= worldSize.x - margin or p.y >= worldSize.y - margin:
+		return false
+	var r : int = maxi(clear_r, cave_d)
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			var n : Vector2i = p + Vector2i(dx, dy)
+			if not in_bounds(n):
+				continue
+			var nt : WorldTile = get_tile(n)
+			if nt.is_cave and absi(dx) <= cave_d and absi(dy) <= cave_d:
+				return false
+			if nt.has_tree and absi(dx) <= clear_r and absi(dy) <= clear_r:
+				return false
+	return true
+
+# Global position of the spawn tile (needs the world node, so only valid after genTileMap)
+func get_spawn_position() -> Vector2:
+	var ground : TileMapLayer = worldNode.ground
+	return ground.to_global(ground.map_to_local(spawn_cell))
+
+# Places the player at the spawn tile. Only runs once per run load (spawn_on_load), never after
+# an F6 despawn or a free-cam regen, so the debug free cam / right-click spawn work as before.
+func _spawn_player_on_load() -> void:
+	spawn_on_load = false
+	if not get_tree().get_nodes_in_group("Player").is_empty():
+		return # someone's already here
+	var newPlayer : RigidBody2D = Global.playerRes.instantiate()
+	newPlayer.position = Global.currentScene.to_local(get_spawn_position())
+	Global.currentScene.add_child(newPlayer)
+
+#endregion
+
 var _cutout_warned : Dictionary = {}
 
 # Where the hole goes for a node in the cutout group.
@@ -1005,6 +1275,8 @@ func genTileMap() -> void:
 				tree_chunks[chunk].append([xform, custom])
 	
 	_build_tree_multimeshes(trees, tree_chunks)
+	_spawn_torches()
+	_build_cave_darkness()
 	
 	#Set world bounds
 	var used_rect_size : Vector2i = ground.get_used_rect().size
@@ -1032,6 +1304,8 @@ func genWorld() -> void:
 	rebuild_regions()
 	gen_region_connections() # must come after the last rebuild, which replaces every Region/SubRegion
 	gen_trees()
+	gen_torches()
+	gen_spawn()
 
 func regen() -> void:
 	currentSeed = randi()
@@ -1070,6 +1344,7 @@ func _process(_delta: float) -> void:
 				var newWorldNode : Node2D = load("uid://didgtbe1q6t4k").instantiate()
 				Global.currentScene.add_child(newWorldNode)
 				worldNode = newWorldNode
+				spawn_on_load = true # fresh world for a run: place the player once it's built
 			
 			if worldNode:
 				worldNode.clearLayers()
@@ -1077,8 +1352,10 @@ func _process(_delta: float) -> void:
 				genTileMap()
 				preGen = false
 				loaded = true
+				if spawn_on_load: _spawn_player_on_load()
 		
 		update_tree_cutouts() # runs in every scene, not just generated ones (the hub has its own trees)
+		_update_cave_darkness() # follows day/night
 		
 		#Engine only
 		if OS.has_feature("editor") and freeCam:

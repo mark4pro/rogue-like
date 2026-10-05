@@ -334,15 +334,33 @@ func storeGroundItemData() -> void:
 	var itemNodes : Array[Node] = get_tree().get_nodes_in_group("items")
 	
 	for i in itemNodes:
+		# Dropped items carry `item`, placed things (e.g. torches) carry `weapSys.weapon`
+		var thisItem : BaseItem = null
+		if "item" in i and i.item:
+			thisItem = i.item
+		elif "weapSys" in i and i.weapSys and i.weapSys.weapon:
+			thisItem = i.weapSys.weapon
+		if not thisItem:
+			continue
+		
 		var newGroundItem : GroundItem = GroundItem.new()
-		newGroundItem.item = i.item
+		newGroundItem.item = thisItem
 		newGroundItem.pos = i.global_position
 		newGroundItem.rot = i.rotation
+		newGroundItem.placed = thisItem.placedScene != null and i.scene_file_path == thisItem.placedScene.resource_path
 		
 		hub_groundItems.append(newGroundItem)
 
 func genGroundItems() -> void:
 	for i in hub_groundItems:
+		if not i.item:
+			continue
+		
+		# Placed things come back placed (a lit torch, not a torch icon on the floor)
+		if i.placed and i.item.placedScene:
+			i.item.spawnPlaced(i.pos, i.rot)
+			continue
+		
 		var newGroundItem : Node2D = load("uid://b5eq6i6you4bx").instantiate()
 		newGroundItem.name = i.item.name
 		newGroundItem.position = i.pos

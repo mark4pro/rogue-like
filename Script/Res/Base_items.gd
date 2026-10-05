@@ -174,25 +174,28 @@ func drop(amount: int = 1, decrement: bool = true, pos = null) -> void:
 
 func place(pos: Vector2) -> void:
 	if placable and equippable:
-		var newPlacedScene : Node2D = placedScene.instantiate()
-		newPlacedScene.name = name
-		newPlacedScene.global_position = pos
-		newPlacedScene.z_index = 3
-		newPlacedScene.add_to_group("items")
-		
-		if "item" in newPlacedScene:
-			var newItem : BaseItem = self.duplicate()
-			newItem.quantity = 1
-			newPlacedScene.item = newItem
-		
-		if "weapSys" in newPlacedScene:
-			var newItem : BaseItem = self.duplicate()
-			newItem.quantity = 1
-			
-			var newWeapSys : WeaponSys = WeaponSys.new()
-			newWeapSys.weapon = newItem
-			
-			newPlacedScene.weapSys = newWeapSys
-		
-		Global.currentScene.add_child(newPlacedScene)
+		var newItem : BaseItem = self.duplicate()
+		newItem.quantity = 1
+		newItem.spawnPlaced(pos)
 		quantity -= 1
+
+# Spawns this item's placedScene in the world with THIS item on it (no copy).
+# Used by place() and by Global.genGroundItems() to bring placed things back after a save.
+func spawnPlaced(pos: Vector2, rot: float = 0.0) -> Node2D:
+	var newPlacedScene : Node2D = placedScene.instantiate()
+	newPlacedScene.name = name
+	newPlacedScene.global_position = pos
+	newPlacedScene.rotation = rot
+	newPlacedScene.z_index = 3
+	newPlacedScene.add_to_group("items")
+	
+	if "item" in newPlacedScene:
+		newPlacedScene.item = self
+	
+	if "weapSys" in newPlacedScene:
+		var newWeapSys : WeaponSys = WeaponSys.new()
+		newWeapSys.weapon = self
+		newPlacedScene.weapSys = newWeapSys
+	
+	Global.currentScene.add_child(newPlacedScene)
+	return newPlacedScene
