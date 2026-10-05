@@ -6,7 +6,7 @@ var t : float = 0
 
 func damage(target: Node) -> void:
 	if t == 1:
-		target.take_damage(weapSys.weapon.genDamage(), weapSys.parentNode)
+		target.take_damage(weapSys.genDamage(), weapSys.parentNode)
 		
 		if target is RigidBody2D:
 			var knBckDir : Vector2 = (target.global_position - to_global(points[-1])).normalized()

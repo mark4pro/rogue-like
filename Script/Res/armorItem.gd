@@ -23,7 +23,7 @@ func rollStats() -> void:
 	
 	var dayBias : float = setDay * 0.015
 	
-	var roll : float = clamp(rng.randf() + dayBias, 0.0, 0.999)
+	var roll : float = clamp(rng.randf() + dayBias + Global.lootRarityBonus, 0.0, 0.999)
 	rarity = int(roll * 6)
 	
 	var rarityMult : float = 1.0 + rarity * 0.25

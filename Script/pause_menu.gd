@@ -3,8 +3,11 @@ extends Control
 @onready var pauseCanvasLayer : CanvasLayer = $".." 
 @onready var bg : ColorRect = $ColorRect
 @onready var exitBttn : Button = $ColorRect/exitGame
+@onready var resumeBttn : Button = $ColorRect/Resume
 
 var bgChildren : Array[Node] = []
+var optionsBttn : Button = null
+var optionsMenu : OptionsMenu = null
 
 func getChildCount() -> int:
 	var count = 0
@@ -14,25 +17,50 @@ func getChildCount() -> int:
 	
 	return count
 
+func _ready() -> void:
+	# Options button made at runtime from Resume, so the pause menu scene doesn't need editing.
+	# duplicate(0) = no signals, otherwise it would also resume the game.
+	optionsBttn = resumeBttn.duplicate(0)
+	optionsBttn.name = "options"
+	optionsBttn.text = "Options"
+	bg.add_child(optionsBttn)
+	bg.move_child(optionsBttn, resumeBttn.get_index() + 1)
+	optionsBttn.button_down.connect(_on_options_button_down)
+
 func _process(_delta: float) -> void:
+	$ColorRect/backToHub.visible = Global.sceneIndex != 0
+	
+	# Stack the visible buttons and size/centre the background to fit (hub and runs)
 	bgChildren = bg.get_children()
-	
 	var bgCount : int = getChildCount()
+	var i : int = 0
+	for c in bgChildren:
+		if not c.visible:
+			continue
+		c.position.y = (i * 100) + (i * 10) + 10
+		i += 1
 	
-	if Global.sceneIndex == 0:
-		$ColorRect/backToHub.visible = false
-		
-		var dif : int = bgChildren.size() - bgCount
-		var thisIndex : int = bgChildren.find(exitBttn) - dif
-		
-		exitBttn.position.y = (thisIndex * 100) + (thisIndex * 10) + 10
-		
-		var halfBGSize : Vector2 = bg.size / 2
-		var newSize : float = (bgCount * 100) + (bgCount * 10) + 10
-		
-		bg.custom_minimum_size.y = newSize
-		bg.size.y = newSize
-		bg.position = Vector2(960 - halfBGSize.x, 540 - halfBGSize.y)
+	var newSize : float = (bgCount * 100) + (bgCount * 10) + 10
+	bg.custom_minimum_size.y = newSize
+	bg.size.y = newSize
+	var halfBGSize : Vector2 = bg.size / 2
+	bg.position = Vector2(960 - halfBGSize.x, 540 - halfBGSize.y)
+	
+	# If the pause menu got closed some other way, don't leave the options menu behind
+	if not pauseCanvasLayer.visible and optionsMenu and is_instance_valid(optionsMenu):
+		optionsMenu.close()
+
+func _on_options_button_down() -> void:
+	if optionsMenu and is_instance_valid(optionsMenu):
+		return
+	optionsMenu = OptionsMenu.new()
+	optionsMenu.closed.connect(_on_options_closed)
+	add_child(optionsMenu)
+	bg.visible = false
+
+func _on_options_closed() -> void:
+	optionsMenu = null
+	bg.visible = true
 
 func _on_resume_button_down() -> void:
 	get_tree().paused = !get_tree().paused

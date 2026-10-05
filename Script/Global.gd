@@ -94,6 +94,10 @@ const SUNSET : float = 0.75
 
 var rollBloodMoon : bool = true
 
+# Added to the rarity roll of any item that rolls its stats while this is set
+# (enemies set it for a moment while dropping blood moon loot)
+var lootRarityBonus : float = 0.0
+
 var ambientLight : CanvasModulate = null
 var ambientColor : Color = Color.WHITE
 

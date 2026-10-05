@@ -101,7 +101,7 @@ func bulletCol(body: Node):
 				body.knockbackVelocity += knBckDir * weapSys.weapon.knockback
 		
 		if body.has_method("take_damage") and canDamage:
-			body.take_damage(weapSys.weapon.genDamage(), weapSys.parentNode)
+			body.take_damage(weapSys.genDamage(), weapSys.parentNode)
 		
 		hit = true
 
@@ -135,7 +135,7 @@ func bulletArea(thisArea: Area2D) -> void:
 			newEffect.emitting = true
 		
 		if parent.has_method("take_damage") and canDamage:
-			parent.take_damage(weapSys.weapon.genDamage(), weapSys.parentNode)
+			parent.take_damage(weapSys.genDamage(), weapSys.parentNode)
 		
 		hit = true
 

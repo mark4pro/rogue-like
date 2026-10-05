@@ -80,6 +80,8 @@ var ogScale : Vector2 = Vector2.ONE
 
 var oldArmor : ArmorItem = null
 
+var slimeTrail : SlimeTrail = null
+
 func _ready():
 	ui.visible = true
 	Inventory_UI.visible = false
@@ -118,6 +120,22 @@ func _ready():
 		camera.limit_top = int(topLeft.y)
 		camera.limit_right = int(bottomRight.x)
 		camera.limit_bottom = int(bottomRight.y)
+
+# The Shell node sits under Offset (0.5, 0.5), which lines up odd-sized shells (15x13) with the
+# body's pixels. An even-sized shell (16 wide) would land half a pixel off, so shift it back
+# by half a pixel on that axis. +0.5 on x keeps its back (left) edge where the 15x13 shells' is.
+func snapShellToPixels(armor: Node) -> void:
+	var s : Sprite2D = armor as Sprite2D
+	if not s or not s.texture or not s.centered:
+		return
+	var size : Vector2 = s.texture.get_size()
+	if s.region_enabled:
+		size = s.region_rect.size
+	size /= Vector2(s.hframes, s.vframes)
+	s.offset = Vector2(
+		0.5 if int(size.x) % 2 == 0 else 0.0,
+		-0.5 if int(size.y) % 2 == 0 else 0.0
+	)
 
 func calc_defense() -> float:
 	var result : float = pStats.base_defense
@@ -271,11 +289,15 @@ func _process(delta: float) -> void:
 			is_rolling = false 
 			roll_state += 1
 		
-		#Particles
+		#Slime trail: one Line2D that grows behind the snail (replaces a fading sprite per frame)
 		if is_moving:
-			var trail : Sprite2D = snail_slime.instantiate()
-			Global.currentScene.add_child(trail) 
-			trail.global_position = global_position + Vector2(0, 10)
+			var slimePos : Vector2 = global_position + Vector2(0, 10)
+			if not slimeTrail or not is_instance_valid(slimeTrail) or slimeTrail.get_parent() != Global.currentScene \
+			or not slimeTrail.extend(slimePos):
+				if slimeTrail and is_instance_valid(slimeTrail): slimeTrail.retire()
+				slimeTrail = SlimeTrail.new()
+				Global.currentScene.add_child(slimeTrail)
+				slimeTrail.extend(slimePos)
 	else:
 		sprite.pause()
 		roll_cooldown.paused = true
@@ -310,10 +332,12 @@ func _process(delta: float) -> void:
 	if Global.armor and shell.get_child_count() == 0:
 		oldArmor = Global.armor
 		var newArmor : Node = Global.armor.armorScene.instantiate()
+		snapShellToPixels(newArmor)
 		shell.add_child(newArmor)
 	
 	if not Global.armor and shell.get_child_count() == 0:
 		var newArmor : Node = default_shell.instantiate()
+		snapShellToPixels(newArmor)
 		shell.add_child(newArmor)
 	
 	#Place item
@@ -346,8 +370,8 @@ func _process(delta: float) -> void:
 	
 	var dbck : CanvasLayer = get_node_or_null("debugMenu")
 	
-	#pause menu 
-	if Input.is_action_just_pressed("pause"):
+	#pause menu (the options menu uses Esc itself to close / cancel a rebind)
+	if Input.is_action_just_pressed("pause") and Settings.pause_input_free():
 		get_tree().paused = !get_tree().paused
 		if not Inventory_UI.visible and not dbck:
 			pauseMenu.visible = !pauseMenu.visible

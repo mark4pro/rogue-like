@@ -85,18 +85,24 @@ func _process(delta: float) -> void:
 		if healthBar: healthBar.value = (health / maxHealth) * 100
 		if health <= 0:
 			var randomChk : float = randf()
+			var mods : Dictionary = EnemySpawner.lootMods() # blood moon kills drop better loot
 			
-			if randomChk <= moneyChance: Global.money += randi_range(moneyRange.x, moneyRange.y)
+			if randomChk <= moneyChance: Global.money += roundi(randi_range(moneyRange.x, moneyRange.y) * mods.money)
 			
-			if randomChk <= lootChance:
+			# Items roll their rarity as they land, so the bonus only needs to be set while dropping
+			Global.lootRarityBonus = mods.rarity
+			
+			if randomChk <= lootChance * mods.loot_chance:
 				var thisLootList : LootList = Global.lootList if useGlobalLootList else localLootList
 				if thisLootList:
-					for i in range(randi_range(lootAmount.x, lootAmount.y)):
+					for i in range(randi_range(lootAmount.x, lootAmount.y) + mods.extra):
 						var item : BaseItem = thisLootList.getRandom()
 						if item: item.drop(1, false, global_position)
 			
-			if randomChk <= equipDropChance:
+			if randomChk <= equipDropChance * mods.equip:
 				if weapon: weapon.drop(1, false, global_position)
+			
+			Global.lootRarityBonus = 0.0
 			
 			queue_free()
 		

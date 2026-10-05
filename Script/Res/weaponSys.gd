@@ -27,6 +27,15 @@ var perT : float = 0
 
 var flipSword : bool = false
 
+# Scales damage dealt through this weapon system (EnemySpawner sets it from difficulty; the player stays at 1)
+var damageMult : float = 1.0
+
+# Use this instead of weapon.genDamage() so per-wielder multipliers apply
+func genDamage() -> Dictionary:
+	var data : Dictionary = weapon.genDamage()
+	data.value *= damageMult
+	return data
+
 func ellipseArc(center: Vector2, radius: Vector2, angleRange: Vector2, steps: int) -> PackedVector2Array:
 	var points : PackedVector2Array = []
 	
