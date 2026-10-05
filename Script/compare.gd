@@ -16,6 +16,8 @@ func getCompColor(thisProperty, equippedProperty) -> String:
 	return result.to_html()
 
 func _ready() -> void:
+	global_position = get_global_mouse_position()
+	
 	if item:
 		nameTxt.text = " Name: " + item.name
 		

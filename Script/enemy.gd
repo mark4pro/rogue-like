@@ -65,6 +65,7 @@ func _ready() -> void:
 		print("Please check nav, eye, sprite, and coll!")
 	
 	weapSys.spawnPos.resize(laserEyes.size())
+	add_to_group("tree_cutout")
 
 func _process(delta: float) -> void:
 	if nav and eye and sprite and coll:

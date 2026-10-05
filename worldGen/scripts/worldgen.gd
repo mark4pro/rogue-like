@@ -1,11 +1,10 @@
 extends Node
 
 @onready var treeRes : PackedScene = preload("uid://biahn66yel13i")
-#@onready var worldData : World = preload("uid://bjciwkufbj1c").duplicate(true)
 
 const NO_PARENT : Vector2i = Vector2i(-1, -1)
-const CUTOUT_GROUP : StringName = &"tree_cutout" # add the player + enemies to this group
-const MAX_CUTOUTS : int = 32                      # width of the cutout data texture, raise freely
+const CUTOUT_GROUP : StringName = &"tree_cutout"
+const MAX_CUTOUTS : int = 32
 
 @export var thisSeed : int = -1 # -1 use random seed
 @export var tileSize : Vector2i = Vector2i(32, 32)
@@ -24,6 +23,9 @@ const MAX_CUTOUTS : int = 32                      # width of the cutout data tex
 @export var tunnel_radius_max : int = 2
 @export var opening_clear_radius : int = 3                      # no trees this close to a cave mouth
 
+@export_group("Forest connections")
+@export var min_forest_size : int = 12 # sealed-in forest patches smaller than this become rock instead of getting a tunnel
+
 @export_group("Trees")
 @export var tree_noise_frequency : float = 0.035
 @export_range(-1.0, 1.0) var clearing_threshold : float = -0.2  # noise below this = clearing (no trees)
@@ -32,6 +34,12 @@ const MAX_CUTOUTS : int = 32                      # width of the cutout data tex
 @export_range(0.0, 1.0) var sparse_density : float = 0.08
 @export var tree_jitter : float = 12.0
 @export var tree_chunk_size : int = 32 # tiles per MultiMesh chunk, lets off-screen chunks get culled
+
+@export_group("Tree cutouts")
+@export var tree_cutout_shader : Shader = preload("uid://cpd32ul7pn8w2")
+@export var cutout_radius : float = 48.0
+@export var cutout_softness : float = 24.0
+@export_range(0.0, 1.0) var cutout_alpha : float = 0.25
 
 var currentSeed : int = randi()
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
@@ -59,6 +67,7 @@ var tree_texture : Texture2D = null
 var tree_scale : Vector2 = Vector2.ONE
 var tree_modulate : Color = Color.WHITE
 var tree_material : Material = null
+var cutout_material : ShaderMaterial = null
 var cutout_image : Image = null
 var cutout_texture : ImageTexture = null
 
@@ -283,12 +292,16 @@ func gen_cave_subRegions() -> void:
 		var temp : Dictionary = {}
 		
 		for tile in r.tiles:
-			if temp.has(tile.tilePos) or not is_cave_floor(tile):
+			if temp.has(tile.tilePos) or not _is_room_floor(tile):
 				continue
 			
 			var sub : SubRegion = SubRegion.new()
-			_flood(tile.tilePos, temp, sub, func(p: Vector2i) -> bool: return is_cave_floor(get_tile(p)))
+			_flood(tile.tilePos, temp, sub, func(p: Vector2i) -> bool: return _is_room_floor(get_tile(p)))
 			r.subRegions.append(sub)
+
+# Pocket floor, not tunnel. Tunnels are corridors between pockets, not part of them.
+func _is_room_floor(tile: WorldTile) -> bool:
+	return is_cave_floor(tile) and not tile.is_connection
 
 # Carving changes which pockets touch, so redo regions/sub-regions/edge flags afterwards
 func rebuild_regions() -> void:
@@ -469,10 +482,12 @@ func _force_exit(sub: SubRegion) -> void:
 func _open_exit(path: Array, mouth: Vector2i) -> void:
 	_carve_path(path)
 	cave_openings.append(mouth)
-	
+	_clear_trees_around(mouth)
+
+func _clear_trees_around(center: Vector2i) -> void:
 	for dy in range(-opening_clear_radius, opening_clear_radius + 1):
 		for dx in range(-opening_clear_radius, opening_clear_radius + 1):
-			no_tree_zone[mouth + Vector2i(dx, dy)] = true
+			no_tree_zone[center + Vector2i(dx, dy)] = true
 
 func _carve_path(path: Array) -> void:
 	var radius : int = rng.randi_range(tunnel_radius_min, tunnel_radius_max)
@@ -495,6 +510,237 @@ func _carve_disc(center: Vector2i, radius: int) -> void:
 				t.wall_type = -1
 				t.is_walkable = true
 				t.is_connection = true
+
+#endregion
+
+#region Forest connections
+
+# Makes every forest region reachable from the biggest one.
+# Paths are free through forest and cave floor and only cost something through rock,
+# so a region that can already be reached by walking through a cave gets no new tunnel.
+func connect_forests() -> void:
+	var forests : Array = regions.forest.duplicate()
+	if forests.size() <= 1:
+		return
+	forests.sort_custom(func(a, b): return a.tiles.size() > b.tiles.size())
+	
+	# Pass 1: tiny patches sealed in solid rock aren't worth a tunnel, turn them into rock.
+	# (Done before any carving so a later tunnel can't route through a patch that then gets filled.)
+	var to_connect : Array = []
+	for i in range(1, forests.size()):
+		var r = forests[i]
+		if r.tiles.size() < min_forest_size and _is_sealed_in_rock(r):
+			_fill_with_rock(r)
+		else:
+			to_connect.append(r)
+	
+	# Pass 2: tunnel each remaining region to anything already connected to the main forest
+	var connected : Dictionary = {}
+	for t in forests[0].tiles:
+		connected[t.tilePos] = true
+	
+	for r in to_connect:
+		var path : Array[Vector2i] = _cheapest_path_to(r, connected)
+		if path.is_empty():
+			continue
+		
+		_carve_path(path)
+		_clear_trees_around(path.front()) # mouth on the connected side
+		_clear_trees_around(path.back())  # mouth on this region's side
+		
+		for t in r.tiles:
+			connected[t.tilePos] = true
+		for p in path:
+			connected[p] = true
+
+func _is_sealed_in_rock(r) -> bool:
+	for t in r.edgeTiles:
+		for dir in dirs:
+			var n : Vector2i = t.tilePos + dir
+			if in_bounds(n) and is_cave_floor(get_tile(n)):
+				return false # opens onto a cave, filling it could block a passage
+	return true
+
+func _fill_with_rock(r) -> void:
+	for t in r.tiles:
+		t.is_cave = true
+		t.biome_type = 1
+		t.ground_type = 1
+		t.wall_type = 0
+		t.is_walkable = false
+
+# 0-1 BFS from every tile of `r`: rock costs 1, everything else costs 0.
+# Returns the path (excluding r's own tiles) to the cheapest tile in `targets`.
+func _cheapest_path_to(r, targets: Dictionary) -> Array[Vector2i]:
+	const INF : int = 1 << 30
+	var parent : Dictionary = {}
+	var dist : Dictionary = {}
+	var cur : Array[Vector2i] = []
+	var nxt : Array[Vector2i] = []
+	
+	for t in r.tiles:
+		parent[t.tilePos] = NO_PARENT
+		dist[t.tilePos] = 0
+		cur.append(t.tilePos)
+	
+	var level : int = 0
+	while not cur.is_empty():
+		var head : int = 0
+		while head < cur.size():
+			var pos : Vector2i = cur[head]
+			head += 1
+			if dist[pos] != level:
+				continue # found a cheaper route to this tile later, skip the stale entry
+			if targets.has(pos):
+				return _trace(pos, parent)
+			
+			for dir in shuffled_dirs():
+				var next : Vector2i = pos + dir
+				if not in_bounds(next):
+					continue
+				var step : int = 1 if is_cave_wall(get_tile(next)) else 0
+				var nd : int = level + step
+				if nd < int(dist.get(next, INF)):
+					dist[next] = nd
+					parent[next] = pos
+					if step == 0:
+						cur.append(next)
+					else:
+						nxt.append(next)
+		
+		cur = nxt
+		nxt = []
+		level += 1
+	
+	return []
+
+#endregion
+
+#region Region connection data
+
+# Fills connections_* / connected_subregion_ids / has_exit / reaches_outside
+# from the final map. Each corridor (a connected run of tunnel tiles) is flooded once,
+# and we record every pocket and forest region it touches.
+#
+# Every connections_tile entry is a tile that belongs to the region/pocket it's stored on,
+# at the middle of the doorway:
+#   SubRegion            -> pocket floor where a corridor enters it
+#   Region (cave)        -> corridor tile at a cave mouth
+#   Region (forest)      -> forest tile just outside a cave mouth
+func gen_region_connections() -> void:
+	var forest_owner : Dictionary = {} # Vector2i -> index into regions.forest
+	for fi in regions.forest.size():
+		for t in regions.forest[fi].tiles:
+			forest_owner[t.tilePos] = fi
+	
+	var seen : Dictionary = {}
+	
+	for r in regions.cave:
+		var sub_owner : Dictionary = {} # Vector2i -> index into r.subRegions
+		for si in r.subRegions.size():
+			for t in r.subRegions[si].tiles:
+				sub_owner[t.tilePos] = si
+		
+		for start in r.tiles:
+			if seen.has(start.tilePos) or not start.is_connection:
+				continue
+			
+			var c : Dictionary = _flood_corridor(start.tilePos, seen, sub_owner, forest_owner)
+			var touched : Array = c.subs.keys()
+			var leads_out : bool = not c.forest.is_empty()
+			
+			# Pockets on this corridor
+			for si in touched:
+				var sub : SubRegion = r.subRegions[si]
+				_add_connection(sub, _doorway(c.subs[si]))
+				for sj in touched:
+					if sj != si and not sub.connected_subregion_ids.has(sj):
+						sub.connected_subregion_ids.append(sj)
+				if leads_out:
+					sub.has_exit = true
+			
+			# Cave mouths: one doorway per forest region this corridor opens onto
+			for fi in c.forest:
+				_add_connection(regions.forest[fi], _doorway(c.forest[fi]))
+				_add_connection(r, _doorway(c.mouths[fi]))
+		
+		# A pocket can walk out if any pocket it's linked to (directly or not) has an exit
+		for si in r.subRegions.size():
+			r.subRegions[si].reaches_outside = _pocket_reaches_outside(r, si)
+
+func _flood_corridor(start: Vector2i, seen: Dictionary, sub_owner: Dictionary, forest_owner: Dictionary) -> Dictionary:
+	var result : Dictionary = {
+		"subs": {},   # pocket index -> pocket tiles touching the corridor
+		"forest": {}, # forest region index -> forest tiles touching the corridor
+		"mouths": {}  # forest region index -> corridor tiles touching that forest
+	}
+	
+	var queue : Array[Vector2i] = [start]
+	seen[start] = true
+	var head : int = 0
+	
+	while head < queue.size():
+		var pos : Vector2i = queue[head]
+		head += 1
+		
+		for dir in dirs:
+			var n : Vector2i = pos + dir
+			if not in_bounds(n):
+				continue
+			
+			var tile : WorldTile = get_tile(n)
+			if tile.is_connection:
+				if not seen.has(n):
+					seen[n] = true
+					queue.append(n)
+			elif sub_owner.has(n):
+				var si : int = sub_owner[n]
+				if not result.subs.has(si): result.subs[si] = []
+				result.subs[si].append(n)
+			elif forest_owner.has(n):
+				var fi : int = forest_owner[n]
+				if not result.forest.has(fi):
+					result.forest[fi] = []
+					result.mouths[fi] = []
+				result.forest[fi].append(n)
+				result.mouths[fi].append(pos)
+	
+	return result
+
+# Middle of a doorway: the contact tile closest to the average of all contact tiles
+func _doorway(contacts: Array) -> Vector2i:
+	var avg : Vector2 = Vector2.ZERO
+	for p in contacts:
+		avg += Vector2(p)
+	avg /= float(contacts.size())
+	
+	var best : Vector2i = contacts[0]
+	var best_d : float = INF
+	for p in contacts:
+		var d : float = Vector2(p).distance_squared_to(avg)
+		if d < best_d:
+			best_d = d
+			best = p
+	return best
+
+func _add_connection(target, tile_pos: Vector2i) -> void:
+	target.connections_tile.append(tile_pos)
+	target.connections_global.append(get_tile(tile_pos).globalPos)
+
+func _pocket_reaches_outside(r: Region, start: int) -> bool:
+	var visited : Dictionary = {start: true}
+	var queue : Array[int] = [start]
+	var head : int = 0
+	while head < queue.size():
+		var sub : SubRegion = r.subRegions[queue[head]]
+		head += 1
+		if sub.has_exit:
+			return true
+		for j in sub.connected_subregion_ids:
+			if not visited.has(j):
+				visited[j] = true
+				queue.append(j)
+	return false
 
 #endregion
 
@@ -544,6 +790,12 @@ func _load_tree_visual() -> void:
 	if not tree_material and inst is CanvasItem:
 		tree_material = inst.material
 	
+	# Own copy so the flag below doesn't leak into the tree scene's material
+	if tree_material:
+		tree_material = tree_material.duplicate()
+		if tree_material is ShaderMaterial:
+			tree_material.set_shader_parameter("use_instance_data", true)
+	
 	# Local rect already accounts for centered/offset/region/frames
 	var rect : Rect2 = sprite.get_rect()
 	
@@ -584,30 +836,64 @@ func _load_tree_visual() -> void:
 func _build_tree_multimeshes(trees: Node2D, chunks: Dictionary) -> void:
 	_load_tree_visual()
 	
+	# Everything goes inside one CanvasGroup so cutouts are cut from the finished forest,
+	# not from each tree (overlapping trees would otherwise stack back up to opaque)
+	var group : CanvasGroup = CanvasGroup.new()
+	group.name = "TreeGroup"
+	if tree_cutout_shader:
+		if not cutout_material:
+			cutout_material = ShaderMaterial.new()
+			cutout_material.shader = tree_cutout_shader
+		group.material = cutout_material
+	else:
+		push_warning("tree_cutout_shader not assigned, trees won't cut out")
+	trees.add_child(group)
+	
 	for chunk in chunks:
-		var transforms : Array = chunks[chunk]
+		var entries : Array = chunks[chunk] # [Transform2D, Color custom]
 		
 		var mm : MultiMesh = MultiMesh.new()
-		mm.transform_format = MultiMesh.TRANSFORM_2D # must be set before instance_count
+		# Both of these must be set before instance_count
+		mm.transform_format = MultiMesh.TRANSFORM_2D
+		mm.use_custom_data = true
 		mm.mesh = tree_mesh
-		mm.instance_count = transforms.size()
-		for i in transforms.size():
-			mm.set_instance_transform_2d(i, transforms[i])
+		mm.instance_count = entries.size()
+		for i in entries.size():
+			mm.set_instance_transform_2d(i, entries[i][0])
+			mm.set_instance_custom_data(i, entries[i][1])
 		
 		var mmi : MultiMeshInstance2D = MultiMeshInstance2D.new()
 		mmi.name = "Trees_%d_%d" % [chunk.x, chunk.y]
 		mmi.multimesh = mm
 		mmi.texture = tree_texture
 		mmi.self_modulate = tree_modulate
-		mmi.material = tree_material # shared across chunks, so tweaking it in the inspector hits every tree
-		trees.add_child(mmi)
+		mmi.material = tree_material # shadow shader, shared across chunks
+		group.add_child(mmi)
 
 #endregion
+
+var _cutout_warned : Dictionary = {}
+
+# Where the hole goes for a node in the cutout group.
+# 1. If the node has get_cutout_position(), that wins (use it when the moving body is a child).
+# 2. Otherwise its global_position if it's a Node2D.
+# 3. Otherwise warn once per scene type, so you can see what's being skipped.
+func _cutout_position(n: Node):
+	if n.has_method("get_cutout_position"):
+		return n.get_cutout_position()
+	if n is Node2D:
+		return n.global_position
+	
+	var key : String = n.scene_file_path if n.scene_file_path != "" else n.get_class()
+	if not _cutout_warned.has(key):
+		_cutout_warned[key] = true
+		push_warning("Tree cutout: '%s' (%s) isn't a Node2D, skipping. Add get_cutout_position() or put the group on its body." % [n.name, key])
+	return null
 
 # Sends the positions of everything in CUTOUT_GROUP to the tree shader.
 # If there are more than MAX_CUTOUTS, the ones closest to the camera win.
 func update_tree_cutouts() -> void:
-	var mat : ShaderMaterial = tree_material as ShaderMaterial
+	var mat : ShaderMaterial = cutout_material
 	if not mat:
 		return
 	
@@ -617,30 +903,35 @@ func update_tree_cutouts() -> void:
 	# Re-assign every frame in case the material was swapped/reloaded
 	mat.set_shader_parameter("cutout_data", cutout_texture)
 	
-	var nodes : Array = get_tree().get_nodes_in_group(CUTOUT_GROUP).filter(
-		func(n): return n is Node2D and n.is_inside_tree() and n != Global.player
-	)
+	# Collect positions (player first, then everything else in the group)
+	var points : Array[Vector2] = []
+	if Global.player and is_instance_valid(Global.player) and Global.player.is_inside_tree():
+		points.append(_cutout_position(Global.player))
 	
-	if nodes.size() > MAX_CUTOUTS - 1:
+	var others : Array[Vector2] = []
+	for n in get_tree().get_nodes_in_group(CUTOUT_GROUP):
+		if n == Global.player or not n.is_inside_tree():
+			continue
+		var p = _cutout_position(n)
+		if p != null:
+			others.append(p)
+	
+	if points.size() + others.size() > MAX_CUTOUTS:
 		var cam : Camera2D = get_viewport().get_camera_2d()
 		if cam:
 			var center : Vector2 = cam.get_screen_center_position()
-			nodes.sort_custom(func(a, b):
-				return a.global_position.distance_squared_to(center) < b.global_position.distance_squared_to(center))
+			others.sort_custom(func(a, b): return a.distance_squared_to(center) < b.distance_squared_to(center))
+	points.append_array(others)
 	
-	# Player always gets slot 0, group or not
-	if Global.player and is_instance_valid(Global.player) and Global.player.is_inside_tree():
-		nodes.push_front(Global.player)
-	
-	var count : int = mini(nodes.size(), MAX_CUTOUTS)
+	var count : int = mini(points.size(), MAX_CUTOUTS)
 	for i in count:
-		var p : Vector2 = nodes[i].global_position
-		cutout_image.set_pixel(i, 0, Color(p.x, p.y, 0.0))
+		cutout_image.set_pixel(i, 0, Color(points[i].x, points[i].y, 0.0))
 	
 	cutout_texture.update(cutout_image)
 	mat.set_shader_parameter("cutout_count", count)
-	
-	print(count, " cutouts, first: ", nodes.slice(0, 3).map(func(n): return n.name))
+	mat.set_shader_parameter("cutout_radius", cutout_radius)
+	mat.set_shader_parameter("cutout_softness", cutout_softness)
+	mat.set_shader_parameter("cutout_alpha", cutout_alpha)
 
 #gens the actual map in the tileMapLayer
 func genTileMap() -> void:
@@ -688,10 +979,13 @@ func genTileMap() -> void:
 				var world_pos : Vector2 = ground.to_global(ground.map_to_local(cell) + thisTile.tree_offset)
 				var xform : Transform2D = Transform2D(thisTile.tree_rotation, tree_scale, 0.0, trees.to_local(world_pos))
 				
+				# Baked for the shader: world position, rotation, scale
+				var custom : Color = Color(world_pos.x, world_pos.y, thisTile.tree_rotation, tree_scale.x)
+				
 				var chunk : Vector2i = cell / tree_chunk_size
 				if not tree_chunks.has(chunk):
 					tree_chunks[chunk] = []
-				tree_chunks[chunk].append(xform)
+				tree_chunks[chunk].append([xform, custom])
 	
 	_build_tree_multimeshes(trees, tree_chunks)
 	
@@ -716,6 +1010,9 @@ func genWorld() -> void:
 	gen_cave_subRegions()
 	connect_caves()
 	rebuild_regions()
+	connect_forests()
+	rebuild_regions()
+	gen_region_connections() # must come after the last rebuild, which replaces every Region/SubRegion
 	gen_trees()
 
 func regen() -> void:
