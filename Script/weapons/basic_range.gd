@@ -32,11 +32,13 @@ func _ready() -> void:
 	contact_monitor = true
 	max_contacts_reported = 10
 	
-	excludeList.append(self)
-	excludeList.append(area)
-	excludeList.append(weapSys.parentNode)
+	# Ray queries exclude by RID, not by node
+	excludeList.append(get_rid())
+	excludeList.append(area.get_rid())
+	if weapSys and weapSys.parentNode is CollisionObject2D:
+		excludeList.append(weapSys.parentNode.get_rid())
 	for i in get_tree().get_nodes_in_group("Exclude_From_Bullets"):
-		excludeList.append(i)
+		if i is CollisionObject2D: excludeList.append(i.get_rid())
 	
 	area.connect("area_entered", bulletArea)
 	connect("body_entered", bulletCol)
@@ -96,7 +98,7 @@ func bulletArea(thisArea: Area2D) -> void:
 		var to = global_position + dir * 5000.0
 		
 		var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(global_position, to)
-		query.exclude = [self, weapSys.parentNode]
+		query.exclude = excludeList
 		query.collide_with_areas = true
 		query.collide_with_bodies = true
 		

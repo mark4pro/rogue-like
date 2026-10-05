@@ -134,9 +134,11 @@ func update(delta: float, target: Vector2) -> void:
 						weaponNode.z_index = weapon.swingZRange.x if t < 0.5 else weapon.swingZRange.y
 				weapon.animType.AIM_LASER:
 					if not spawned.size() == spawnPos.size():
-						excludeList.append(parentNode)
+						# Ray queries exclude by RID, not by node
+						excludeList.clear()
+						if parentNode is CollisionObject2D: excludeList.append(parentNode.get_rid())
 						for i in parentNode.get_tree().get_nodes_in_group("Exclude_From_Lasers"):
-							excludeList.append(i)
+							if i is CollisionObject2D: excludeList.append(i.get_rid())
 						
 						for i in spawnPos:
 							var newWeapon : Node2D = weapon.weaponScene.instantiate()

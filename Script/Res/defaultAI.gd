@@ -11,6 +11,7 @@ var initialized : bool = false
 var weapSys : WeaponSys = null
 @export var currentState : state = state.WONDER
 var gotoLastKnownPos : bool = false
+@export var investigateDist : float = 8 # how close to get to the last known position (stopDist is too far, the agent counted as arrived almost instantly)
 var wonderTime : float = 0
 var inSiteTime : float = 0
 var endChaseTime : float = 0
@@ -49,6 +50,7 @@ func update(delta: float) -> void:
 		
 		if not gotoLastKnownPos and retarget and canUpdate: # and not pathing
 			wonderTime = 0
+			navAgent.target_desired_distance = stopDist
 			navAgent.target_position = EnemySpawner.getWanderPoint(body.global_position)
 			navAgent.set_velocity(Vector2.ZERO)
 		
@@ -64,10 +66,13 @@ func update(delta: float) -> void:
 				currentState = state.CHASE
 				targetNode = foundTarget
 			
-			if not gotoLastKnownPos and canUpdate:
+			# Keep refreshing while the target is in view, so losing sight sends it to where
+			# the target was LAST seen, not where it was first spotted
+			if canUpdate:
 				wonderTime = 0
 				gotoLastKnownPos = true
 				
+				navAgent.target_desired_distance = investigateDist
 				navAgent.target_position = foundTarget.global_position
 				navAgent.set_velocity(Vector2.ZERO)
 				
@@ -78,6 +83,9 @@ func update(delta: float) -> void:
 		wonderTime = 0
 		inSiteTime = 0
 		gotoLastKnownPos = false
+		
+		# Chasing stops at attack range again
+		if navAgent.target_desired_distance != stopDist: navAgent.target_desired_distance = stopDist
 		
 		if canUpdate and targetNode: navAgent.target_position = targetNode.global_position
 		
