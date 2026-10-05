@@ -6,6 +6,7 @@ extends Node
 const NO_PARENT : Vector2i = Vector2i(-1, -1)
 const CUTOUT_GROUP : StringName = &"tree_cutout" # add the player + enemies to this group
 const MAX_CUTOUTS : int = 32                      # width of the cutout data texture, raise freely
+const CUTOUT_CANVAS_GROUP : StringName = &"tree_cutout_canvas" # hand-placed CanvasGroups (e.g. the hub) using tree_cutout_group.gdshader
 
 @export var thisSeed : int = -1 # -1 use random seed
 @export var tileSize : Vector2i = Vector2i(32, 32)
@@ -902,15 +903,19 @@ func _cutout_position(n: Node):
 # Sends the positions of everything in CUTOUT_GROUP to the tree shader.
 # If there are more than MAX_CUTOUTS, the ones closest to the camera win.
 func update_tree_cutouts() -> void:
-	var mat : ShaderMaterial = cutout_material
-	if not mat:
+	# The generated forest's material, plus any hand-placed CanvasGroup in CUTOUT_CANVAS_GROUP
+	var mats : Array[ShaderMaterial] = []
+	if cutout_material and loaded:
+		mats.append(cutout_material)
+	for n in get_tree().get_nodes_in_group(CUTOUT_CANVAS_GROUP):
+		if n is CanvasItem and n.material is ShaderMaterial and not mats.has(n.material):
+			mats.append(n.material)
+	if mats.is_empty():
 		return
 	
 	if not cutout_texture:
 		cutout_image = Image.create_empty(MAX_CUTOUTS, 1, false, Image.FORMAT_RGF) # 32-bit floats, no 0-1 clamping
 		cutout_texture = ImageTexture.create_from_image(cutout_image)
-	# Re-assign every frame in case the material was swapped/reloaded
-	mat.set_shader_parameter("cutout_data", cutout_texture)
 	
 	# Collect positions (player first, then everything else in the group)
 	var points : Array[Vector2] = []
@@ -937,10 +942,13 @@ func update_tree_cutouts() -> void:
 		cutout_image.set_pixel(i, 0, Color(points[i].x, points[i].y, 0.0))
 	
 	cutout_texture.update(cutout_image)
-	mat.set_shader_parameter("cutout_count", count)
-	mat.set_shader_parameter("cutout_radius", cutout_radius)
-	mat.set_shader_parameter("cutout_softness", cutout_softness)
-	mat.set_shader_parameter("cutout_alpha", cutout_alpha)
+	for mat in mats:
+		# Re-assign every frame in case the material was swapped/reloaded
+		mat.set_shader_parameter("cutout_data", cutout_texture)
+		mat.set_shader_parameter("cutout_count", count)
+		mat.set_shader_parameter("cutout_radius", cutout_radius)
+		mat.set_shader_parameter("cutout_softness", cutout_softness)
+		mat.set_shader_parameter("cutout_alpha", cutout_alpha)
 
 #gens the actual map in the tileMapLayer
 func genTileMap() -> void:
@@ -1070,8 +1078,7 @@ func _process(_delta: float) -> void:
 				preGen = false
 				loaded = true
 		
-		if loaded:
-			update_tree_cutouts()
+		update_tree_cutouts() # runs in every scene, not just generated ones (the hub has its own trees)
 		
 		#Engine only
 		if OS.has_feature("editor") and freeCam:
