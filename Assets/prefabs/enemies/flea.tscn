@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://djxahk1v21may"]
 
 [ext_resource type="Script" uid="uid://bxh3oi5ta7yj8" path="res://Script/enemy.gd" id="1_0soh1"]
-[ext_resource type="Resource" uid="uid://cuamogxy52nlx" path="res://Assets/weapons/enemy_sword.tres" id="2_ebk3l"]
+[ext_resource type="Resource" uid="uid://cuamogxy52nlx" path="res://Assets/weapons/emerald_sword.tres" id="2_ebk3l"]
 [ext_resource type="Texture2D" uid="uid://b05u3n78c00pn" path="res://Assets/imgs/enemies/flea.png" id="3_kiyl1"]
 [ext_resource type="Texture2D" uid="uid://b70aujp6bewbx" path="res://Assets/imgs/effects/shadow.png" id="4_6tgb6"]
 [ext_resource type="PackedScene" uid="uid://diwkxcopn8e5d" path="res://Assets/prefabs/ui/health_bar.tscn" id="5_g55tq"]

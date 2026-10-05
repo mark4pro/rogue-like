@@ -7,7 +7,7 @@
 [ext_resource type="Resource" uid="uid://ei7v3sv0c01y" path="res://Assets/weapons/Metal_pipe.tres" id="3_luntf"]
 [ext_resource type="Resource" uid="uid://bocuq5n3soyig" path="res://Assets/weapons/magic_pellet.tres" id="4_otkig"]
 [ext_resource type="Resource" uid="uid://cdc1gfeklgwg6" path="res://Assets/items/teleportation_potion.tres" id="5_v47xf"]
-[ext_resource type="Resource" uid="uid://b3a0hq8gaedfp" path="res://Assets/weapons/Butter_knife.tres" id="6_q34y3"]
+[ext_resource type="Resource" uid="uid://b3a0hq8gaedfp" path="res://Assets/weapons/butter_knife.tres" id="6_q34y3"]
 [ext_resource type="Resource" uid="uid://bcrekfubof6nq" path="res://Assets/armor/dark_shell.tres" id="7_8hp14"]
 [ext_resource type="Resource" uid="uid://cdqkuh0os6fao" path="res://Assets/armor/skin_shell.tres" id="8_wqwv4"]
 [ext_resource type="Resource" uid="uid://cgtuabk0ypsfg" path="res://Assets/armor/candy_shell.tres" id="9_p6w4n"]

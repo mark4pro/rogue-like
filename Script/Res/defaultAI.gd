@@ -7,6 +7,7 @@ enum state {
 }
 
 var id : int
+var initialized : bool = false
 var weapSys : WeaponSys = null
 @export var currentState : state = state.WONDER
 var gotoLastKnownPos : bool = false
@@ -27,11 +28,12 @@ func disengage(attacker: Node = null) -> void:
 
 func update(delta: float) -> void:
 	#init values
-	if id == 0:
+	if not initialized:
 		navAgent.target_desired_distance = stopDist
 		id = randi() % EnemySpawner.updateSlots
+		initialized = true
 	
-	var canUpdate : bool = Engine.get_physics_frames() % EnemySpawner.updateSlots == id
+	var canUpdate : bool = Engine.get_physics_frames() % EnemySpawner.updateSlots == id % EnemySpawner.updateSlots
 	var pathing : bool = not navAgent.is_navigation_finished()
 	eyeDir = (target - eyePos).normalized()
 	visionCone()
@@ -47,7 +49,7 @@ func update(delta: float) -> void:
 		
 		if not gotoLastKnownPos and retarget and canUpdate: # and not pathing
 			wonderTime = 0
-			navAgent.target_position = EnemySpawner.getSpawn(body.global_position, 30)
+			navAgent.target_position = EnemySpawner.getWanderPoint(body.global_position)
 			navAgent.set_velocity(Vector2.ZERO)
 		
 		if not foundTarget:

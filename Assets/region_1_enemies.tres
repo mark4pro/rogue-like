@@ -13,6 +13,7 @@
 [sub_resource type="Resource" id="Resource_65mp6"]
 script = ExtResource("2_qwyng")
 data = ExtResource("1_n8i8k")
+habitat = 2
 chance = 25.0
 metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
 
@@ -37,6 +38,7 @@ metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
 [sub_resource type="Resource" id="Resource_wq4y3"]
 script = ExtResource("2_qwyng")
 data = ExtResource("6_jdkto")
+habitat = 1
 chance = 15.0
 metadata/_custom_type_script = "uid://cd3cv5ncx0kqe"
 

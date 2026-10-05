@@ -1,6 +1,9 @@
 extends Node
 
-@export var enemyList : LootList = null
+const HABITAT_FOREST : int = 1
+const HABITAT_CAVE : int = 2
+
+@onready var enemyList : LootList = preload("uid://nsj3x6vtwf1e")
 
 @export var targetFPS : int = 60
 @export var updateSlots : int = 10
@@ -8,72 +11,281 @@ extends Node
 @export var enemyCount : int = 0
 @export var spawnTime : float = 0.5
 
+@export_group("Spawn placement")
+@export var spawn_band : int = 12            # how many tiles past the screen edge enemies can appear
+@export var offscreen_margin : float = 64.0  # extra px around the screen that still counts as "visible"
+@export var front_bias : float = 3.0         # extra weight for tiles ahead of the player (0 = no preference)
+@export var mouth_bias : float = 3.0         # weight multiplier near cave mouths (1 = no preference)
+@export var mouth_radius : int = 4           # tiles around a cave mouth that get mouth_bias
+@export var spawn_in_corridors : bool = false
+
+@export_group("Cave spawning")
+@export_range(0.0, 1.0) var cave_spawn_weight : float = 0.3 # weight of a cave tile vs a forest tile (1 = equal)
+@export var cave_tiles_per_enemy : int = 80                 # pocket capacity = pocket tiles / this (at least 1)
+
 var enemyNode : Node2D = null
 
-var time = 0
-var oldDay = -1
+var time : float = 0.0
+var oldDay : int = -1
+var spawned_total : int = 0
 
-func _ready() -> void:
-	enemyList = preload("res://Assets/region_1_enemies.tres")
+# World caches, rebuilt once per generated world (see _refresh_world_cache)
+var _cache_gen : int = -1
+var _mouth_zone : Dictionary = {}       # Vector2i -> true
+var _pocket_of : Dictionary = {}        # Vector2i -> pocket index (cave room floor only)
+var _pocket_capacity : Array[int] = []  # pocket index -> max enemies
 
 func getCameraRect() -> Rect2:
 	var camera : Camera2D = get_viewport().get_camera_2d()
-	var viewport_size = camera.get_viewport_rect().size
-	var half_size = (viewport_size * 0.5) / camera.zoom
-	return Rect2(camera.global_position - half_size, half_size * 2.0)
+	if not camera:
+		return Rect2()
+	var half_size : Vector2 = (camera.get_viewport_rect().size * 0.5) / camera.zoom
+	# Screen center, not global_position: accounts for smoothing, drag margins and limits
+	return Rect2(camera.get_screen_center_position() - half_size, half_size * 2.0)
 
 func isWalkable(pos: Vector2) -> bool:
-	var walls : TileMapLayer = Worldgen.worldNode.walls
-	var ground : TileMapLayer = Worldgen.worldNode.ground
-	var cell = walls.local_to_map(walls.to_local(pos))
-	var wallTileData = walls.get_cell_tile_data(cell)
-	var groundTileData = ground.get_cell_tile_data(cell)
-	if groundTileData == null:
-		return false
-	if wallTileData == null:
-		return true
-	return not wallTileData.get_collision_polygons_count(0) > 0
+	var cell : Vector2i = Worldgen.cell_at(pos)
+	return Worldgen.in_bounds(cell) and Worldgen.get_tile(cell).is_walkable
 
-func getSpawn(center: Vector2, radius: float, chkCamera: bool = false, inFrontOfPlayer: bool = false, maxAtt: int = 50) -> Vector2:
-	var cam_rect = getCameraRect()
+func habitat_of(tile: WorldTile) -> int:
+	if not tile.is_walkable:
+		return 0
+	if Worldgen.is_forest(tile):
+		return HABITAT_FOREST
+	if tile.is_connection and not spawn_in_corridors:
+		return 0
+	return HABITAT_CAVE
+
+#region Wandering
+
+# Random reachable point for AI wandering.
+# Walks from `from` through walkable tiles and picks a random tile between min_steps and
+# max_steps away by walking distance, so the nav agent always gets a target it can reach.
+# keep_habitat: only walk/pick within the same biome as `from` (cave enemies stay in caves,
+# forest enemies don't wander into caves).
+# Returns `from` if nothing fits, so the agent just idles until its next retarget.
+func getWanderPoint(from: Vector2, min_steps: int = 8, max_steps: int = 30, keep_habitat: bool = true) -> Vector2:
+	if not Worldgen.loaded or Worldgen.world.is_empty():
+		return from
 	
-	var playerDir : Vector2 = Vector2.ZERO
-	if inFrontOfPlayer and Global.player:
-		playerDir = Global.player.dir
+	var start : Vector2i = Worldgen.cell_at(from)
+	if not Worldgen.in_bounds(start):
+		return from
+	var start_forest : bool = Worldgen.is_forest(Worldgen.get_tile(start))
 	
-	for i in maxAtt:
-		var angle = 0
-		var dist = randf_range(960, 960 + radius)
+	var dist : Dictionary = {start: 0}
+	var queue : Array[Vector2i] = [start]
+	var head : int = 0
+	var picked : WorldTile = null
+	var seen_candidates : int = 0
+	
+	while head < queue.size():
+		var c : Vector2i = queue[head]
+		head += 1
+		var d : int = dist[c]
 		
-		var pos : Vector2 = Vector2.ZERO
+		if d >= min_steps:
+			# Reservoir sampling: uniform pick without storing every candidate
+			seen_candidates += 1
+			if randi() % seen_candidates == 0:
+				picked = Worldgen.get_tile(c)
 		
-		if inFrontOfPlayer and Global.player and playerDir != Vector2.ZERO:
-			var halfPI : float = PI / 2
-			angle = randf_range(-halfPI, halfPI)  # ±90 degrees around player_dir
-			pos = center + playerDir.rotated(angle) * dist
-		else:
-			angle = randf() * TAU
-			pos = center + Vector2.RIGHT.rotated(angle) * dist
-		
-		if cam_rect.has_point(pos) and chkCamera:
+		if d >= max_steps:
 			continue
-		if not isWalkable(pos):
+		
+		for dir in Worldgen.dirs:
+			var n : Vector2i = c + dir
+			if dist.has(n) or not Worldgen.in_bounds(n):
+				continue
+			var t : WorldTile = Worldgen.get_tile(n)
+			if not t.is_walkable:
+				continue
+			if keep_habitat and Worldgen.is_forest(t) != start_forest:
+				continue
+			dist[n] = d + 1
+			queue.append(n)
+	
+	return picked.globalPos if picked else from
+
+#endregion
+
+#region Spawn placement
+
+# Picks a spawn spot and an enemy that's allowed to live there.
+# Returns {"pos": Vector2 (global), "scene": PackedScene}, or {} if nothing fits this tick.
+#
+# Walks outward from the player's tile through walkable tiles only (BFS), so every candidate
+# is reachable on foot and close by walking distance, not just in a straight line.
+# That replaces the old raycast: a spot behind a cave wall is far in steps, so it never qualifies.
+func findSpawn() -> Dictionary:
+	if not Worldgen.loaded or Worldgen.world.is_empty() or not Global.player:
+		return {}
+	
+	var allowed : int = _available_habitats()
+	if allowed == 0:
+		return {} # no enemies valid today
+	
+	_refresh_world_cache()
+	var pocket_counts : Dictionary = _count_enemies_per_pocket()
+	
+	var cam_rect : Rect2 = getCameraRect().grow(offscreen_margin)
+	var tile_px : float = float(Worldgen.tileSize.x)
+	var half : Vector2 = cam_rect.size * 0.5
+	# Walking distance is never shorter than straight-line distance, so nothing closer than
+	# the nearest screen edge can be off-screen. The camera check below handles the rest.
+	var min_steps : int = int(minf(half.x, half.y) / tile_px)
+	var max_steps : int = int(half.length() / tile_px) + spawn_band
+	
+	var player_pos : Vector2 = Global.player.global_position
+	var player_cell : Vector2i = Worldgen.cell_at(player_pos)
+	if not Worldgen.in_bounds(player_cell):
+		return {}
+	
+	var player_dir : Vector2 = Vector2.ZERO
+	if "dir" in Global.player:
+		player_dir = Global.player.dir
+	
+	var tiles : Array[WorldTile] = []
+	var weights : PackedFloat32Array = PackedFloat32Array()
+	var total : float = 0.0
+	
+	var dist : Dictionary = {player_cell: 0}
+	var queue : Array[Vector2i] = [player_cell]
+	var head : int = 0
+	
+	while head < queue.size():
+		var c : Vector2i = queue[head]
+		head += 1
+		var d : int = dist[c]
+		
+		if d >= min_steps:
+			var t : WorldTile = Worldgen.get_tile(c)
+			var hab : int = habitat_of(t)
+			if hab & allowed and not cam_rect.has_point(t.globalPos) and not _pocket_full(c, pocket_counts):
+				var w : float = 1.0
+				if hab == HABITAT_CAVE:
+					w *= cave_spawn_weight
+				if player_dir != Vector2.ZERO and (t.globalPos - player_pos).dot(player_dir) > 0.0:
+					w += front_bias
+				if _mouth_zone.has(c):
+					w *= mouth_bias
+				tiles.append(t)
+				weights.append(w)
+				total += w
+		
+		if d >= max_steps:
 			continue
 		
-		var space : PhysicsDirectSpaceState2D = enemyNode.get_world_2d().direct_space_state
-		var query : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(center, pos)
-		query.collide_with_areas = true
-		query.collide_with_bodies = true
-		if space.intersect_ray(query): continue
-		
-		return pos
-	return Vector2.ZERO
+		for dir in Worldgen.dirs:
+			var n : Vector2i = c + dir
+			if dist.has(n) or not Worldgen.in_bounds(n):
+				continue
+			if not Worldgen.get_tile(n).is_walkable:
+				continue
+			dist[n] = d + 1
+			queue.append(n)
+	
+	if total <= 0.0:
+		return {}
+	
+	# Weighted pick of a tile
+	var r : float = randf() * total
+	var idx : int = 0
+	while idx < weights.size() - 1:
+		r -= weights[idx]
+		if r <= 0.0:
+			break
+		idx += 1
+	
+	var tile : WorldTile = tiles[idx]
+	var scene : PackedScene = _pick_enemy(habitat_of(tile))
+	if not scene:
+		return {}
+	
+	return {"pos": tile.globalPos, "scene": scene}
+
+# Bitmask of habitats that have at least one valid enemy right now
+func _available_habitats() -> int:
+	if enemyList.valid.is_empty():
+		enemyList.getValid()
+	var mask : int = 0
+	for e in enemyList.valid:
+		if e is EnemyWeighted and e.data:
+			mask |= e.habitat
+	return mask
+
+# Weighted by `chance` over just the enemies allowed in this habitat.
+# (Doesn't use the precalculated `weight`, since that was normalised over the whole list.)
+func _pick_enemy(habitat: int) -> PackedScene:
+	var options : Array[EnemyWeighted] = []
+	var total : float = 0.0
+	for e in enemyList.valid:
+		if e is EnemyWeighted and e.data and e.habitat & habitat:
+			options.append(e)
+			total += e.chance
+	
+	if options.is_empty() or total <= 0.0:
+		return null
+	
+	var r : float = randf() * total
+	for e in options:
+		r -= e.chance
+		if r <= 0.0:
+			return e.data
+	return options.back().data
+
+# Rebuilt once per generated world:
+# - mouth zone: forest tiles near cave mouths (forest side only, so caves don't get the boost)
+# - pocket lookup + capacity, so small caves can't fill up
+func _refresh_world_cache() -> void:
+	if _cache_gen == Worldgen.gen_id:
+		return
+	_cache_gen = Worldgen.gen_id
+	_mouth_zone.clear()
+	_pocket_of.clear()
+	_pocket_capacity.clear()
+	
+	for r in Worldgen.regions.get("forest", []):
+		for p in r.connections_tile:
+			for dy in range(-mouth_radius, mouth_radius + 1):
+				for dx in range(-mouth_radius, mouth_radius + 1):
+					var n : Vector2i = p + Vector2i(dx, dy)
+					if Worldgen.in_bounds(n) and Worldgen.is_forest(Worldgen.get_tile(n)):
+						_mouth_zone[n] = true
+	
+	for r in Worldgen.regions.get("cave", []):
+		for sub in r.subRegions:
+			var idx : int = _pocket_capacity.size()
+			_pocket_capacity.append(maxi(1, sub.tiles.size() / maxi(1, cave_tiles_per_enemy)))
+			for t in sub.tiles:
+				_pocket_of[t.tilePos] = idx
+
+# pocket index -> enemies currently standing in it
+func _count_enemies_per_pocket() -> Dictionary:
+	var counts : Dictionary = {}
+	if not enemyNode:
+		return counts
+	for e in enemyNode.get_children():
+		if not e is Node2D:
+			continue
+		var idx = _pocket_of.get(Worldgen.cell_at(e.global_position))
+		if idx != null:
+			counts[idx] = counts.get(idx, 0) + 1
+	return counts
+
+func _pocket_full(cell: Vector2i, counts: Dictionary) -> bool:
+	var idx = _pocket_of.get(cell)
+	if idx == null:
+		return false # forest (or corridor): no cap
+	return counts.get(idx, 0) >= _pocket_capacity[idx]
+
+#endregion
 
 func clearEnemies() -> void:
 	if enemyNode: enemyNode.queue_free()
 
 func _process(delta: float) -> void:
-	if not Global.sceneIndex == 0 and Global.currentScene and Global.player:
+	if Global.sceneIndex != 0 and Global.currentScene and Global.player:
 		enemyNode = Global.currentScene.get_node_or_null("Enemies")
 		
 		if enemyNode:
@@ -84,18 +296,17 @@ func _process(delta: float) -> void:
 					time += delta
 					
 					if time >= spawnTime:
-						time = 0
+						time = 0.0
 						
-						var enemy : PackedScene = enemyList.getRandom()
-						
-						if enemy:
-							var newEnemy = enemy.instantiate()
-							newEnemy.name = "Enemy_" + str(enemyCount + 1)
-							newEnemy.position = getSpawn(Global.player.position, 0, true, true)
-							
+						var spawn : Dictionary = findSpawn()
+						if not spawn.is_empty(): # no valid spot this tick, try again next time
+							var newEnemy : Node2D = spawn.scene.instantiate()
+							newEnemy.name = "Enemy_%d" % spawned_total
+							newEnemy.position = enemyNode.to_local(spawn.pos)
 							enemyNode.add_child(newEnemy)
+							spawned_total += 1
 				else:
-					time = 0
+					time = 0.0
 			else:
 				oldDay = Global.runDays
 				enemyList.getValid()

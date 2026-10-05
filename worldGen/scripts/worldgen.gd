@@ -1,10 +1,11 @@
 extends Node
 
 @onready var treeRes : PackedScene = preload("uid://biahn66yel13i")
+#@onready var worldData : World = preload("uid://bjciwkufbj1c").duplicate(true)
 
 const NO_PARENT : Vector2i = Vector2i(-1, -1)
-const CUTOUT_GROUP : StringName = &"tree_cutout"
-const MAX_CUTOUTS : int = 32
+const CUTOUT_GROUP : StringName = &"tree_cutout" # add the player + enemies to this group
+const MAX_CUTOUTS : int = 32                      # width of the cutout data texture, raise freely
 
 @export var thisSeed : int = -1 # -1 use random seed
 @export var tileSize : Vector2i = Vector2i(32, 32)
@@ -47,6 +48,7 @@ var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 #State
 var preGen : bool = false
 var loaded : bool = false
+var gen_id : int = 0 # bumps every genWorld(), lets other systems know their cached world data is stale
 
 #Noise
 var biome_noise : FastNoiseLite = FastNoiseLite.new()
@@ -116,6 +118,13 @@ func in_bounds(p: Vector2i) -> bool:
 
 func get_tile(p: Vector2i) -> WorldTile:
 	return world[p.y][p.x]
+
+# Global position -> tile coords. Uses the ground layer when it exists so scale/offset are respected.
+func cell_at(global_pos: Vector2) -> Vector2i:
+	if worldNode and is_instance_valid(worldNode):
+		var ground : TileMapLayer = worldNode.ground
+		return ground.local_to_map(ground.to_local(global_pos))
+	return Vector2i((global_pos / Vector2(tileSize)).floor())
 
 func is_cave_wall(tile: WorldTile) -> bool:
 	return tile.wall_type == 0 and tile.biome_type == 1
@@ -1005,6 +1014,7 @@ func genTileMap() -> void:
 	worldNode.coll.polygon = points
 
 func genWorld() -> void:
+	gen_id += 1
 	genArrays()
 	gen_regions()
 	gen_cave_subRegions()

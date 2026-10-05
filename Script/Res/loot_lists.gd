@@ -17,7 +17,7 @@ func getValid() -> void:
 		if afterStart and beforeEnd:
 			valid.append(entry)
 	
-	Global.precalcWeights(list)
+	Global.precalcWeights(valid)
 
 func getRandom(dup: bool = false):
 	if valid.is_empty(): getValid()
