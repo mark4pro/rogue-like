@@ -25,6 +25,7 @@ Global="*uid://b3lugf1qx08i4"
 Worldgen="*uid://dk61fmxhfrtqg"
 EnemySpawner="*uid://q1u3yhfaxg0k"
 DialogueManager="*uid://c3rodes2l3gxb"
+_mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
 [dialogue_manager]
 
@@ -39,7 +40,6 @@ window/stretch/aspect="ignore"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg")
 
 [global_group]
 
