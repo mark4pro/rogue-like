@@ -22,7 +22,7 @@ tile_set = ExtResource("2_aq7tu")
 
 [node name="Trees" type="Node2D" parent="." unique_id=302490610]
 unique_name_in_owner = true
-z_index = 4
+z_index = 5
 
 [node name="Debug" type="TileMapLayer" parent="." unique_id=31362335]
 unique_name_in_owner = true

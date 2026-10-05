@@ -4,6 +4,8 @@ extends Node
 #@onready var worldData : World = preload("uid://bjciwkufbj1c").duplicate(true)
 
 const NO_PARENT : Vector2i = Vector2i(-1, -1)
+const CUTOUT_GROUP : StringName = &"tree_cutout" # add the player + enemies to this group
+const MAX_CUTOUTS : int = 32                      # width of the cutout data texture, raise freely
 
 @export var thisSeed : int = -1 # -1 use random seed
 @export var tileSize : Vector2i = Vector2i(32, 32)
@@ -29,6 +31,7 @@ const NO_PARENT : Vector2i = Vector2i(-1, -1)
 @export_range(0.0, 1.0) var clump_density : float = 0.8
 @export_range(0.0, 1.0) var sparse_density : float = 0.08
 @export var tree_jitter : float = 12.0
+@export var tree_chunk_size : int = 32 # tiles per MultiMesh chunk, lets off-screen chunks get culled
 
 var currentSeed : int = randi()
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
@@ -49,6 +52,15 @@ var sepBiomes : Dictionary = {}
 var regions : Dictionary = {}
 var cave_openings : Array[Vector2i] = [] # forest tile just outside each cave mouth
 var no_tree_zone : Dictionary = {}       # Vector2i -> true
+
+#Tree rendering (built once from treeRes)
+var tree_mesh : ArrayMesh = null
+var tree_texture : Texture2D = null
+var tree_scale : Vector2 = Vector2.ONE
+var tree_modulate : Color = Color.WHITE
+var tree_material : Material = null
+var cutout_image : Image = null
+var cutout_texture : ImageTexture = null
 
 var worldNode : Node2D = null
 var freeCam : Camera2D = null #Make it spawn this in if you press f6 and the player is loaded
@@ -509,7 +521,126 @@ func gen_trees() -> void:
 				tile.tree_offset = Vector2(rng.randf_range(-tree_jitter, tree_jitter), rng.randf_range(-tree_jitter, tree_jitter))
 				tile.tree_rotation = rng.randf_range(0.0, TAU)
 
+# Reads the Sprite2D out of treeRes once and turns it into a quad mesh,
+# so the tree scene stays the place you edit the tree's look.
+func _load_tree_visual() -> void:
+	if tree_mesh:
+		return
+	
+	var inst : Node = treeRes.instantiate()
+	var sprite : Sprite2D = inst as Sprite2D
+	if not sprite:
+		var found : Array[Node] = inst.find_children("*", "Sprite2D", true, false)
+		if not found.is_empty():
+			sprite = found[0]
+	assert(sprite and sprite.texture, "treeRes needs a Sprite2D with a texture")
+	
+	tree_texture = sprite.texture
+	tree_scale = sprite.scale
+	tree_modulate = sprite.modulate * sprite.self_modulate
+	
+	# Carry over the drop shadow shader (on the sprite, or on the scene root if the sprite uses its parent's)
+	tree_material = sprite.material
+	if not tree_material and inst is CanvasItem:
+		tree_material = inst.material
+	
+	# Local rect already accounts for centered/offset/region/frames
+	var rect : Rect2 = sprite.get_rect()
+	
+	# Work out which part of the texture the sprite shows
+	var tex_size : Vector2 = tree_texture.get_size()
+	var src : Rect2 = sprite.region_rect if sprite.region_enabled else Rect2(Vector2.ZERO, tex_size)
+	var frame_size : Vector2 = src.size / Vector2(sprite.hframes, sprite.vframes)
+	var frame_pos : Vector2 = src.position + frame_size * Vector2(sprite.frame_coords)
+	var uv0 : Vector2 = frame_pos / tex_size
+	var uv1 : Vector2 = (frame_pos + frame_size) / tex_size
+	if sprite.flip_h:
+		var t : float = uv0.x; uv0.x = uv1.x; uv1.x = t
+	if sprite.flip_v:
+		var t : float = uv0.y; uv0.y = uv1.y; uv1.y = t
+	
+	var arrays : Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = PackedVector2Array([
+		rect.position,
+		Vector2(rect.end.x, rect.position.y),
+		rect.end,
+		Vector2(rect.position.x, rect.end.y)
+	])
+	arrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array([
+		uv0,
+		Vector2(uv1.x, uv0.y),
+		uv1,
+		Vector2(uv0.x, uv1.y)
+	])
+	arrays[Mesh.ARRAY_INDEX] = PackedInt32Array([0, 1, 2, 0, 2, 3])
+	
+	tree_mesh = ArrayMesh.new()
+	tree_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	
+	inst.free()
+
+# chunks: Vector2i chunk coord -> Array[Transform2D] (in trees-node space)
+func _build_tree_multimeshes(trees: Node2D, chunks: Dictionary) -> void:
+	_load_tree_visual()
+	
+	for chunk in chunks:
+		var transforms : Array = chunks[chunk]
+		
+		var mm : MultiMesh = MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_2D # must be set before instance_count
+		mm.mesh = tree_mesh
+		mm.instance_count = transforms.size()
+		for i in transforms.size():
+			mm.set_instance_transform_2d(i, transforms[i])
+		
+		var mmi : MultiMeshInstance2D = MultiMeshInstance2D.new()
+		mmi.name = "Trees_%d_%d" % [chunk.x, chunk.y]
+		mmi.multimesh = mm
+		mmi.texture = tree_texture
+		mmi.self_modulate = tree_modulate
+		mmi.material = tree_material # shared across chunks, so tweaking it in the inspector hits every tree
+		trees.add_child(mmi)
+
 #endregion
+
+# Sends the positions of everything in CUTOUT_GROUP to the tree shader.
+# If there are more than MAX_CUTOUTS, the ones closest to the camera win.
+func update_tree_cutouts() -> void:
+	var mat : ShaderMaterial = tree_material as ShaderMaterial
+	if not mat:
+		return
+	
+	if not cutout_texture:
+		cutout_image = Image.create_empty(MAX_CUTOUTS, 1, false, Image.FORMAT_RGF) # 32-bit floats, no 0-1 clamping
+		cutout_texture = ImageTexture.create_from_image(cutout_image)
+	# Re-assign every frame in case the material was swapped/reloaded
+	mat.set_shader_parameter("cutout_data", cutout_texture)
+	
+	var nodes : Array = get_tree().get_nodes_in_group(CUTOUT_GROUP).filter(
+		func(n): return n is Node2D and n.is_inside_tree() and n != Global.player
+	)
+	
+	if nodes.size() > MAX_CUTOUTS - 1:
+		var cam : Camera2D = get_viewport().get_camera_2d()
+		if cam:
+			var center : Vector2 = cam.get_screen_center_position()
+			nodes.sort_custom(func(a, b):
+				return a.global_position.distance_squared_to(center) < b.global_position.distance_squared_to(center))
+	
+	# Player always gets slot 0, group or not
+	if Global.player and is_instance_valid(Global.player) and Global.player.is_inside_tree():
+		nodes.push_front(Global.player)
+	
+	var count : int = mini(nodes.size(), MAX_CUTOUTS)
+	for i in count:
+		var p : Vector2 = nodes[i].global_position
+		cutout_image.set_pixel(i, 0, Color(p.x, p.y, 0.0))
+	
+	cutout_texture.update(cutout_image)
+	mat.set_shader_parameter("cutout_count", count)
+	
+	print(count, " cutouts, first: ", nodes.slice(0, 3).map(func(n): return n.name))
 
 #gens the actual map in the tileMapLayer
 func genTileMap() -> void:
@@ -521,6 +652,9 @@ func genTileMap() -> void:
 	
 	for child in trees.get_children():
 		child.queue_free()
+	
+	_load_tree_visual() # needs to happen before the loop, it sets tree_scale
+	var tree_chunks : Dictionary = {}
 	
 	for y in worldSize.y:
 		for x in worldSize.x:
@@ -550,12 +684,16 @@ func genTileMap() -> void:
 					debug.set_cell(cell, 1, debug_remap[thisTile.biome_type].wall_edge)
 			
 			if thisTile.has_tree:
-				var newTree : Node2D = treeRes.instantiate()
 				# Go through global space so it lines up even if ground is scaled
 				var world_pos : Vector2 = ground.to_global(ground.map_to_local(cell) + thisTile.tree_offset)
-				newTree.position = trees.to_local(world_pos)
-				newTree.rotation = thisTile.tree_rotation
-				trees.add_child(newTree)
+				var xform : Transform2D = Transform2D(thisTile.tree_rotation, tree_scale, 0.0, trees.to_local(world_pos))
+				
+				var chunk : Vector2i = cell / tree_chunk_size
+				if not tree_chunks.has(chunk):
+					tree_chunks[chunk] = []
+				tree_chunks[chunk].append(xform)
+	
+	_build_tree_multimeshes(trees, tree_chunks)
 	
 	#Set world bounds
 	var used_rect_size : Vector2i = ground.get_used_rect().size
@@ -624,6 +762,9 @@ func _process(_delta: float) -> void:
 				genTileMap()
 				preGen = false
 				loaded = true
+		
+		if loaded:
+			update_tree_cutouts()
 		
 		#Engine only
 		if OS.has_feature("editor") and freeCam:

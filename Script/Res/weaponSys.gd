@@ -176,7 +176,7 @@ func update(delta: float, target: Vector2) -> void:
 							
 							var thisPos : Vector2 = dir * finalDist
 							
-							i.points[1] = t * thisPos
+							i.set_point_position(1, t * thisPos)
 						
 						#checks if you are rolling
 						var canAttack : bool = true

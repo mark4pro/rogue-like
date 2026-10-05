@@ -9,15 +9,26 @@ uniform float shadow_scale = 1.5;
 uniform bool disable_rotating = false;
 uniform bool disable_shadow = false;
 
+// Cutouts (filled from GDScript every frame).
+// Positions live in a 1-pixel-tall float texture: pixel i = (x, y) in R and G.
+uniform sampler2D cutout_data : filter_nearest, repeat_disable;
+uniform int cutout_count = 0;
+uniform float cutout_radius = 48.0;     // world pixels
+uniform float cutout_softness = 24.0;   // fade width at the edge of the hole
+uniform float cutout_alpha : hint_range(0.0, 1.0) = 0.25; // how see-through the middle gets (0 = fully gone)
+
 varying flat vec4 modulate;
 varying flat float sprite_rotation;
 varying flat float final_scale;
+varying vec2 world_pos;
 
 void vertex() {
 	final_scale = max(border_scale, shadow_scale);
 	VERTEX.xy *= final_scale;
 	modulate = COLOR;
 	sprite_rotation = atan(MODEL_MATRIX[0][1], MODEL_MATRIX[0][0]);
+	// Same space as Node2D.global_position (includes the multimesh instance transform)
+	world_pos = (MODEL_MATRIX * vec4(VERTEX, 0.0, 1.0)).xy;
 }
 
 vec4 sample_texture_safe(sampler2D tex, vec2 uv) {
@@ -68,6 +79,18 @@ vec2 rotate_point(vec2 point, float angle) {
 	return vec2(point.x * c - point.y * s, point.x * s + point.y * c);
 }
 
+// 1.0 = untouched, cutout_alpha = in the middle of a hole
+float cutout_factor() {
+	float f = 1.0;
+	int count = min(cutout_count, textureSize(cutout_data, 0).x);
+	for (int i = 0; i < count; i++) {
+		vec2 p = texelFetch(cutout_data, ivec2(i, 0), 0).rg;
+		float d = distance(world_pos, p);
+		f = min(f, smoothstep(cutout_radius - cutout_softness, cutout_radius, d));
+	}
+	return mix(cutout_alpha, 1.0, f);
+}
+
 void fragment() {
 	vec2 sprite_uv = (UV - 0.5) * final_scale + 0.5;
 	vec4 main_texture = sample_texture_safe(TEXTURE, sprite_uv) * modulate;
@@ -88,4 +111,7 @@ void fragment() {
 		vec4 res = mix(shadow, main_texture, main_texture.a);
 		COLOR = debug ? mix(vec4(1.0, 0.0, 0.0, 0.3), res, res.a) : res;
 	}
+
+	// Fade canopy and its shadow together so the hole doesn't reveal a dark blob
+	COLOR.a *= cutout_factor();
 }
