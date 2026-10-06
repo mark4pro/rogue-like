@@ -11,6 +11,13 @@ baseDamage = 62.0
 animationType = 3
 rangeSpawnAmount = 20
 rangeSpreadAngle = 50.0
+scaling = {
+"magic": "A",
+"rogue": "D"
+}
+elements = {
+"shadow": 0.6
+}
 name = "Shadow Ball"
 itemIcon = ExtResource("1_swtyi")
 groundScale = 0.5

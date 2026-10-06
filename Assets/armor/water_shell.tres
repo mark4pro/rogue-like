@@ -7,6 +7,11 @@
 [resource]
 script = ExtResource("3_c6q8s")
 armorScene = ExtResource("1_epnv5")
+baseResists = {
+"fire": 0.25,
+"shock": -0.25,
+"water": 0.4
+}
 name = "Water Shell"
 itemIcon = ExtResource("2_fmcvs")
 iconScale = 2.0

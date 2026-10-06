@@ -8,6 +8,12 @@
 script = ExtResource("1_2vyih")
 weaponScene = ExtResource("3_6ykqe")
 baseDamage = 2.0
+scaling = {
+"strength": "D"
+}
+elements = {
+"fire": 0.5
+}
 damage = Vector2(2, 5)
 critChance = 0.2
 critMulti = 1.2

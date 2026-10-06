@@ -46,6 +46,7 @@ func _ready() -> void:
 		icon.texture = item.itemIcon
 		icon.scale = Vector2.ONE * item.iconScale
 		icon.rotation_degrees = item.iconRotOffset
+		Mutation.applyTo(icon, item)
 	else:
 		amountTxt.visible = false
 

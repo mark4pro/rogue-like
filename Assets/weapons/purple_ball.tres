@@ -9,6 +9,12 @@ script = ExtResource("1_6dj15")
 weaponScene = ExtResource("2_kugf0")
 baseDamage = 30.0
 animationType = 3
+scaling = {
+"magic": "C"
+}
+elements = {
+"shock": 0.4
+}
 name = "Purple Ball"
 itemIcon = ExtResource("1_njonl")
 groundScale = 0.5

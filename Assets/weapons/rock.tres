@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("1_jypjq")
+scaling = {"strength": "C"}
 weaponScene = ExtResource("2_3tqjh")
 baseDamage = 30.0
 KnBckVar = 0.6

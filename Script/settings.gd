@@ -271,7 +271,9 @@ func _apply_shadow_shader(n: CanvasItem) -> void:
 		n.visible = n.get_meta("_settings_shadow_visible") and data.graphics.shadows
 	else:
 		if not mat.has_meta("_settings_disable_shadow"):
-			mat.set_meta("_settings_disable_shadow", bool(mat.get_shader_parameter("disable_shadow")))
+			# null when the material never set it (shader default) - bool(null) would crash
+			var current = mat.get_shader_parameter("disable_shadow")
+			mat.set_meta("_settings_disable_shadow", true if current else false)
 		mat.set_shader_parameter("disable_shadow", mat.get_meta("_settings_disable_shadow") or not data.graphics.shadows)
 
 var _shadow_shader_cache : Dictionary = {} # Shader -> bool

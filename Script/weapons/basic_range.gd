@@ -77,9 +77,9 @@ func bulletCol(body: Node):
 			newEffect.emitting = true
 		
 		if body is RigidBody2D:
-			var knBckDir : Vector2 = (body.global_position - global_position).normalized()
-			if "knockbackVelocity" in body:
-				body.knockbackVelocity += knBckDir * weapSys.weapon.knockback
+			# Push along the bullet's flight, not just away from where it touched
+			var knBckDir : Vector2 = dir if dir != Vector2.ZERO else body.global_position - global_position
+			Knockback.apply(body, knBckDir, weapSys.weapon.knockback, weapSys.parentNode)
 		
 		if body.has_method("take_damage"):
 			body.take_damage(weapSys.genDamage(), weapSys.parentNode)

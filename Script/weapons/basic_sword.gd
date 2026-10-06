@@ -46,9 +46,7 @@ func _process(_delta: float) -> void:
 						b.take_damage(weapSys.genDamage(), weapSys.parentNode)
 						
 						if b is RigidBody2D:
-							var knBckDir : Vector2 = (b.global_position - col.global_position).normalized()
-							if "knockbackVelocity" in b:
-								b.knockbackVelocity += knBckDir * weapSys.weapon.knockback
+							Knockback.apply(b, b.global_position - col.global_position, weapSys.weapon.knockback, weapSys.parentNode)
 						
 						hitTargets.append(b)
 

@@ -8,6 +8,16 @@
 script = ExtResource("1_dvwkg")
 armorScene = ExtResource("1_h1bhv")
 baseDefense = 80.0
+baseResists = {
+"acid": 0.1,
+"fire": 0.1,
+"ice": 0.1,
+"shadow": 0.1,
+"shock": 0.1,
+"slime": 0.1,
+"venom": 0.1,
+"water": 0.1
+}
 name = "Weird Shell"
 itemIcon = ExtResource("2_a81bu")
 iconScale = 2.0

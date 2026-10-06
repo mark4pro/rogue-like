@@ -7,6 +7,10 @@
 [resource]
 script = ExtResource("3_0xhi8")
 armorScene = ExtResource("1_8a2gj")
+baseResists = {
+"acid": 0.2,
+"venom": 0.25
+}
 name = "Skin Shell"
 itemIcon = ExtResource("2_pxxsi")
 iconScale = 2.0

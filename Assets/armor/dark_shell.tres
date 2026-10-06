@@ -7,6 +7,10 @@
 [resource]
 script = ExtResource("3_0glvi")
 armorScene = ExtResource("1_hwe8m")
+baseResists = {
+"laser": 0.15,
+"shadow": 0.4
+}
 name = "Dark Shell"
 itemIcon = ExtResource("2_8uhnb")
 iconScale = 2.0

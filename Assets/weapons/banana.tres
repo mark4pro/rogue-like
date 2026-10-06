@@ -8,6 +8,13 @@
 script = ExtResource("2_veykp")
 weaponScene = ExtResource("3_e7xug")
 baseDamage = 15.0
+scaling = {
+"luck": "C",
+"strength": "D"
+}
+elements = {
+"slime": 0.2
+}
 name = "Banana"
 itemIcon = ExtResource("1_8p5m2")
 itemType = 1

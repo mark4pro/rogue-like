@@ -70,6 +70,26 @@ func _process(_delta: float) -> void:
 			zPart.visible = true
 			zPart.emitting = true
 
+#region Respec (called from Shop_Keeper.dialogue)
+# Resets every attribute point back into the pool for money. Proficiency is kept.
+
+func respec_price() -> int:
+	return Global.playerStats.respecPrice()
+
+func has_spent_points() -> bool:
+	return Global.playerStats.pointsSpent() > 0
+
+func can_afford_respec() -> bool:
+	return Global.money >= respec_price()
+
+func do_respec() -> void:
+	if not has_spent_points() or not can_afford_respec(): return
+	Global.money -= respec_price()
+	Global.playerStats.resetAttributes()
+	Global.sendMessage("Stats reset: %d points to spend" % Global.playerStats.unspent_points, 4.0, Color.GOLD)
+
+#endregion
+
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):
 		Global.sendMessage("Press " + Global.getKeyFromAction("interact") + " to talk to shop keeper.", 3.0, Color(0.0, 0.196, 0.667, 1.0))

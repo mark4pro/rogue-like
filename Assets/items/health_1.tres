@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("2_heevd")
-healthAmount = 25.0
+healthAmount = 10.0
 name = "Snail Meds"
 itemIcon = ExtResource("1_6wq8w")
 iconScale = 1.2

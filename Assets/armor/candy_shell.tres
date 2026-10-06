@@ -7,6 +7,11 @@
 [resource]
 script = ExtResource("1_548no")
 armorScene = ExtResource("1_wblfa")
+knockbackResist = 0.05
+baseResists = {
+"acid": -0.15,
+"slime": 0.3
+}
 name = "Candy Shell"
 itemIcon = ExtResource("2_bqdax")
 iconScale = 2.0

@@ -3,6 +3,19 @@
 	Shop Keeper: [speed=0.2]I'll show you what I have.
 	do isShopOpen = true
 	=> END
+- Reset my stats
+	if has_spent_points()
+		Shop Keeper: [speed=0.2]Starting over will cost you ${{respec_price()}}. All your points come back to spend again.
+		- Do it [if can_afford_respec()]
+			do do_respec()
+			Shop Keeper: [speed=0.2]Done. Spend them wisely this time.
+		- I can't afford that [if not can_afford_respec()]
+			Shop Keeper: [speed=0.2]Come back when you've got the coin.
+		- Never mind
+			Shop Keeper: [speed=0.2]Suit yourself.
+	else
+		Shop Keeper: [speed=0.2]You haven't spent any points yet. Nothing to reset.
+	=> END
 - Chat
 	Shop Keeper: [speed=0.2]How's it going? (wip)
 	=> END

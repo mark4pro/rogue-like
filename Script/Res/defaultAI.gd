@@ -115,5 +115,6 @@ func update(delta: float) -> void:
 		#Weapon system attack
 		if currentState == state.CHASE and targetNode and \
 		body.global_position.distance_to(targetNode.global_position) <= stopDist and \
-		not body.get_tree().paused and weapSys and not weapSys.isAttacking:
-				weapSys.attack()
+		not body.get_tree().paused and weapSys and not weapSys.isAttacking and weapSys.canAfford() and \
+		not ("hitstun" in body and body.hitstun > 0):
+				weapSys.attack() # out of stamina/mana the enemy holds off until its pool recovers

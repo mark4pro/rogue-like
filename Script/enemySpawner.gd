@@ -19,25 +19,20 @@ const HABITAT_CAVE : int = 2
 @export var mouth_radius : int = 4           # tiles around a cave mouth that get mouth_bias
 @export var spawn_in_corridors : bool = false
 
-@export_group("Difficulty")
-# Each enemy is scaled once, when it spawns:
-#   mult = 1 + total_days * per_total_day + run_days * per_run_day   (x blood moon mult, capped)
-# total_days = days finished before this run started (Global.totalDays), run_days = Global.runDays
-@export var health_per_total_day : float = 0.03
-@export var health_per_run_day : float = 0.12
-@export var damage_per_total_day : float = 0.02
-@export var damage_per_run_day : float = 0.08
-@export var defense_per_total_day : float = 0.25 # flat defense added (10 defense = ~9% less damage taken)
-@export var defense_per_run_day : float = 1.0
-@export var speed_per_total_day : float = 0.002
-@export var speed_per_run_day : float = 0.02
-@export var max_stat_mult : float = 6.0          # cap for the health/damage multipliers
-@export var max_speed_mult : float = 1.5         # speed is capped lower so enemies stay dodgeable
+@export_group("Enemy levels")
+# Each enemy gets a level when it spawns (replaces the old flat difficulty multipliers):
+#   level = 1 + total_days * level_per_total_day + run_days * level_per_run_day (+ blood moon bonus)
+# total_days = days finished before this run started (Global.totalDays), run_days = Global.runDays.
+# The level buys attribute points (same table as the player) spread by the enemy's archetype
+# weights, plus a small built-in boost per level so high-level enemies are tough whatever their build.
+@export var level_per_total_day : float = 0.2
+@export var level_per_run_day : float = 1.0
+@export var level_variance : int = 1             # random +-, so a pack isn't all one level
+@export var health_per_level : float = 0.08      # +8% max health per level above 1
+@export var damage_per_level : float = 0.05      # +5% damage per level above 1
+@export var defense_per_level : float = 0.5      # flat defense per level above 1
 @export_subgroup("Blood moon")
-@export var blood_moon_health_mult : float = 1.5
-@export var blood_moon_damage_mult : float = 1.35
-@export var blood_moon_speed_mult : float = 1.15
-@export var blood_moon_defense_add : float = 5.0
+@export var blood_moon_bonus_levels : int = 5    # blood moon enemies are this many levels higher
 @export var blood_moon_spawn_rate_mult : float = 2.0  # spawns this many times as often
 @export var blood_moon_max_enemies_mult : float = 1.5 # and allows this many times as many at once
 @export_subgroup("Blood moon loot")
@@ -312,40 +307,17 @@ func _pocket_full(cell: Vector2i, counts: Dictionary) -> bool:
 
 #region Difficulty
 
-# Current multipliers for a newly spawned enemy
-func difficulty() -> Dictionary:
-	var total : float = float(Global.totalDays)
-	var run : float = float(Global.runDays)
-	
-	var d : Dictionary = {
-		"health": 1.0 + total * health_per_total_day + run * health_per_run_day,
-		"damage": 1.0 + total * damage_per_total_day + run * damage_per_run_day,
-		"defense": total * defense_per_total_day + run * defense_per_run_day,
-		"speed": 1.0 + total * speed_per_total_day + run * speed_per_run_day,
-	}
-	if Global.isBloodMoon:
-		d.health *= blood_moon_health_mult
-		d.damage *= blood_moon_damage_mult
-		d.speed *= blood_moon_speed_mult
-		d.defense += blood_moon_defense_add
-	
-	d.health = minf(d.health, max_stat_mult)
-	d.damage = minf(d.damage, max_stat_mult)
-	d.speed = minf(d.speed, max_speed_mult)
-	return d
+# Level for an enemy spawning right now
+func enemyLevel() -> int:
+	var lvl : int = 1 + int(Global.totalDays * level_per_total_day + Global.runDays * level_per_run_day)
+	if Global.isBloodMoon: lvl += blood_moon_bonus_levels
+	lvl += randi_range(-level_variance, level_variance)
+	return clampi(lvl, 1, stats.LEVEL_CAP)
 
-func applyDifficulty(e: Node) -> void:
-	var d : Dictionary = difficulty()
-	if "maxHealth" in e:
-		e.maxHealth *= d.health
-		e.health = e.maxHealth
-	if "defense" in e:
-		e.defense += d.defense
-	if "speed" in e:
-		e.speed *= d.speed
-	if "weapSys" in e and e.weapSys:
-		e.weapSys.damageMult = d.damage
-	e.set_meta("difficulty", d)
+# Call before add_child so the enemy starts at full (scaled) health
+func applyLevel(e: Node) -> void:
+	if e.has_method("setLevel"):
+		e.setLevel(enemyLevel())
 	if Global.isBloodMoon:
 		e.set_meta("blood_moon", true)
 
@@ -392,7 +364,7 @@ func _process(delta: float) -> void:
 							var newEnemy : Node2D = spawn.scene.instantiate()
 							newEnemy.name = "Enemy_%d" % spawned_total
 							newEnemy.position = enemyNode.to_local(spawn.pos)
-							applyDifficulty(newEnemy) # before add_child so health starts full at the scaled max
+							applyLevel(newEnemy) # before add_child so health starts full at the scaled max
 							enemyNode.add_child(newEnemy)
 							spawned_total += 1
 				else:

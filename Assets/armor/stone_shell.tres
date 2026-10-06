@@ -7,6 +7,12 @@
 [resource]
 script = ExtResource("1_30uwt")
 armorScene = ExtResource("1_kiy12")
+knockbackResist = 0.35
+baseResists = {
+"fire": 0.1,
+"melee": 0.2,
+"projectile": 0.2
+}
 name = "Stone Shell"
 itemIcon = ExtResource("1_66x1g")
 iconScale = 2.0

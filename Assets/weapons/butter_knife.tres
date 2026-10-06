@@ -6,6 +6,7 @@
 
 [resource]
 script = ExtResource("2_nbveu")
+scaling = {"rogue": "B", "strength": "D"}
 weaponScene = ExtResource("3_63ko8")
 baseDamage = 15.0
 name = "Butter Knife"

@@ -8,6 +8,10 @@
 script = ExtResource("3_7ixj7")
 armorScene = ExtResource("1_qfp6d")
 baseDefense = 35.0
+baseResists = {
+"acid": 0.25,
+"laser": 0.2
+}
 name = "Face Shell"
 itemIcon = ExtResource("2_xh7pk")
 iconScale = 2.0

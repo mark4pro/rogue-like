@@ -8,6 +8,10 @@
 script = ExtResource("3_vgnun")
 armorScene = ExtResource("1_ukleh")
 baseDefense = 50.0
+baseResists = {
+"laser": 0.3,
+"shadow": 0.3
+}
 name = "Bright Shell"
 itemIcon = ExtResource("2_uvk7o")
 iconScale = 2.0

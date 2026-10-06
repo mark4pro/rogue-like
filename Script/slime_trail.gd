@@ -22,7 +22,10 @@ var _shine : Line2D = null
 var _retired : bool = false
 
 func _ready() -> void:
-	z_index = 1 # same layer the old slime sprites used
+	# One layer above ground decoration (the hub path is z 1). The hub is y-sorted, so on the same
+	# layer the path (origin lower on screen) would draw over a trail whose origin is (0, 0).
+	# Still below the player (3); the player's shadow (2) draws over it thanks to that same y-sort.
+	z_index = 2
 	width = trail_width
 	joint_mode = Line2D.LINE_JOINT_ROUND
 	begin_cap_mode = Line2D.LINE_CAP_ROUND

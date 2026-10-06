@@ -14,7 +14,7 @@ var compareUI : PackedScene = preload("uid://bdiwb0lraqgm1")
 @export var armor : ArmorItem = null
 @export var money : int = 0
 @export var pickupRange : float = 50
-@export var playerStats : stats = stats.new()
+@export var playerStats : stats = _newStats()
 
 @export_category("Hot Bar")
 @export var hotbar_weapons : Array[BaseItem] = []
@@ -98,10 +98,19 @@ var rollBloodMoon : bool = true
 # (enemies set it for a moment while dropping blood moon loot)
 var lootRarityBonus : float = 0.0
 
+# Everything added to an item's rarity roll: temporary bonuses (blood moon drops) + the player's Luck
+func rarityRollBonus() -> float:
+	return lootRarityBonus + (playerStats.rarityBonus() if playerStats else 0.0)
+
 var ambientLight : CanvasModulate = null
 var ambientColor : Color = Color.WHITE
 
 const savePath : String = "user://saves/"
+
+static func _newStats() -> stats:
+	var s : stats = stats.new()
+	s.version = stats.CURRENT_VERSION
+	return s
 
 func saveGame() -> void:
 	if sceneIndex == 0:
@@ -162,6 +171,14 @@ func loadGame():
 		armor = save_data.armor
 		money = save_data.money
 		playerStats = save_data.playerStats
+		# Base stat values changed since this save was made: take the new defaults
+		# but carry the earned progression over
+		if not playerStats or playerStats.version < stats.CURRENT_VERSION:
+			var fresh : stats = _newStats()
+			if playerStats:
+				for p in ["level", "xp", "unspent_points", "attributes", "beeness_unlocked", "proficiency"]:
+					if p in playerStats and playerStats.get(p) != null: fresh.set(p, playerStats.get(p))
+			playerStats = fresh
 		
 		#Inventory
 		inventory = save_data.inventory
@@ -305,6 +322,9 @@ func damNumbers(colShape, data: Dictionary) -> void:
 		else:
 			newLabel.add_theme_font_size_override("font_size", randi_range(damNumberSizeRange.x, damNumberSizeRange.y))
 			newLabel.add_theme_color_override("font_color", damNumberNormColor)
+		# Elemental / status damage is coloured by its element
+		if data.has("color"):
+			newLabel.add_theme_color_override("font_color", data.color)
 		
 		var randomPos : Vector2 = getRandomPosFromColShap(colShape)
 		

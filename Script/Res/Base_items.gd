@@ -63,7 +63,7 @@ func rollStats() -> void:
 	
 	var dayBias : float = setDay * 0.015
 	
-	var roll : float = clamp(rng.randf() + dayBias + Global.lootRarityBonus, 0.0, 0.999)
+	var roll : float = clamp(rng.randf() + dayBias + Global.rarityRollBonus(), 0.0, 0.999)
 	rarity = int(roll * 6)
 	
 	var rarityMult : float = 1.0 + rarity * 0.25
@@ -197,5 +197,6 @@ func spawnPlaced(pos: Vector2, rot: float = 0.0) -> Node2D:
 		newWeapSys.weapon = self
 		newPlacedScene.weapSys = newWeapSys
 	
+	Mutation.applyTree(newPlacedScene, self)
 	Global.currentScene.add_child(newPlacedScene)
 	return newPlacedScene

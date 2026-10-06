@@ -65,6 +65,14 @@ const CUTOUT_CANVAS_GROUP : StringName = &"tree_cutout_canvas" # hand-placed Can
 @export var spawn_border_margin : int = 12  # min tiles from the map edge
 @export var spawn_tries : int = 600         # random picks before relaxing the rules
 
+@export_group("Boss site")
+@export var boss_site_enabled : bool = true
+@export var boss_min_distance : int = 40    # tiles from the player spawn
+@export var boss_max_distance : int = 90
+@export var boss_clear_radius : int = 5     # trees cleared around the broken eye so it's never hidden
+@export var boss_cave_distance : int = 8    # min tiles from any cave tile
+@export var boss_border_margin : int = 15
+
 var currentSeed : int = randi()
 var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 
@@ -90,6 +98,7 @@ var torch_spots : Array[Dictionary] = [] # {"cell": Vector2i, "wall": Vector2i} 
 var cave_dark_light : PointLight2D = null # subtractive light shaped like the caves (see _build_cave_darkness)
 
 var spawn_cell : Vector2i = Vector2i(-1, -1) # picked in genWorld() from the seed
+var boss_cell : Vector2i = Vector2i(-1, -1)  # where the broken Robotic Spider Eye lies (gen_boss_site)
 var spawn_on_load : bool = false             # set when a run's world node is created, cleared once the player is placed
 
 #Tree rendering (built once from treeRes)
@@ -1196,6 +1205,151 @@ func _spawn_ok(t: WorldTile, clear_r: int, cave_d: int, margin: int) -> bool:
 				return false
 	return true
 
+# Picks a forest spot for the broken Robotic Spider Eye: in the main forest, a fair walk from the
+# spawn, away from caves, then clears the trees around it so it's always visible.
+func gen_boss_site() -> void:
+	boss_cell = Vector2i(-1, -1)
+	if not boss_site_enabled or regions.forest.is_empty() or spawn_cell == Vector2i(-1, -1):
+		return
+	var main : Region = regions.forest[0]
+	for r in regions.forest:
+		if r.tiles.size() > main.tiles.size():
+			main = r
+	
+	var rules : Array = [
+		[boss_min_distance, boss_max_distance, boss_cave_distance, boss_border_margin],
+		[boss_min_distance / 2, boss_max_distance * 2, boss_cave_distance / 2, boss_border_margin / 2],
+		[0, 100000, 0, 2],
+	]
+	for rule in rules:
+		for i in spawn_tries:
+			var t : WorldTile = main.tiles[rng.randi_range(0, main.tiles.size() - 1)]
+			var d : float = Vector2(t.tilePos - spawn_cell).length()
+			if d < rule[0] or d > rule[1] or not t.is_walkable:
+				continue
+			if _spawn_ok_ignore_trees(t, rule[2], rule[3]):
+				boss_cell = t.tilePos
+				_clear_trees_disc(boss_cell, boss_clear_radius)
+				return
+
+# Like _spawn_ok but trees don't matter (they get cleared)
+func _spawn_ok_ignore_trees(t: WorldTile, cave_d: int, margin: int) -> bool:
+	var p : Vector2i = t.tilePos
+	if p.x < margin or p.y < margin or p.x >= worldSize.x - margin or p.y >= worldSize.y - margin:
+		return false
+	for dy in range(-cave_d, cave_d + 1):
+		for dx in range(-cave_d, cave_d + 1):
+			var n : Vector2i = p + Vector2i(dx, dy)
+			if in_bounds(n) and get_tile(n).is_cave:
+				return false
+	return true
+
+func _clear_trees_disc(center: Vector2i, radius: int) -> void:
+	for dy in range(-radius, radius + 1):
+		for dx in range(-radius, radius + 1):
+			if dx * dx + dy * dy > radius * radius:
+				continue
+			var n : Vector2i = center + Vector2i(dx, dy)
+			if in_bounds(n):
+				get_tile(n).has_tree = false
+				no_tree_zone[n] = true
+
+#region Navigation
+
+# Performance: the ground TileMapLayer used to provide navigation, which made every tile its own
+# navigation region (90,000 of them). Each enemy path query then took ~20 ms, so a few enemies
+# re-pathing in one frame caused big stutters. Instead the walkable tiles are baked into one
+# navigation region per NAV_CHUNK x NAV_CHUNK tiles (~225 regions, ~0.2 ms per query, ~80 ms to
+# bake while the world loads). Chunks link up through the map's edge connections.
+const NAV_CHUNK : int = 20
+
+func _build_navigation() -> void:
+	var ground : TileMapLayer = worldNode.ground
+	ground.navigation_enabled = false
+	worldNode.walls.navigation_enabled = false
+	var old : Node = worldNode.get_node_or_null("Navigation")
+	if old:
+		old.free()
+	var nav : Node2D = Node2D.new()
+	nav.name = "Navigation"
+	worldNode.add_child(nav)
+	
+	var tile : Vector2 = Vector2(tileSize) * ground.scale
+	var origin : Vector2 = nav.to_local(ground.to_global(ground.map_to_local(Vector2i.ZERO))) - tile * 0.5
+	for cy in range(0, worldSize.y, NAV_CHUNK):
+		for cx in range(0, worldSize.x, NAV_CHUNK):
+			var np : NavigationPolygon = _bake_nav_chunk(cx, cy, origin, tile)
+			if not np:
+				continue
+			var region : NavigationRegion2D = NavigationRegion2D.new()
+			region.navigation_polygon = np
+			nav.add_child(region)
+
+# One chunk: the chunk's square is walkable, every blocked tile (run) is cut out of it
+func _bake_nav_chunk(cx: int, cy: int, origin: Vector2, tile: Vector2) -> NavigationPolygon:
+	var x1 : int = mini(cx + NAV_CHUNK, worldSize.x)
+	var y1 : int = mini(cy + NAV_CHUNK, worldSize.y)
+	var geo : NavigationMeshSourceGeometryData2D = NavigationMeshSourceGeometryData2D.new()
+	var walkable : int = 0
+	for y in range(cy, y1):
+		var run : int = -1
+		for x in range(cx, x1 + 1):
+			var blocked : bool = x >= x1 or not world[y][x].is_walkable
+			if x < x1 and not blocked:
+				walkable += 1
+			if x < x1 and blocked and run < 0:
+				run = x
+			if (not blocked or x >= x1) and run >= 0:
+				# Grown a hair so diagonal blocked tiles overlap instead of touching at one corner
+				# (a single shared corner makes the convex partition fail)
+				var pad : Vector2 = Vector2(0.05, 0.05)
+				geo.add_obstruction_outline(_nav_rect(origin + Vector2(run, y) * tile - pad, origin + Vector2(x, y + 1) * tile + pad))
+				run = -1
+	if walkable == 0:
+		return null
+	geo.add_traversable_outline(_nav_rect(origin + Vector2(cx, cy) * tile, origin + Vector2(x1, y1) * tile))
+	var np : NavigationPolygon = NavigationPolygon.new()
+	np.agent_radius = 0.0
+	NavigationServer2D.bake_from_source_geometry_data(np, geo)
+	if np.get_polygon_count() == 0:
+		np = _grid_nav_chunk(cx, cy, x1, y1, origin, tile) # awkward shapes can fail to partition
+	return np
+
+# Fallback: one square per walkable tile, sharing vertices so they all connect
+func _grid_nav_chunk(cx: int, cy: int, x1: int, y1: int, origin: Vector2, tile: Vector2) -> NavigationPolygon:
+	var np : NavigationPolygon = NavigationPolygon.new()
+	var verts : PackedVector2Array = PackedVector2Array()
+	var w : int = x1 - cx + 1
+	for y in range(cy, y1 + 1):
+		for x in range(cx, x1 + 1):
+			verts.append(origin + Vector2(x, y) * tile)
+	np.vertices = verts
+	for y in range(cy, y1):
+		for x in range(cx, x1):
+			if not world[y][x].is_walkable:
+				continue
+			var i : int = (y - cy) * w + (x - cx)
+			np.add_polygon(PackedInt32Array([i, i + 1, i + w + 1, i + w]))
+	return np
+
+static func _nav_rect(a: Vector2, b: Vector2) -> PackedVector2Array:
+	return PackedVector2Array([a, Vector2(b.x, a.y), b, Vector2(a.x, b.y)])
+
+#endregion
+
+# One BossSite per world, straight under the scene so it y-sorts with the player
+func _spawn_boss_site() -> void:
+	var old : Node = Global.currentScene.get_node_or_null("BossSite") if Global.currentScene else null
+	if old:
+		old.free()
+	if boss_cell == Vector2i(-1, -1) or not Global.currentScene:
+		return
+	var ground : TileMapLayer = worldNode.ground
+	var site : BossSite = BossSite.new()
+	site.name = "BossSite"
+	site.position = Global.currentScene.to_local(ground.to_global(ground.map_to_local(boss_cell)))
+	Global.currentScene.add_child(site)
+
 # Global position of the spawn tile (needs the world node, so only valid after genTileMap)
 func get_spawn_position() -> Vector2:
 	var ground : TileMapLayer = worldNode.ground
@@ -1288,6 +1442,9 @@ func genTileMap() -> void:
 	var trees : Node2D = worldNode.trees
 	var walls : TileMapLayer = worldNode.walls
 	var debug : TileMapLayer = worldNode.debug
+	# Tile navigation off before filling the map (see _build_navigation)
+	ground.navigation_enabled = false
+	walls.navigation_enabled = false
 	
 	for child in trees.get_children():
 		child.queue_free()
@@ -1337,6 +1494,8 @@ func genTileMap() -> void:
 	
 	_build_tree_multimeshes(trees, tree_chunks)
 	_spawn_torches()
+	_spawn_boss_site()
+	_build_navigation()
 	_build_cave_darkness()
 	_apply_ground_blend()
 	
@@ -1368,6 +1527,7 @@ func genWorld() -> void:
 	gen_trees()
 	gen_torches()
 	gen_spawn()
+	gen_boss_site() # after the spawn so it can keep its distance
 
 func regen() -> void:
 	currentSeed = randi()

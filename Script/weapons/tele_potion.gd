@@ -96,9 +96,7 @@ func bulletCol(body: Node):
 			newEffect.emitting = true
 		
 		if body is RigidBody2D:
-			var knBckDir : Vector2 = (body.global_position - global_position).normalized()
-			if "knockbackVelocity" in body:
-				body.knockbackVelocity += knBckDir * weapSys.weapon.knockback
+			Knockback.apply(body, body.global_position - global_position, weapSys.weapon.knockback, weapSys.parentNode)
 		
 		if body.has_method("take_damage") and canDamage:
 			body.take_damage(weapSys.genDamage(), weapSys.parentNode)

@@ -127,3 +127,9 @@ func _process(_delta: float) -> void:
 			slot_6_icon.texture = null
 			slot_6_outline.modulate = color_default
 			slot_6_amount.visible = false
+	
+	# Mutated weapons keep their colours in the hot bar
+	var icons : Array = [slot_1_icon, slot_2_icon, slot_3_icon, slot_4_icon, slot_5_icon, slot_6_icon]
+	var items : Array = wHBar + iHBar
+	for i in mini(icons.size(), items.size()):
+		Mutation.applyTo(icons[i], items[i])

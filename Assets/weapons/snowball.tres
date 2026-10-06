@@ -9,6 +9,12 @@ script = ExtResource("1_hmqeb")
 weaponScene = ExtResource("2_eo4wu")
 baseDamage = 5.0
 animationType = 3
+scaling = {
+"strength": "C"
+}
+elements = {
+"ice": 0.5
+}
 name = "Snowball"
 itemIcon = ExtResource("1_jiwri")
 groundScale = 0.5

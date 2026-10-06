@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="RegenPotionItem" format=3]
+
+[ext_resource type="Texture2D" path="res://Assets/imgs/items/Health_potion.png" id="1_icon"]
+[ext_resource type="Script" path="res://Script/Res/regenPotionItem.gd" id="2_script"]
+
+[resource]
+script = ExtResource("2_script")
+stat = 0
+totalAmount = 60.0
+duration = 8.0
+name = "Health Potion"
+itemIcon = ExtResource("1_icon")
+iconScale = 1.2
+groundScale = 0.1
+hotBarType = 2
+rolled = true
+rarity = 1
+cost = 75
+shopPrice = 64

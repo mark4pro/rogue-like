@@ -14,11 +14,7 @@ func _ready() -> void:
 		print("Can't find item on ground node: ", groundNode.name)
 		queue_free()
 	
-	$Name.text = "\t[color=%s]%s[/color] x%s" % [
-		thisItem.getRarity().color.to_html(),
-		str(thisItem.name),
-		str(thisItem.quantity)
-	]
+	$Name.text = "\t%s x%s" % [Mutation.nameBB(thisItem), str(thisItem.quantity)]
 
 func _process(_delta: float) -> void:
 	if not Global.inventory.hasSpace(thisItem):

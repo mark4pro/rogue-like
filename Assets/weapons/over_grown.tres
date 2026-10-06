@@ -6,6 +6,8 @@
 
 [resource]
 script = ExtResource("2_gkaud")
+elements = {"slime": 0.3}
+scaling = {"strength": "A"}
 weaponScene = ExtResource("3_xn2rn")
 baseDamage = 30.0
 name = "Over Grown"

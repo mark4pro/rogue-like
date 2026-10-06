@@ -12,6 +12,12 @@ baseKnBck = 30.0
 animationType = 3
 rangeSpawnAmount = 2
 rangeSpreadAngle = 20.0
+scaling = {
+"magic": "B"
+}
+elements = {
+"fire": 0.6
+}
 name = "Fireball"
 itemIcon = ExtResource("1_vlpkh")
 groundScale = 0.5

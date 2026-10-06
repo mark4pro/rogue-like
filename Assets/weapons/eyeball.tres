@@ -12,6 +12,13 @@ animationType = 3
 rangeSpawnAmount = 4
 rangeSpreadAngle = 20.0
 rangeFireSpeed = 5.0
+scaling = {
+"focus": "D",
+"magic": "B"
+}
+elements = {
+"acid": 0.4
+}
 name = "Eyeball"
 itemIcon = ExtResource("1_gu1r1")
 groundScale = 0.5

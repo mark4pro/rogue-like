@@ -6,11 +6,15 @@
 
 [resource]
 script = ExtResource("1_avi8m")
+scaling = {"luck": "C", "magic": "B"}
 weaponScene = ExtResource("2_ec1lu")
-baseDamage = 100000.0
+baseDamage = 55.0
+baseKnBck = 15.0
 animationType = 3
 rangeSpawnAmount = 30
 rangeSpreadAngle = 50.0
+rangeFireSpeed = 1.5
+poolCost = 35.0
 name = "Rectangle"
 itemIcon = ExtResource("1_o76rj")
 placedScene = ExtResource("2_ec1lu")
@@ -18,4 +22,5 @@ itemType = 1
 equippable = true
 stackable = false
 sortType = 1
+baseCost = 120.0
 metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

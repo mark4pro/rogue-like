@@ -8,6 +8,13 @@
 script = ExtResource("1_ms8iv")
 weaponScene = ExtResource("3_yl14b")
 baseDamage = 5.0
+scaling = {
+"rogue": "C",
+"strength": "B"
+}
+elements = {
+"acid": 0.25
+}
 name = "Emerald Sword"
 itemIcon = ExtResource("1_jbfpi")
 itemType = 1
