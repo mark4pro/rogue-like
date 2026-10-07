@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("1_hohpu")
 weaponScene = ExtResource("2_4cmxb")
-baseDamage = 50.0
+baseDamage = 13.0
 animationType = 3
 rangeSpawnAmount = 4
 rangeSpreadAngle = 20.0
@@ -19,6 +19,7 @@ scaling = {
 elements = {
 "acid": 0.4
 }
+mutationNotes = null
 name = "Eyeball"
 itemIcon = ExtResource("1_gu1r1")
 groundScale = 0.5

@@ -13,6 +13,15 @@ var weapSys : WeaponSys = null
 var gotoLastKnownPos : bool = false
 @export var investigateDist : float = 8 # how close to get to the last known position (stopDist is too far, the agent counted as arrived almost instantly)
 var wonderTime : float = 0
+## Wandering: walk to a point, then idle wonderUpdate to wonderUpdate x this seconds before the next.
+## The pause is random per stop (wonderUpdate 2 -> 2 to 5 s), so a group doesn't move in sync.
+@export var wanderPauseMax : float = 2.5
+## Give up on a wander point that's taking this long (blocked, stuck on something)
+@export var wanderGiveUp : float = 12.0
+## How close counts as reached for a wander point (stopDist is the attack range, far too loose)
+@export var wanderArriveDist : float = 12.0
+var _wanderIdle : float = 0.0
+var _wanderWait : float = -1.0
 var inSiteTime : float = 0
 var endChaseTime : float = 0
 var dir : Vector2 = Vector2.ZERO
@@ -46,11 +55,18 @@ func update(delta: float) -> void:
 		endChaseTime = 0
 		
 		wonderTime += delta
-		var retarget : bool = wonderTime >= wonderUpdate
+		if _wanderWait < 0.0: _wanderWait = randf_range(0.0, wonderUpdate * wanderPauseMax) # first stop: staggered
+		# Walking: keep going to the point (only give up if it takes far too long).
+		# Arrived: stand around for a bit, then pick the next point.
+		if pathing: _wanderIdle = 0.0
+		else: _wanderIdle += delta
+		var retarget : bool = (not pathing and _wanderIdle >= _wanderWait) or (pathing and wonderTime >= wanderGiveUp)
 		
-		if not gotoLastKnownPos and retarget and canUpdate: # and not pathing
+		if not gotoLastKnownPos and retarget and canUpdate:
 			wonderTime = 0
-			navAgent.target_desired_distance = stopDist
+			_wanderIdle = 0.0
+			_wanderWait = randf_range(wonderUpdate, wonderUpdate * wanderPauseMax)
+			navAgent.target_desired_distance = wanderArriveDist
 			navAgent.target_position = EnemySpawner.getWanderPoint(body.global_position)
 			navAgent.set_velocity(Vector2.ZERO)
 		
@@ -109,12 +125,23 @@ func update(delta: float) -> void:
 		target = navAgent.get_next_path_position()
 		dir = (target - body.global_position).normalized()
 		
-		navAgent.set_velocity(dir * speed * 1000 * delta)
+		# Was `speed * 1000 * delta`: a velocity scaled by the frame time, so enemies walked slower
+		# the higher the frame rate (2.4x slower at 144 fps). Same speed as before at 60 fps.
+		navAgent.set_velocity(dir * speed * 1000.0 / 60.0)
 	else:
 		navAgent.set_velocity(Vector2.ZERO)
 		#Weapon system attack
 		if currentState == state.CHASE and targetNode and \
 		body.global_position.distance_to(targetNode.global_position) <= stopDist and \
 		not body.get_tree().paused and weapSys and not weapSys.isAttacking and weapSys.canAfford() and \
-		not ("hitstun" in body and body.hitstun > 0):
+		not ("hitstun" in body and body.hitstun > 0) and _clearShot():
 				weapSys.attack() # out of stamina/mana the enemy holds off until its pool recovers
+
+# Projectile / laser enemies used to fire into walls when the player was in range on the other side
+# (wasting mana and giving the player a free show). Melee swings don't need it.
+func _clearShot() -> bool:
+	if not weapSys.weapon or weapSys.weapon.animationType == WeaponItem.animType.SWING: return true
+	if not (targetNode is Node2D): return true
+	var q : PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(body.global_position, targetNode.global_position, 1)
+	q.exclude = [body.get_rid()]
+	return body.get_world_2d().direct_space_state.intersect_ray(q).is_empty()

@@ -48,11 +48,21 @@ var levelLabel : Label = null
 @export var useGlobalLootList : bool = true
 @export var localLootList : LootList = null
 @export var lootChance : float = 0.3
-@export var lootAmount : Vector2i = Vector2i(1, 2)
+## Items per loot drop (was 1-2; with the new rarity odds fewer, better-earned drops)
+@export var lootAmount : Vector2i = Vector2i(1, 1)
 @export var equipDropChance : float = 0.1
 
 var weapSys : WeaponSys = WeaponSys.new()
 var thisAI : DefaultAI = DefaultAI.new()
+
+## How hard this enemy's weapon hits compared with a Common roll of it. Each enemy now gets its own
+## Common copy (they all shared the file's copy before, so whatever rarity it happened to roll first,
+## 1x to 2.25x, applied to every enemy of that type for the session; ~1.6x on average).
+@export var weaponPower : float = 1.5
+var _weaponTemplate : WeaponItem = null # the weapon file; drops are fresh rolls of it
+## Beam tick rate for this enemy's laser copy. Laser files are tuned for the player now
+## (fast ticks); enemies tick slower so their beams keep the same damage per second as before.
+@export var laserTickRate : float = 0.5
 
 @export_category("For Vision Cone")
 @export var coneSteps : int = 12
@@ -103,11 +113,50 @@ var dt : float = 0
 
 var collPosX : float = 0
 
+#region Elite vars
+## Elite affixes (EnemySpawner picks one when it rolls an elite)
+const ELITE_AFFIXES : Array[String] = ["fast", "splitting", "shielded"]
+const ELITE_NAMES : Dictionary = {"fast": "Swift", "splitting": "Splitting", "shielded": "Shielded"}
+const ELITE_COLORS : Dictionary = {
+	"fast": Color(1.0, 0.82, 0.2),
+	"splitting": Color(0.45, 1.0, 0.35),
+	"shielded": Color(0.4, 0.75, 1.0),
+}
+const ELITE_GLOW : Texture2D = preload("uid://oyvy6kab4ex8")
+const ELITE_SIZE : float = 1.2          # elites are drawn a bit bigger
+const ELITE_REWARD_MULT : float = 3.0   # exp and money
+const ELITE_LOOT_RARITY : float = 0.3   # added to the rarity roll of its drops (like the boss's 0.5)
+const FAST_SPEED : float = 1.6
+const SHIELD_FRACTION : float = 0.5     # shield = this much of max health on top
+const SHIELD_REGEN_DELAY : float = 4.0  # seconds without being hit before it comes back
+const SHIELD_REGEN_RATE : float = 0.2   # of the full shield per second
+const SPLIT_COUNT : int = 2
+const SPLIT_HEALTH : float = 0.4        # each half has this much of a normal enemy's health
+const SPLIT_SIZE : float = 0.75
+
+var elite : String = ""        # "" = normal enemy, otherwise one of ELITE_AFFIXES
+var isSplitChild : bool = false
+var shield : float = 0.0
+var maxShield : float = 0.0
+var _shieldWait : float = 0.0
+var _eliteGlow : Sprite2D = null
+var _shieldRing : ShieldRing = null
+var _eliteLabel : Label = null
+var _dead : bool = false
+#endregion
+
 var ogScale : Vector2 = Vector2.ONE
 
 func take_damage(data: Dictionary, attacker: Node):
 	if not get_tree().paused:
 		var hit : Dictionary = StatusEffects.resolveHit(data, self)
+		var throughShield : float = _absorbShield(hit.total) # shielded elites
+		if throughShield <= 0.0:
+			if is_instance_valid(attacker): thisAI.engage(attacker)
+			return # all soaked: no hit reaction, no status buildup
+		var shieldShare : float = throughShield / maxf(hit.total, 0.001)
+		hit.total = throughShield
+		for e in hit.elements: hit.elements[e] *= shieldShare
 		health -= hit.total
 		var shown : Dictionary = data.duplicate()
 		shown.value = hit.total
@@ -174,7 +223,7 @@ func setLevel(lvl: int) -> void:
 	maxHealth *= (1.0 + EnemySpawner.health_per_level * above) * (1.0 + 0.04 * vit) # +4% per Vitality point
 	health = maxHealth
 	defense += EnemySpawner.defense_per_level * above + 0.5 * vit
-	weapSys.damageMult = 1.0 + EnemySpawner.damage_per_level * above
+	weapSys.damageMult = (1.0 + EnemySpawner.damage_per_level * above) * weaponPower
 	
 	# Attribute-driven stats, same formulas as the player
 	speed *= eStats.speedMoveMult()
@@ -262,17 +311,27 @@ func updatePools(delta: float) -> void:
 		mana = min(mana + manaRegen * delta, maxMana)
 
 func _ready() -> void:
+	# Own Common copy of the weapon (see weaponPower)
+	if weapon and not _weaponTemplate:
+		_weaponTemplate = weapon
+		weapon = weapon.duplicate()
+		weapon.rollCommon()
+		if weapon.animationType == WeaponItem.animType.AIM_LASER:
+			weapon.laserAttackSpeed = laserTickRate
 	# Enemies placed by hand (not by the spawner) are level 1
 	if not _levelApplied: setLevel(1)
 	stamina = maxStamina
 	mana = maxMana
 	_buildLevelLabel()
+	_buildEliteLabel()
 	statusFx = StatusEffects.new(self)
 	add_to_group("enemies") # shock chains between these
 	
 	# Wall slam detection needs contact reports
 	contact_monitor = true
 	max_contacts_reported = 4
+	
+	_applyEliteLook() # before the sprite / collider scale and position are remembered below
 	
 	if nav and eye and sprite and coll:
 		thisAI.body = self
@@ -301,12 +360,13 @@ func _process(delta: float) -> void:
 		thisAI.timeUntilChase = timeUntilChase
 		thisAI.timeUntilChaseEnd = timeUntilChaseEnd
 		thisAI.eyePos = eye.global_position
-		thisAI.isFlipped = sprite.scale.x == -1
+		thisAI.isFlipped = sprite.scale.x < 0 # was == -1, wrong for any sprite not at scale 1
 		
 		#Health shit
 		health = clamp(health, 0, maxHealth)
 		if healthBar: healthBar.value = (health / maxHealth) * 100
-		if health <= 0:
+		if health <= 0 and not _dead:
+			_dead = true
 			var randomChk : float = randf()
 			var mods : Dictionary = EnemySpawner.lootMods() # blood moon kills drop better loot
 			
@@ -315,7 +375,7 @@ func _process(delta: float) -> void:
 			if randomChk <= moneyChance: Global.money += roundi(randi_range(moneyRange.x, moneyRange.y) * mods.money)
 			
 			# Items roll their rarity as they land, so the bonus only needs to be set while dropping
-			Global.lootRarityBonus = mods.rarity
+			Global.lootRarityBonus = mods.rarity + (ELITE_LOOT_RARITY if elite != "" else 0.0)
 			
 			if randomChk <= lootChance * mods.loot_chance * Global.playerStats.dropChanceMult(): # Luck
 				var thisLootList : LootList = Global.lootList if useGlobalLootList else localLootList
@@ -325,11 +385,14 @@ func _process(delta: float) -> void:
 						if item: item.drop(1, false, global_position)
 			
 			if randomChk <= equipDropChance * mods.equip:
-				if weapon: weapon.drop(1, false, global_position)
+				# A fresh roll of the weapon file (rarity rolled like any drop), not the enemy's Common copy
+				if _weaponTemplate: _weaponTemplate.drop(1, false, global_position)
 			
 			Global.lootRarityBonus = 0.0
 			
+			if elite == "splitting": _split()
 			queue_free()
+			return
 		
 		#Fix scale for the vision cone
 		var visionConeChk : Node2D = eye.get_node_or_null("Cone")
@@ -347,6 +410,9 @@ func _process(delta: float) -> void:
 		
 		#Flip logic
 		var flipChck : float = linear_velocity.x - knockbackVelocity.x
+		# Standing still in a fight (attacking): face the target instead of the last walk direction
+		if absf(flipChck) < 1.0 and thisAI.currentState == DefaultAI.state.CHASE and is_instance_valid(thisAI.targetNode) and thisAI.targetNode is Node2D:
+			flipChck = thisAI.targetNode.global_position.x - global_position.x
 		if flipChck < 0:
 			sprite.scale.x = -ogScale.x
 			coll.position.x = -collPosX
@@ -365,6 +431,7 @@ func _process(delta: float) -> void:
 			updatePools(delta)
 			hitstun = maxf(hitstun - delta, 0)
 			if statusFx and health > 0: statusFx.process(delta)
+			_updateElite(delta)
 			# The player can level up mid-fight, so the red/white level colour is re-checked
 			if (Engine.get_process_frames() + get_instance_id()) % 30 == 0: _updateLevelLabel() # staggered across enemies
 		# Stunned: stop beams / held fire (the AI won't start new attacks either)
@@ -419,3 +486,137 @@ func velocity_computed(safe_velocity: Vector2) -> void:
 	if statusFx: walk *= statusFx.speedMult() # Chill / Sticky
 	linear_velocity = walk + knockbackVelocity
 	knockbackVelocity *= pow(Global.KNOCKBACK_DECAY, dt)
+
+#region Elite
+
+# Called by EnemySpawner after setLevel and before add_child
+func makeElite(affix: String) -> void:
+	if elite != "" or not affix in ELITE_AFFIXES: return
+	elite = affix
+	maxHealth *= EnemySpawner.elite_health_mult
+	health = maxHealth
+	defense += 3.0
+	weapSys.damageMult *= EnemySpawner.elite_damage_mult # bites use this too
+	expReward *= ELITE_REWARD_MULT
+	moneyRange = Vector2i(moneyRange.x * 3, moneyRange.y * 3)
+	moneyChance = 1.0
+	lootChance = minf(lootChance * 3.0, 1.0)
+	lootAmount += Vector2i(1, 1)
+	equipDropChance = minf(equipDropChance * 3.0, 1.0)
+	knockbackResist = minf(knockbackResist + 0.3, 0.8)
+	match affix:
+		"fast":
+			speed *= FAST_SPEED
+			timeUntilChase *= 0.5
+			staminaRegen *= 1.5
+			manaRegen *= 1.5
+		"shielded":
+			maxShield = maxHealth * SHIELD_FRACTION
+			shield = maxShield
+
+# Size, glow and shield ring. Runs in _ready before the sprite / collider scale is remembered.
+func _applyEliteLook() -> void:
+	if not sprite or not coll: return
+	var size : float = 1.0
+	if elite != "": size = ELITE_SIZE
+	elif isSplitChild: size = SPLIT_SIZE
+	if size != 1.0:
+		sprite.scale *= size
+		sprite.position *= size
+		coll.scale *= size
+		coll.position *= size
+	if elite == "": return
+	var c : Color = ELITE_COLORS[elite]
+	var spriteSize : Vector2 = sprite.get_rect().size * sprite.scale.abs()
+	_eliteGlow = Sprite2D.new()
+	_eliteGlow.name = "EliteGlow"
+	_eliteGlow.texture = ELITE_GLOW
+	_eliteGlow.position = sprite.position
+	_eliteGlow.scale = Vector2.ONE * (spriteSize.length() * 1.5 / float(ELITE_GLOW.get_width()))
+	_eliteGlow.modulate = Color(c.r, c.g, c.b, 0.7)
+	_eliteGlow.show_behind_parent = true
+	var add : CanvasItemMaterial = CanvasItemMaterial.new()
+	add.blend_mode = CanvasItemMaterial.BLEND_MODE_ADD
+	_eliteGlow.material = add
+	add_child(_eliteGlow)
+	move_child(_eliteGlow, 0)
+	if elite == "shielded":
+		_shieldRing = ShieldRing.new()
+		_shieldRing.radius = maxf(spriteSize.x, spriteSize.y) * 0.65
+		_shieldRing.position = sprite.position
+		_shieldRing.color = c
+		add_child(_shieldRing)
+
+func _buildEliteLabel() -> void:
+	if elite == "" or not healthBar or _eliteLabel: return
+	_eliteLabel = Label.new()
+	_eliteLabel.name = "Elite"
+	_eliteLabel.text = "%s Elite" % ELITE_NAMES[elite]
+	_eliteLabel.add_theme_font_override("font", load("uid://dv68j0l4djo44"))
+	_eliteLabel.add_theme_font_size_override("font_size", 18)
+	_eliteLabel.add_theme_constant_override("outline_size", 6)
+	_eliteLabel.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	_eliteLabel.add_theme_color_override("font_color", ELITE_COLORS[elite])
+	_eliteLabel.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_eliteLabel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_eliteLabel.size = Vector2(maxf(healthBar.size.x, 160), 24)
+	_eliteLabel.position = healthBar.position + Vector2((healthBar.size.x - _eliteLabel.size.x) * 0.5, -_eliteLabel.size.y - 2)
+	healthBar.get_parent().add_child(_eliteLabel)
+
+func _updateElite(delta: float) -> void:
+	if elite == "": return
+	if _eliteGlow:
+		var pulse : float = 0.55 + 0.25 * sin(Time.get_ticks_msec() * 0.005 + get_instance_id())
+		_eliteGlow.modulate.a = pulse
+	if maxShield > 0.0:
+		if _shieldWait > 0.0: _shieldWait -= delta
+		elif shield < maxShield: shield = minf(shield + maxShield * SHIELD_REGEN_RATE * delta, maxShield)
+		if _shieldRing: _shieldRing.amount = shield / maxShield
+
+# Shielded elites: the shield soaks damage first. Returns what gets through to health.
+func _absorbShield(amount: float) -> float:
+	if maxShield <= 0.0: return amount
+	_shieldWait = SHIELD_REGEN_DELAY
+	if shield <= 0.0: return amount
+	var soaked : float = minf(shield, amount)
+	shield -= soaked
+	if soaked > 0.0:
+		Global.damNumbers(coll, {"value": soaked, "isCrit": false, "color": ELITE_COLORS["shielded"]})
+	return amount - soaked
+
+# Splitting elites burst into smaller, weaker copies of themselves
+func _split() -> void:
+	if scene_file_path == "" or not get_parent(): return
+	var packed : PackedScene = load(scene_file_path)
+	if not packed: return
+	for i in SPLIT_COUNT:
+		var c : Node = packed.instantiate()
+		c.isSplitChild = true
+		c.setLevel(maxi(level - 2, 1))
+		c.maxHealth *= SPLIT_HEALTH
+		c.health = c.maxHealth
+		c.expReward *= 0.5
+		c.lootChance *= 0.5
+		c.equipDropChance = 0.0
+		var a : float = TAU * (float(i) / SPLIT_COUNT) + randf_range(-0.4, 0.4)
+		c.position = position + Vector2(cos(a), sin(a)) * 8.0
+		c.knockbackVelocity = Vector2(cos(a), sin(a)) * 140.0
+		get_parent().call_deferred("add_child", c)
+
+# Ring around a shielded elite; fades and thins as the shield wears down
+class ShieldRing extends Node2D:
+	var radius : float = 16.0
+	var color : Color = Color(0.4, 0.75, 1.0)
+	var amount : float = 1.0:
+		set(v):
+			if is_equal_approx(v, amount): return
+			amount = v
+			queue_redraw()
+	
+	func _draw() -> void:
+		if amount <= 0.01: return
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.85))
+		draw_circle(Vector2.ZERO, radius, Color(color.r, color.g, color.b, 0.12 * amount))
+		draw_arc(Vector2.ZERO, radius, 0.0, TAU, 40, Color(color.r, color.g, color.b, 0.35 + 0.5 * amount), 1.0 + 1.5 * amount)
+
+#endregion

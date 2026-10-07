@@ -17,7 +17,7 @@ class_name Mutation
 const CHANCE : float = 0.06
 const LUCK_CHANCE : float = 0.1   # x the player's rarity luck (up to +2.5%)
 const ELEMENT_SHARE : float = 0.35
-const SHADER : Shader = preload("res://Assets/shaders/mutation.gdshader")
+const SHADER : Shader = preload("uid://cxtor3ygqrry3")
 
 const STRAINS : Dictionary = {
 	"fire": {"name": "Blazing", "weight": 7, "element": "fire"},
@@ -160,8 +160,8 @@ static func materialFor(item: WeaponItem) -> ShaderMaterial:
 	_mats[id] = m
 	return m
 
-const DROP_SHADOW : Shader = preload("res://Assets/shaders/drop_shadow.gdshader")
-const SHADOW_SHADER : Shader = preload("res://Assets/shaders/mutation_shadow.gdshader")
+const DROP_SHADOW : Shader = preload("uid://b8rek7pxkyq5r")
+const SHADOW_SHADER : Shader = preload("uid://d1cb440cr2ttj")
 
 # One sprite / icon. Clears our material again when the item isn't mutated.
 # Sprites using the drop shadow get the drop shadow + mutation shader with the same settings.

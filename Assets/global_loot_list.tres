@@ -32,6 +32,7 @@ metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 script = ExtResource("1_8cx6g")
 data = ExtResource("3_f217l")
 chance = 20.0
+day = 2
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_5conb"]
@@ -68,6 +69,7 @@ metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 script = ExtResource("1_8cx6g")
 data = ExtResource("8_g7ce6")
 chance = 25.0
+day = 1
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_7pxns"]
@@ -79,7 +81,7 @@ metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 [sub_resource type="Resource" id="Resource_vxhft"]
 script = ExtResource("1_8cx6g")
 data = ExtResource("11_1tw25")
-chance = 80.0
+chance = 10.0
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_n55rq"]
@@ -97,36 +99,42 @@ metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 script = ExtResource("1_8cx6g")
 data = ExtResource("14_o4ngj")
 chance = 15.0
+day = 3
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_2cxnn"]
 script = ExtResource("1_8cx6g")
 data = ExtResource("15_kex7k")
 chance = 20.0
+day = 3
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_iy7ug"]
 script = ExtResource("1_8cx6g")
 data = ExtResource("16_qk06m")
 chance = 45.0
+day = 2
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_i853n"]
 script = ExtResource("1_8cx6g")
 data = ExtResource("17_jw4l0")
 chance = 5.0
+day = 4
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_5vdba"]
 script = ExtResource("1_8cx6g")
 data = ExtResource("18_vxhft")
 chance = 35.0
+day = 1
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_rxwt3"]
 script = ExtResource("1_8cx6g")
 data = ExtResource("19_n55rq")
 chance = 10.0
+day = 4
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_tw57u"]
@@ -139,6 +147,7 @@ metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 script = ExtResource("1_8cx6g")
 data = ExtResource("21_scya4")
 chance = 5.0
+day = 4
 metadata/_custom_type_script = "uid://dl251w1lsyqw4"
 
 [sub_resource type="Resource" id="Resource_fx1j3"]

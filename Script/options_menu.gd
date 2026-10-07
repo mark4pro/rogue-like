@@ -7,7 +7,7 @@ class_name OptionsMenu
 
 signal closed
 
-const FONT : FontFile = preload("res://Assets/fonts/tiny5/Tiny5-Regular.ttf")
+const FONT : FontFile = preload("uid://dv68j0l4djo44")
 const BG_COLOR : Color = Color(0.1477, 0.1477, 0.1477, 1)
 const ROW_LABEL_WIDTH : float = 420.0
 

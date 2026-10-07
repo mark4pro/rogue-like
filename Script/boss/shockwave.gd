@@ -32,7 +32,7 @@ func _ready() -> void:
 	_dust.one_shot = true
 	_dust.explosiveness = 1.0
 	_dust.local_coords = false
-	_dust.texture = preload("res://Assets/imgs/Lights/Light_1.png")
+	_dust.texture = preload("uid://oyvy6kab4ex8")
 	_dust.emission_shape = CPUParticles2D.EMISSION_SHAPE_RING
 	_dust.emission_ring_radius = 18.0
 	_dust.emission_ring_inner_radius = 10.0

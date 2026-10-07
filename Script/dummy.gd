@@ -11,3 +11,6 @@ func _ready() -> void:
 func take_damage(data: Dictionary, _attacker: Node):
 	Global.damageAnim(sprite, data.value, ogScale)
 	Global.damNumbers(coll, data)
+	# Status ticks (burn, poison...) aren't hits; every real hit counts toward the dummy task
+	if not data.get("status", false):
+		Tasks.count("dummy_hits")

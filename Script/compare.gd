@@ -163,6 +163,11 @@ func regenStatName(stat: int) -> String:
 	return "?"
 
 func addConsumable() -> void:
+	if item.questItem:
+		addLine("[color=%s]Quest item[/color]" % Color(1.0, 0.8, 0.35).to_html())
+		if item.description != "": addLine(item.description)
+		if item.stackable: addLine("Amount: %d" % item.quantity)
+		return
 	if item is HealthItem:
 		addLine("Heals: %s instantly" % fmt(item.healthAmount))
 	elif item is RegenPotionItem:

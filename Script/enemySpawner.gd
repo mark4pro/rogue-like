@@ -43,6 +43,18 @@ const HABITAT_CAVE : int = 2
 @export var blood_moon_equip_drop_mult : float = 2.0   # chance of dropping the enemy's own weapon
 @export_range(0.0, 1.0) var blood_moon_rarity_bonus : float = 0.25 # added to the rarity roll (6 tiers, so 0.25 = +1.5 tiers)
 
+@export_group("Elites")
+# Rare tougher versions of normal enemies from a set run day on: a coloured glow, more health and
+# damage, much better drops, and one affix (fast / splitting / shielded). Tuning for each affix is
+# in enemy.gd (Elite region).
+@export var elite_first_run_day : int = 2              # no elites on run days before this
+@export_range(0.0, 1.0) var elite_chance : float = 0.04          # chance per spawn on that day
+@export_range(0.0, 1.0) var elite_chance_per_day : float = 0.015 # added each run day after it
+@export_range(0.0, 1.0) var elite_chance_max : float = 0.15
+@export var elite_blood_moon_mult : float = 2.0        # blood moons spawn this many times as many
+@export var elite_health_mult : float = 2.5
+@export var elite_damage_mult : float = 1.35
+
 @export_group("Cave spawning")
 @export_range(0.0, 1.0) var cave_spawn_weight : float = 0.3 # weight of a cave tile vs a forest tile (1 = equal)
 @export var cave_tiles_per_enemy : int = 80                 # pocket capacity = pocket tiles / this (at least 1)
@@ -320,6 +332,15 @@ func applyLevel(e: Node) -> void:
 		e.setLevel(enemyLevel())
 	if Global.isBloodMoon:
 		e.set_meta("blood_moon", true)
+	if e.has_method("makeElite") and randf() < eliteChance():
+		e.makeElite(e.ELITE_AFFIXES.pick_random())
+
+# Chance that an enemy spawning right now is an elite
+func eliteChance() -> float:
+	if Global.sceneIndex == 0 or Global.runDays < elite_first_run_day: return 0.0
+	var c : float = minf(elite_chance + elite_chance_per_day * (Global.runDays - elite_first_run_day), elite_chance_max)
+	if Global.isBloodMoon: c *= elite_blood_moon_mult
+	return minf(c, 1.0)
 
 # Blood moons spawn faster and allow more enemies at once
 func currentSpawnTime() -> float:
@@ -350,6 +371,7 @@ func _process(delta: float) -> void:
 		enemyNode = Global.currentScene.get_node_or_null("Enemies")
 		
 		if enemyNode:
+			if enemyNode.z_index != 3: enemyNode.z_index = 3
 			enemyCount = enemyNode.get_child_count()
 			updateSlots = max(10, ceili(max(1, enemyCount) / (float(targetFPS) / 100)))
 			if oldDay == Global.runDays:
@@ -375,5 +397,6 @@ func _process(delta: float) -> void:
 		else:
 			var newNode : Node2D = Node2D.new()
 			newNode.y_sort_enabled = true
+			newNode.z_index = 3 # same layer as the player so they y-sort together (and stand above the grass)
 			newNode.name = "Enemies"
 			Global.currentScene.add_child(newNode)

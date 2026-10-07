@@ -6,6 +6,7 @@ func _process(_delta: float) -> void:
 	if touching and Input.is_action_just_pressed("interact") and not get_tree().paused:
 		Global.storeGroundItemData()
 		Global.sceneIndex = 1
+		Global.lootList.getValid() # run-day unlocks start from day 0 (it was still the hub's list)
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):

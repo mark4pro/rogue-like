@@ -10,6 +10,9 @@ extends RigidBody2D
 
 var dir : Vector2 = Vector2.ZERO
 var excludeList : Array[RID] = []
+# A projectile can touch an enemy's body and its hit area in the same frame; only the first counts
+# (both used to deal damage, so projectiles often hit twice)
+var _spent : bool = false
 
 func _ready() -> void:
 	if weapSys and weapSys.parentNode:
@@ -51,7 +54,9 @@ func _physics_process(_delta: float) -> void:
 	rotation += thisRotSpeed if not weapSys.flip else -thisRotSpeed
 
 func bulletCol(body: Node):
+	if _spent: return
 	if not body.is_in_group("Exclude_From_Bullets"):
+		_spent = true
 		#Raycast to the colliding body to get the collision normal
 		var space : PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 		
@@ -88,8 +93,10 @@ func bulletCol(body: Node):
 
 func bulletArea(thisArea: Area2D) -> void:
 	var parent = thisArea.get_parent()
+	if _spent: return
 	
 	if not thisArea.is_in_group("Exclude_From_Bullets"):
+		_spent = true
 		linear_velocity = Vector2.ZERO
 		
 		#Raycast to the colliding body to get the collision normal

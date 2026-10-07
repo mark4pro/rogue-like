@@ -6,13 +6,16 @@
 
 [resource]
 script = ExtResource("1_ldmbk")
-scaling = {"strength": "C"}
 weaponScene = ExtResource("2_c2pki")
-baseDamage = 50.0
+baseDamage = 40.0
 baseKnBck = 40.0
 animationType = 3
 rangeSpawnAmount = 10
 rangeSpreadAngle = 30.0
+scaling = {
+"strength": "C"
+}
+mutationNotes = null
 name = "Egg"
 itemIcon = ExtResource("1_t1esk")
 groundScale = 0.5

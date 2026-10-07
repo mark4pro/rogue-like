@@ -15,8 +15,8 @@ class_name StatusVisuals
 #   Sticky  slow slime drips + green tint
 #   Poison  rising poison sprites (more with more stacks) + venom tint
 
-const GLOW : Texture2D = preload("res://Assets/imgs/Lights/Light_1.png")
-const POISON_TEX : Texture2D = preload("res://Assets/imgs/effects/poison.png")
+const GLOW : Texture2D = preload("uid://oyvy6kab4ex8")
+const POISON_TEX : Texture2D = preload("uid://dq5u4kcn5g2di")
 
 const STATUSES : Array[String] = ["burn", "wet", "chill", "freeze", "stun", "weaken", "blind", "sticky", "poison"]
 
@@ -43,7 +43,7 @@ var _measured : bool = false
 var _poisonShown : int = 0
 var _tintMat : ShaderMaterial = null
 
-const TINT_SHADER : Shader = preload("res://Assets/shaders/status_tint.gdshader")
+const TINT_SHADER : Shader = preload("uid://dvopdjbsktesv")
 
 func _init(f: StatusEffects) -> void:
 	fx = f

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="1_dvwkg"]
 [ext_resource type="PackedScene" uid="uid://bj23wat4576eb" path="res://Assets/prefabs/armor/weird_armor.tscn" id="1_h1bhv"]
-[ext_resource type="Texture2D" uid="uid://mrtj7pbnuk84" path="res://Assets/imgs/armor/weird_armor.png" id="2_a81bu"]
+[ext_resource type="Texture2D" uid="uid://mrtj7pbnuk84" path="res://Assets/imgs/armor/weird_shell.png" id="2_a81bu"]
 
 [resource]
 script = ExtResource("1_dvwkg")

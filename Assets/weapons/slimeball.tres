@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("1_s2sdv")
 weaponScene = ExtResource("2_vih7o")
-baseDamage = 45.0
+baseDamage = 14.0
 animationType = 3
 rangeSpawnAmount = 3
 rangeSpreadAngle = 10.0
@@ -17,6 +17,7 @@ scaling = {
 elements = {
 "slime": 0.5
 }
+mutationNotes = null
 name = "Slimeball"
 itemIcon = ExtResource("1_1tp61")
 groundScale = 0.5

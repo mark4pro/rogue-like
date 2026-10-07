@@ -5,7 +5,7 @@ class_name EvilRoach
 # eye and drop it in, over and over, until the eye wakes up (BossSite runs the show).
 # They can't be killed and ignore the player. Hits shove them around and show "Immune".
 
-const TEXTURE : Texture2D = preload("res://Assets/imgs/enemies/evil_roach.png") # 2 frames, faces right
+const TEXTURE : Texture2D = preload("uid://chqenit07ckid") # 2 frames, faces right
 
 enum Job { FETCH, CARRY, IDLE, FLEE }
 
@@ -40,7 +40,7 @@ func _ready() -> void:
 	add_child(sprite)
 	
 	var shadow : Sprite2D = Sprite2D.new()
-	shadow.texture = preload("res://Assets/imgs/effects/shadow.png")
+	shadow.texture = preload("uid://b70aujp6bewbx")
 	shadow.modulate = Color(1, 1, 1, 0.35)
 	shadow.show_behind_parent = true
 	shadow.scale = Vector2(0.45, 0.2)

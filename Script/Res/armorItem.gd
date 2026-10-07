@@ -30,10 +30,7 @@ func rollStats() -> void:
 	var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = Global.rng
 	
-	var dayBias : float = setDay * 0.015
-	
-	var roll : float = clamp(rng.randf() + dayBias + Global.rarityRollBonus(), 0.0, 0.999)
-	rarity = int(roll * 6)
+	rarity = BaseItem.rollRarity(rng, setDay)
 	
 	var rarityMult : float = 1.0 + rarity * 0.25
 	
@@ -44,7 +41,7 @@ func rollStats() -> void:
 		var defVar : float = baseDefense * defenseVar
 		var lowDef = (baseDefense - defVar) * rarityMult * progMult
 		var highDef = (baseDefense + defVar) * rarityMult * progMult
-		defense = randf_range(lowDef, highDef)
+		defense = randf_range(lowDef, highDef) * uniqueMult()
 	
 	if resists.is_empty(): rollResists(rng)
 	
@@ -83,7 +80,7 @@ func rollResists(rng: RandomNumberGenerator = null) -> void:
 		rng = RandomNumberGenerator.new()
 		rng.seed = hash(name) ^ (max(rarity, 0) * 7919) ^ int(defense * 100)
 	var base : Dictionary = getBaseResists()
-	var rarityMult : float = 1.0 + max(rarity, 0) * 0.15
+	var rarityMult : float = (1.0 + max(rarity, 0) * 0.15) * uniqueMult()
 	resists = {}
 	for k in base:
 		var v : float = float(base[k])
@@ -99,7 +96,7 @@ func getResist(key: String) -> float:
 
 # Worked out live (not rolled) so armour that was already rolled and saved still gets it
 func getKnockbackResist() -> float:
-	return clampf(knockbackResist * (1.0 + max(rarity, 0) * 0.15), 0.0, Knockback.RESIST_CAP)
+	return clampf(knockbackResist * (1.0 + max(rarity, 0) * 0.15) * uniqueMult(), 0.0, Knockback.RESIST_CAP)
 
 func use() -> void:
 	pass

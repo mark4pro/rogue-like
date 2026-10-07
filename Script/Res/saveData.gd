@@ -19,12 +19,17 @@ class_name SaveData
 @export var totalDays : int = 0
 @export var lastRunDays : int = 0
 @export var longestRun : int = 0
+@export var playTime : float = 0.0 # seconds played on this save (main menu not counted)
 
 @export_category("Setting Data")
 @export var bloodMoons : bool = true
 @export var damNumberEnable : bool = true
 @export var damAnimRotEnable : bool = true
 @export var debugVision : bool = true
+
+@export_category("Tasks")
+@export var taskProgress : Dictionary = {}       # counter -> amount (see Tasks)
+@export var tasksClaimed : Array[String] = []    # task ids whose reward was taken
 
 @export var groundItems : Array[GroundItem] = []
 @export var shopInventory : Array[BaseItem] = []

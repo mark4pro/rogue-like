@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dl7vhi4i4bgs8"]
+
+[ext_resource type="Texture2D" uid="uid://ivt280rksvpi" path="res://Assets/imgs/armor/straw_shell.png" id="1_straw"]
+
+[node name="armor" type="Sprite2D" unique_id=383490384]
+texture = ExtResource("1_straw")

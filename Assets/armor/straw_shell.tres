@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="ArmorItem" format=3 uid="uid://dvnsfvejt0fof"]
+
+[ext_resource type="Script" uid="uid://dajegbj308dnw" path="res://Script/Res/armorItem.gd" id="1_script"]
+[ext_resource type="PackedScene" uid="uid://dl7vhi4i4bgs8" path="res://Assets/prefabs/armor/straw_shell.tscn" id="2_scene"]
+[ext_resource type="Texture2D" uid="uid://ivt280rksvpi" path="res://Assets/imgs/armor/straw_shell.png" id="3_icon"]
+
+[resource]
+script = ExtResource("1_script")
+armorScene = ExtResource("2_scene")
+baseDefense = 25.0
+knockbackResist = 0.1
+baseResists = {
+"fire": -0.3,
+"projectile": 0.15,
+"slime": 0.2
+}
+unique = true
+name = "Straw Shell"
+itemIcon = ExtResource("3_icon")
+iconScale = 2.0
+itemType = 2
+equippable = true
+stackable = false
+sortType = 2
+weight = 0.6
+baseCost = 40.0
+sellable = false
+metadata/_custom_type_script = "uid://dajegbj308dnw"

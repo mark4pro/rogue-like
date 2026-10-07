@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="BaseItem" format=3 uid="uid://32qtmjmna3xg"]
+
+[ext_resource type="Script" uid="uid://bv2igu5u7qkb6" path="res://Script/Res/Base_items.gd" id="1_base"]
+[ext_resource type="Texture2D" uid="uid://8dhhxd4p3qkl" path="res://Assets/imgs/enemies/testing/eyeball_spider_leg_piece.png" id="2_leg"]
+
+[resource]
+script = ExtResource("1_base")
+name = "Robotic Leg Piece"
+itemIcon = ExtResource("2_leg")
+iconScale = 1.0
+iconRotOffset = 45.0
+groundScale = 0.6
+itemType = 0
+stackable = true
+sellable = false
+baseCost = 0.0
+questItem = true
+description = "Torn off the Robotic Spider Eye.
+Someone might want this..."
+rolled = true
+rarity = 4
+cost = 0
+shopPrice = 0
+metadata/_custom_type_script = "uid://bv2igu5u7qkb6"

@@ -69,6 +69,9 @@ func genDamage() -> Dictionary:
 	if ps:
 		var t : String = profType()
 		data.value *= ps.profDamageMult(t)
+		data.value *= ps.levelDamageMult() # player level growth (enemies get theirs via damageMult)
+		data.value *= ps.classDamageMult(t) # Strength melee / Magic projectiles / Magic+Focus lasers
+		data.value *= volleyShare()
 		var newLevel : int = ps.addProficiency(t, profHitXp())
 		if newLevel > 0:
 			Global.sendMessage("%s proficiency %d!" % [stats.PROFICIENCY_NAMES.get(t, t), newLevel], 3.0, Color(0.55, 0.8, 1.0))
@@ -90,6 +93,17 @@ func genDamage() -> Dictionary:
 	for e in els: data.elements[e] = data.value * float(els[e]) / maxf(share, 1.0) * potency
 	data.attackerStats = wielderStats
 	return data
+
+## Multi-shot weapons: a full volley landing on one target is worth this many single shots,
+## whatever the projectile count (a 20-pellet blast used to deal 20 full hits). The spread still
+## makes them easier to land and lets them hit several enemies.
+const VOLLEY_TOTAL : float = 1.6
+
+# Damage share of each projectile in a volley: 1 for single shots, VOLLEY_TOTAL / count otherwise
+func volleyShare() -> float:
+	if not weapon or weapon.animationType != WeaponItem.animType.RANGE: return 1.0
+	var n : int = maxi(weapon.rangeSpawnAmount, 1)
+	return minf(1.0, VOLLEY_TOTAL / n)
 
 # Speed bonus from proficiency for the current weapon type (1.0 for enemies)
 func profSpeed() -> float:

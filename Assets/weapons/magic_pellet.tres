@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("2_ul8n7")
 weaponScene = ExtResource("3_ibbs7")
-baseDamage = 10.0
+baseDamage = 18.0
 animationType = 3
 scaling = {
 "magic": "C"
@@ -15,6 +15,7 @@ scaling = {
 elements = {
 "water": 0.4
 }
+mutationNotes = null
 name = "Magic Pellet"
 itemIcon = ExtResource("1_knrlo")
 groundScale = 0.2

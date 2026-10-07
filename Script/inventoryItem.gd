@@ -75,6 +75,7 @@ func _process(_delta: float) -> void:
 		
 		icon.position = (size / 2) - (icon.size / 2)
 		icon.pivot_offset = (icon.size / 2)
+		_fitIcon()
 		
 		if touching:
 			if not contextMenu:
@@ -116,6 +117,22 @@ func _process(_delta: float) -> void:
 	favIcon.texture = favAtlas
 	
 	favIcon.position = (size * scale) - (favIcon.size * favIcon.scale) - Vector2(2, 2)
+
+const ICON_BASE_SCALE : float = 1.0  # _ready sets the icon's scale to iconScale (overrides the scene's 0.5)
+const ICON_FIT : float = 0.85        # biggest an icon may be, as a share of the box
+
+# Icons draw at their texture size x iconScale; big images (the potions) overflowed the box.
+# Shrink anything that would spill out (rotation included) so it fits; smaller icons stay as tuned.
+func _fitIcon() -> void:
+	if not icon.texture or size.x <= 0.0: return
+	var tex : Vector2 = icon.texture.get_size()
+	var s : float = ICON_BASE_SCALE * item.iconScale
+	# Bounding box of the rotated icon
+	var r : float = deg_to_rad(item.iconRotOffset)
+	var bb : Vector2 = Vector2(absf(tex.x * cos(r)) + absf(tex.y * sin(r)), absf(tex.x * sin(r)) + absf(tex.y * cos(r))) * s
+	var room : Vector2 = size * ICON_FIT
+	var fit : float = minf(1.0, minf(room.x / maxf(bb.x, 0.001), room.y / maxf(bb.y, 0.001)))
+	icon.scale = Vector2.ONE * s * fit
 
 func _draw() -> void:
 	if item and item.equippable:

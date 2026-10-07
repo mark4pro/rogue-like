@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://mrtj7pbnuk84"
-path="res://.godot/imported/weird_armor.png-fc32d40104fed4008af76a896b430e2a.ctex"
+path="res://.godot/imported/weird_shell.png-7e706315456ee104f2bd267a2d2268e6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/imgs/armor/weird_armor.png"
-dest_files=["res://.godot/imported/weird_armor.png-fc32d40104fed4008af76a896b430e2a.ctex"]
+source_file="res://Assets/imgs/armor/weird_shell.png"
+dest_files=["res://.godot/imported/weird_shell.png-7e706315456ee104f2bd267a2d2268e6.ctex"]
 
 [params]
 

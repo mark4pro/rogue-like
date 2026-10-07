@@ -20,11 +20,11 @@ func _ready() -> void:
 			equipBttn.visible = false
 			unequipBttn.visible = false
 		else:
-			useBttn.visible = true
+			useBttn.visible = not item.questItem # quest items have nothing to use
 			dropBttn.visible = true
 			equipBttn.visible = false
 			unequipBttn.visible = false
-		if item.hotBarType != BaseItem.hotbar_type.NONE:
+		if item.hotbarKind() != BaseItem.hotbar_type.NONE:
 			hotbar1Bttn.visible = true
 			hotbar2Bttn.visible = true
 			hotbar3Bttn.visible = true
@@ -57,8 +57,8 @@ func _process(_delta: float) -> void:
 					unequipBttn.visible = false
 	
 	#Hot Bar
-	if item.hotBarType != BaseItem.hotbar_type.NONE:
-		match item.hotBarType:
+	if item.hotbarKind() != BaseItem.hotbar_type.NONE:
+		match item.hotbarKind():
 			BaseItem.hotbar_type.WEAPON:
 				if Global.hotbar_weapons[0] == item:
 					hotbar1Bttn.text = "Rem slot 1"
@@ -104,7 +104,7 @@ func _on_equip_bttn_button_down() -> void:
 	item.equip()
 
 func _on_hotbar_1_button_down() -> void:
-	match item.hotBarType:
+	match item.hotbarKind():
 		BaseItem.hotbar_type.WEAPON:
 			if Global.hotbar_weapons[0] == item:
 				Global.hotbar_weapons[0] = null
@@ -125,7 +125,7 @@ func _on_hotbar_1_button_down() -> void:
 				Global.hotbar_items[0] = item
 
 func _on_hotbar_2_button_down() -> void:
-	match item.hotBarType:
+	match item.hotbarKind():
 		BaseItem.hotbar_type.WEAPON:
 			if Global.hotbar_weapons[1] == item:
 				Global.hotbar_weapons[1] = null
@@ -146,7 +146,7 @@ func _on_hotbar_2_button_down() -> void:
 				Global.hotbar_items[1] = item
 
 func _on_hotbar_3_button_down() -> void:
-	match item.hotBarType:
+	match item.hotbarKind():
 		BaseItem.hotbar_type.WEAPON:
 			if Global.hotbar_weapons[2] == item:
 				Global.hotbar_weapons[2] = null

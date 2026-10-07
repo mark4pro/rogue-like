@@ -24,4 +24,5 @@ hotBarType = 2
 rolled = true
 rarity = 1
 cost = 80
+shopPrice = 68
 metadata/_custom_type_script = "uid://8d6fyj0lrxpo"

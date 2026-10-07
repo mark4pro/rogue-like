@@ -35,11 +35,13 @@ func _ready() -> void:
 	if Global.shopInventory.is_empty():
 		for i in range(amountOfGlobal):
 			var newItem : BaseItem = Global.lootList.getRandom(true)
+			if not newItem: continue # the global list has an empty entry
 			if newItem.stackable:
 				newItem.quantity += randi_range(1, 20)
 			shopInventory.add_item(newItem)
 		for i in range(amountOfShop):
 			var newItem : BaseItem = shopLootList.getRandom(true)
+			if not newItem: continue
 			if newItem.stackable:
 				newItem.quantity += randi_range(1, 20)
 			shopInventory.add_item(newItem)

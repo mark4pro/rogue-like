@@ -48,6 +48,7 @@ var pStats : stats = Global.playerStats
 
 var mana_bar : ProgressBar = null
 var characterNode : CharacterScreen = null # third inventory page (state 2)
+var questNode : QuestScreen = null         # fourth inventory page (state 3)
 var manaRegenWait : float = 0
 var poolFlash : Array[float] = [0.0, 0.0] # indexed by WeaponItem.poolType
 
@@ -116,6 +117,12 @@ func _ready():
 	characterNode.visible = false
 	Inventory_UI.add_child(characterNode)
 	Inventory_UI.move_child(characterNode, Pickup_Node.get_index() + 1) # under the < > buttons
+	
+	questNode = QuestScreen.new()
+	questNode.name = "quests"
+	questNode.visible = false
+	Inventory_UI.add_child(questNode)
+	Inventory_UI.move_child(questNode, characterNode.get_index() + 1)
 	
 	# Wall slam detection needs contact reports
 	contact_monitor = true
@@ -593,10 +600,11 @@ func _process(delta: float) -> void:
 				1:
 					Inventory_Node.visible = false
 					Pickup_Node.visible = true
-				2:
+				2, 3:
 					Inventory_Node.visible = false
 					Pickup_Node.visible = false
 			if characterNode: characterNode.visible = inventoryState == 2
+			if questNode: questNode.visible = inventoryState == 3
 		
 		#inventory menu
 		if Input.is_action_just_pressed("inventory") and not pauseMenu.visible and not dbck \
@@ -624,6 +632,15 @@ func _process(delta: float) -> void:
 				Inventory_UI.visible = !Inventory_UI.visible
 				get_tree().paused = !get_tree().paused
 			inventoryState = 2
+		
+		#quests (fourth inventory page)
+		if Input.is_action_just_pressed("quests") and not pauseMenu.visible and not dbck \
+		 and not inDialogue:
+			if inventoryState == 3 or not Inventory_UI.visible:
+				Inventory_Node.visible = false
+				Inventory_UI.visible = !Inventory_UI.visible
+				get_tree().paused = !get_tree().paused
+			inventoryState = 3
 		
 		#debug menu
 		if Input.is_action_just_pressed("debug") and not pauseMenu.visible and not Inventory_UI.visible \
@@ -668,8 +685,8 @@ func _on_message_timer_timeout() -> void:
 func _on_speed_timer_timeout() -> void:
 	pStats.mod_speed -= 5
 
-# Pages: 0 Inventory, 1 Pickup, 2 Character. The arrows cycle through them.
-const INVENTORY_PAGES : int = 3
+# Pages: 0 Inventory, 1 Pickup, 2 Character, 3 Quests. The arrows cycle through them.
+const INVENTORY_PAGES : int = 4
 
 func _on_left_button_down() -> void:
 	inventoryState = (inventoryState + INVENTORY_PAGES - 1) % INVENTORY_PAGES

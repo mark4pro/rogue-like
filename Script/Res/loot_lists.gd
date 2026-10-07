@@ -23,6 +23,6 @@ func getRandom(dup: bool = false):
 	if valid.is_empty(): getValid()
 	
 	var thisItem : Variant = Global.getRandom(valid)
-	if dup: thisItem = thisItem.duplicate()
+	if dup and thisItem: thisItem = thisItem.duplicate() # (an entry can be empty)
 	
 	return thisItem

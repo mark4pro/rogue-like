@@ -18,10 +18,16 @@ class_name SpiderEyeBoss
 
 signal defeated # BossSite listens so the boss doesn't come back
 
-const EYE_SCENE : PackedScene = preload("res://Assets/prefabs/enemies/test/eye.tscn")
-const LEG_TEX : Texture2D = preload("res://Assets/imgs/enemies/testing/eyeball_spider_leg_piece.png")
-const GLOW : Texture2D = preload("res://Assets/imgs/Lights/Light_1.png")
-const SHADOW_TEX : Texture2D = preload("res://Assets/imgs/effects/shadow.png")
+const EYE_SCENE : PackedScene = preload("uid://bo6a7iyf781ub")
+const LEG_TEX : Texture2D = preload("uid://8dhhxd4p3qkl")
+const GLOW : Texture2D = preload("uid://oyvy6kab4ex8")
+const SHADOW_TEX : Texture2D = preload("uid://b70aujp6bewbx")
+## Quest item it always drops (does nothing yet)
+const LEG_PIECE : BaseItem = preload("uid://32qtmjmna3xg")
+## Physics layer 6: only the player collides with the boss's footprint (enemies, roaches and
+## bullets go through it as before)
+const BLOCKER_LAYER : int = 32
+const PLAYER_LAYER : int = 2
 
 enum State { BROKEN, WAKING, ACTIVE, DEAD }
 enum Act { NONE, LASER, VOLLEY, SLAM_WINDUP, SLAM_AIR, RECOVER }
@@ -29,8 +35,12 @@ enum Act { NONE, LASER, VOLLEY, SLAM_WINDUP, SLAM_AIR, RECOVER }
 @export var display_name : String = "Robotic Spider Eye"
 
 @export_category("Stats")
-## Health at level 1 (scaled by level like other enemies, see EnemySpawner)
-@export var base_health : float = 1500.0
+## The boss is a fixed level-15 fight (it doesn't level up with the day count like normal enemies),
+## so it's a wall you get past by levelling and gear. Tuned so an average player beats it around
+## level 15, a skilled one around 10-12 (see the balance notes).
+@export var boss_level : int = 15
+## Health at level 1, scaled by level like other enemies (EnemySpawner): ~14,000 at level 15
+@export var base_health : float = 6600.0
 @export var base_defense : float = 15.0
 @export_range(0.0, 1.0) var status_resist : float = 0.4
 @export var resistances : Dictionary = {"laser": 0.3, "acid": 0.4, "shadow": 0.2, "shock": -0.25}
@@ -62,21 +72,23 @@ enum Act { NONE, LASER, VOLLEY, SLAM_WINDUP, SLAM_AIR, RECOVER }
 @export var idle_time : float = 0.9
 
 @export_category("Laser")
-@export var laser_weapon : WeaponItem = preload("res://Assets/weapons/spider_laser.tres")
+@export var laser_weapon : WeaponItem = preload("uid://bsrswcnoltxaf")
 @export var laser_range : float = 190.0
 @export var laser_ticks : float = 6.0
-@export var laser_damage_mult : float = 2.0
+## Damage per beam tick at level 1 (x1.7 at level 15; ~3 ticks/s, a full 2.4 s beam is a big hit)
+@export var laser_tick_damage : float = 6.0
 @export var laser_time : float = 2.4
 ## How quickly the beam swings after you (lower = easier to outrun)
 @export var laser_track_speed : float = 2.5
 
 @export_category("Volley")
-@export var shot_weapon : WeaponItem = preload("res://Assets/weapons/eyeball.tres")
+@export var shot_weapon : WeaponItem = preload("uid://dj2uanxfx2iow")
 @export var shots_per_volley : int = 5
 @export var shot_spread : float = 70.0
 @export var volleys : int = 3
 @export var volley_gap : float = 0.55
-@export var shot_damage_mult : float = 0.08
+## Damage per acid eyeball at level 1 (x1.7 at level 15)
+@export var shot_damage : float = 13.0
 
 @export_category("Body slam")
 @export var slam_cooldown : float = 7.0
@@ -85,8 +97,8 @@ enum Act { NONE, LASER, VOLLEY, SLAM_WINDUP, SLAM_AIR, RECOVER }
 @export var slam_height : float = 80.0
 @export var slam_max_leap : float = 300.0
 @export var slam_impact_radius : float = 34.0
-@export var slam_impact_damage : float = 20.0
-@export var shockwave_damage : float = 12.0
+@export var slam_impact_damage : float = 41.0 # level 1 values, x1.7 at level 15
+@export var shockwave_damage : float = 26.0
 @export var shockwave_speed : float = 260.0
 @export var shockwave_radius : float = 170.0
 @export var shockwave_thickness : float = 14.0
@@ -98,7 +110,7 @@ enum Act { NONE, LASER, VOLLEY, SLAM_WINDUP, SLAM_AIR, RECOVER }
 @export var wake_grace : float = 1.5
 
 @export_category("Rewards")
-@export var exp_reward : float = 250.0
+@export var exp_reward : float = 600.0 # x4.5 at level 15 = 2700, over a full level at 15
 @export var money_range : Vector2i = Vector2i(150, 300)
 @export var loot_drops : int = 4
 @export_range(0.0, 1.0) var loot_rarity_bonus : float = 0.5
@@ -127,6 +139,7 @@ var sprite : Sprite2D = null    # StatusEffects / StatusVisuals tint this (the e
 var eye3d : Node3D = null
 var shadow : Sprite2D = null
 var coll : CollisionShape2D = null
+var blocker : AnimatableBody2D = null # solid footprint on the ground so the player can't walk through
 var pupils : Array[Marker2D] = []
 var sparks : CPUParticles2D = null
 var bar : BossBar = null
@@ -209,6 +222,23 @@ func _ready() -> void:
 	coll.shape = circle
 	add_child(coll)
 	
+	# The hit shape above sits on the eye (that's what weapons hit). This one is the body's footprint
+	# on the ground, a flat capsule under the eye, so the player bumps into it and walks around.
+	blocker = AnimatableBody2D.new()
+	blocker.name = "Blocker"
+	blocker.sync_to_physics = false
+	blocker.collision_layer = BLOCKER_LAYER
+	blocker.collision_mask = PLAYER_LAYER
+	var foot : CollisionShape2D = CollisionShape2D.new()
+	var cap : CapsuleShape2D = CapsuleShape2D.new()
+	cap.radius = eyeRadius * 0.45
+	cap.height = eyeRadius * 2.2
+	foot.shape = cap
+	foot.rotation = PI * 0.5
+	foot.position = Vector2(0, -2)
+	blocker.add_child(foot)
+	add_child(blocker)
+	
 	for i in 2:
 		var m : Marker2D = Marker2D.new()
 		m.name = "Pupil_%d" % i
@@ -219,13 +249,13 @@ func _ready() -> void:
 	_buildSparks()
 	
 	laserSys.parentNode = self
-	laserSys.weapon = laser_weapon.duplicate()
+	laserSys.weapon = _fixedWeapon(laser_weapon, laser_tick_damage)
 	laserSys.weapon.laserRange = laser_range
 	laserSys.weapon.laserAttackSpeed = laser_ticks
 	laserSys.spawnPos = [pupils[0]]
 	
 	shotSys.parentNode = self
-	shotSys.weapon = shot_weapon.duplicate()
+	shotSys.weapon = _fixedWeapon(shot_weapon, shot_damage)
 	shotSys.weapon.rangeSpawnAmount = shots_per_volley
 	shotSys.weapon.rangeSpreadAngle = shot_spread
 	shotSys.spawnPos = [pupils[0], pupils[1]]
@@ -281,16 +311,29 @@ func _buildSparks() -> void:
 	sparks.position = Vector2(eyeRadius * 0.4, -eyeRadius * 0.3)
 	visual.add_child(sparks)
 
-# Level from the day count like normal enemies (EnemySpawner's settings), no random variance
+# Fixed level (boss_level), with the same per-level growth as normal enemies (EnemySpawner)
 func _applyLevel() -> void:
-	level = clampi(1 + int(Global.totalDays * EnemySpawner.level_per_total_day + Global.runDays * EnemySpawner.level_per_run_day), 1, stats.LEVEL_CAP)
+	level = clampi(boss_level, 1, stats.LEVEL_CAP)
 	var above : int = level - 1
 	maxHealth = base_health * (1.0 + EnemySpawner.health_per_level * above)
 	health = maxHealth
 	defense = base_defense + EnemySpawner.defense_per_level * above
 	_dmgMult = 1.0 + EnemySpawner.damage_per_level * above
-	laserSys.damageMult = _dmgMult * laser_damage_mult
-	shotSys.damageMult = _dmgMult * shot_damage_mult
+	laserSys.damageMult = _dmgMult
+	shotSys.damageMult = _dmgMult
+
+# A copy of a weapon file with set damage per hit (no random rarity / crits), so the fight is the
+# same every time. The weapon still supplies visuals, elements and projectile behaviour.
+func _fixedWeapon(template: WeaponItem, perHit: float) -> WeaponItem:
+	var w : WeaponItem = template.duplicate()
+	w.damage = Vector2(perHit * 0.9, perHit * 1.1)
+	w.critChance = 0.0
+	w.critMulti = 1.0
+	w.knockback = w.baseKnBck
+	w.rarity = 0
+	w.mutation = ""
+	w.rolled = true
+	return w
 
 #endregion
 
@@ -393,6 +436,7 @@ func _die() -> void:
 	act = Act.NONE
 	walk = Vector2.ZERO
 	collision_layer = 0
+	blocker.collision_layer = 0
 	_clearTelegraph()
 	_smokeBurst(36, 0.8)
 	_flash()
@@ -412,6 +456,7 @@ func _dropRewards() -> void:
 			var item : BaseItem = Global.lootList.getRandom()
 			if item: item.drop(1, false, global_position + Vector2(randf_range(-30, 30), randf_range(-20, 20)))
 	Global.lootRarityBonus = 0.0
+	if LEG_PIECE: LEG_PIECE.drop(1, false, global_position + Vector2(0, 14)) # drop() hands out a copy
 	
 	if Global.playerStats:
 		var levels : int = Global.playerStats.addExp(exp_reward * (1.0 + 0.25 * (level - 1)))
@@ -535,6 +580,7 @@ func _updateFight(delta: float) -> void:
 				actT = 0.0
 				slamFrom = global_position
 				collision_layer = 0 # out of reach in the air
+				blocker.collision_layer = 0
 		Act.SLAM_AIR:
 			actT += delta
 			var f : float = clampf(actT / _airTime(), 0.0, 1.0)
@@ -589,6 +635,7 @@ func _land() -> void:
 	global_position = slamTo
 	lift = 0.0
 	collision_layer = 4
+	blocker.collision_layer = BLOCKER_LAYER
 	_clearTelegraph()
 	_plantFeet()
 	_camShake = 0.35

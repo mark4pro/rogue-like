@@ -8,6 +8,7 @@
 script = ExtResource("2_djkui")
 scaling = {"strength": "B"}
 weaponScene = ExtResource("3_4fynq")
+baseDamage = 25.0
 name = "Metal Pipe"
 itemIcon = ExtResource("1_n1gc8")
 itemType = 1

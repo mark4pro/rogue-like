@@ -7,6 +7,7 @@ extends Control
 
 var bgChildren : Array[Node] = []
 var optionsBttn : Button = null
+var menuBttn : Button = null
 var optionsMenu : OptionsMenu = null
 
 func getChildCount() -> int:
@@ -26,6 +27,18 @@ func _ready() -> void:
 	bg.add_child(optionsBttn)
 	bg.move_child(optionsBttn, resumeBttn.get_index() + 1)
 	optionsBttn.button_down.connect(_on_options_button_down)
+	
+	# Main Menu: saves (mid-run it ends the run like Back to Hub) and goes to the title screen
+	menuBttn = resumeBttn.duplicate(0)
+	menuBttn.name = "mainMenu"
+	menuBttn.text = "Main Menu"
+	bg.add_child(menuBttn)
+	bg.move_child(menuBttn, exitBttn.get_index())
+	menuBttn.button_down.connect(_on_main_menu_button_down)
+
+func _on_main_menu_button_down() -> void:
+	pauseCanvasLayer.visible = false
+	Global.returnToMenu()
 
 func _process(_delta: float) -> void:
 	$ColorRect/backToHub.visible = Global.sceneIndex != 0
@@ -45,6 +58,10 @@ func _process(_delta: float) -> void:
 	bg.size.y = newSize
 	var halfBGSize : Vector2 = bg.size / 2
 	bg.position = Vector2(960 - halfBGSize.x, 540 - halfBGSize.y)
+	
+	# Keyboard / controller: something in the menu needs focus to navigate it
+	if pauseCanvasLayer.visible and bg.visible and get_viewport().gui_get_focus_owner() == null:
+		resumeBttn.grab_focus()
 	
 	# If the pause menu got closed some other way, don't leave the options menu behind
 	if not pauseCanvasLayer.visible and optionsMenu and is_instance_valid(optionsMenu):

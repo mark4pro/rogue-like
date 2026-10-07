@@ -1,6 +1,6 @@
 extends Node2D
 
-@onready var shopMenu : PackedScene = preload("res://Assets/prefabs/ui/shop.tscn")
+@onready var shopMenu : PackedScene = preload("uid://bspm1f1aimwfx")
 
 @onready var idleTimer : Timer = $Idle
 @onready var head : AnimatedSprite2D = $Body/HeadAnchor/Head

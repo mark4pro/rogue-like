@@ -78,7 +78,7 @@ func visionCone() -> void:
 	
 	if Global.debugVision and baseNode and shape:
 		if not cone:
-			var newCone : Node2D = load("res://Assets/prefabs/ui/vision_cone.tscn").instantiate()
+			var newCone : Node2D = load("uid://ctrevfq4gsj53").instantiate()
 			newCone.name = "Cone"
 			newCone.shape = shape
 			baseNode.add_child(newCone)

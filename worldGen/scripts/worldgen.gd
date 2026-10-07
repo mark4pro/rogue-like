@@ -37,6 +37,17 @@ const CUTOUT_CANVAS_GROUP : StringName = &"tree_cutout_canvas" # hand-placed Can
 @export var tree_jitter : float = 12.0
 @export var tree_chunk_size : int = 32 # tiles per MultiMesh chunk, lets off-screen chunks get culled
 
+@export_group("Grass")
+@export var grass_enabled : bool = true
+@export var grass_texture : Texture2D = preload("uid://bre07aypqooa3")
+@export var grass_noise_frequency : float = 0.07
+@export_range(-1.0, 1.0) var grass_patch_threshold : float = 0.0  # noise above this = grassy patch
+@export var grass_patch_tufts : Vector2i = Vector2i(1, 4)          # tufts per tile inside a patch (more toward the patch middle)
+@export_range(0.0, 1.0) var grass_sparse_chance : float = 0.12    # chance of a lone tuft outside a patch
+@export var grass_height : Vector2 = Vector2(10, 16)               # tuft height in px (same as the menu)
+@export_range(0.0, 0.5) var grass_shade : float = 0.12             # random light/dark per tuft
+@export var grass_z : int = 1                                      # ground 0 < grass < player 3
+
 @export_group("Tree cutouts")
 @export var tree_cutout_shader : Shader = preload("uid://cpd32ul7pn8w2")
 @export var cutout_radius : float = 48.0
@@ -46,7 +57,7 @@ const CUTOUT_CANVAS_GROUP : StringName = &"tree_cutout_canvas" # hand-placed Can
 @export_group("Cave lighting")
 @export var cave_dark_color : Color = Color(0.14, 0.13, 0.17) # how bright cave tiles get (forest keeps the normal day/night light)
 @export var cave_dark_blur : int = 1                           # tiles of soft fade at cave edges/mouths (0 = hard edge)
-@export var torch_item : WeaponItem = preload("res://Assets/weapons/torch.tres")
+@export var torch_item : WeaponItem = preload("uid://c8mdvjtqahwjq")
 @export var wall_torch_spacing : int = 9                       # min tiles between wall torches
 @export_range(0.0, 1.0) var wall_torch_chance : float = 0.35   # chance a wall spot that fits the spacing gets a torch
 @export var room_torch_min_size : int = 80                     # pockets with at least this many floor tiles get a centre torch
@@ -55,7 +66,7 @@ const CUTOUT_CANVAS_GROUP : StringName = &"tree_cutout_canvas" # hand-placed Can
 
 @export_group("Ground blending")
 @export var blend_ground : bool = true                 # blend floor types with a shader instead of transition tiles
-@export var ground_blend_shader : Shader = preload("res://Assets/shaders/ground_blend.gdshader")
+@export var ground_blend_shader : Shader = preload("uid://dowuy17130q35")
 @export_range(0.0, 1.5) var ground_blend_strength : float = 0.6 # 0 = straight tile edges, higher = more ragged border
 @export var ground_blend_feature_px : float = 24.0     # rough size of the border wobbles in pixels
 
@@ -86,6 +97,7 @@ var biome_noise : FastNoiseLite = FastNoiseLite.new()
 var moisture_noise : FastNoiseLite = FastNoiseLite.new()
 var cave_noise : FastNoiseLite = FastNoiseLite.new()
 var tree_noise : FastNoiseLite = FastNoiseLite.new()
+var grass_noise : FastNoiseLite = FastNoiseLite.new()
 
 #World data
 var world = [] # world[y][x] = WorldTile
@@ -919,6 +931,99 @@ func _build_tree_multimeshes(trees: Node2D, chunks: Dictionary) -> void:
 
 #endregion
 
+#region Grass
+
+# Grass tufts on open forest floor: noise picks grassy patches (thicker toward their middle) plus
+# the odd lone tuft. Chunked MultiMeshes like the trees, so it's cheap and off-screen chunks cull.
+func _build_grass() -> void:
+	var old : Node = worldNode.get_node_or_null("Grass")
+	if old:
+		worldNode.remove_child(old)
+		old.queue_free()
+	if not grass_enabled or not grass_texture:
+		return
+	
+	var ground : TileMapLayer = worldNode.ground
+	var root : Node2D = Node2D.new()
+	root.name = "Grass"
+	root.z_index = grass_z
+	worldNode.add_child(root)
+	
+	grass_noise.seed = currentSeed + 11
+	grass_noise.noise_type = FastNoiseLite.TYPE_SIMPLEX
+	grass_noise.fractal_octaves = 2
+	grass_noise.frequency = grass_noise_frequency
+	var grng : RandomNumberGenerator = RandomNumberGenerator.new()
+	grng.seed = currentSeed + 12
+	
+	var tex_h : float = float(grass_texture.get_height())
+	var chunks : Dictionary = {}
+	var half : Vector2 = Vector2(tileSize) * 0.5
+	
+	for y in worldSize.y:
+		for x in worldSize.x:
+			var t : WorldTile = world[y][x]
+			if not is_forest(t) or t.wall_type != -1 or t.has_tree:
+				continue
+			var n : float = grass_noise.get_noise_2d(x, y)
+			var count : int = 0
+			if n > grass_patch_threshold:
+				# 0 at the patch edge -> 1 deep inside
+				var depth : float = clampf((n - grass_patch_threshold) / maxf(0.5 - grass_patch_threshold, 0.01), 0.0, 1.0)
+				count = int(round(lerpf(grass_patch_tufts.x, grass_patch_tufts.y, depth * grng.randf_range(0.6, 1.0))))
+			elif grng.randf() < grass_sparse_chance:
+				count = 1
+			if count <= 0:
+				continue
+			
+			var cell : Vector2i = Vector2i(x, y)
+			var center : Vector2 = ground.map_to_local(cell)
+			var chunk : Vector2i = cell / tree_chunk_size
+			if not chunks.has(chunk):
+				chunks[chunk] = []
+			for i in count:
+				var local : Vector2 = center + Vector2(grng.randf_range(-half.x, half.x), grng.randf_range(-half.y, half.y))
+				var s : float = grng.randf_range(grass_height.x, grass_height.y) / tex_h
+				var flip : float = -1.0 if grng.randf() < 0.5 else 1.0
+				var xform : Transform2D = Transform2D(0.0, Vector2(s * flip, s), 0.0, root.to_local(ground.to_global(local)))
+				var v : float = 1.0 + grng.randf_range(-grass_shade, grass_shade)
+				chunks[chunk].append([xform, Color(v, v, v, 1.0)])
+	
+	var mesh : ArrayMesh = _grass_mesh()
+	for chunk in chunks:
+		var entries : Array = chunks[chunk]
+		var mm : MultiMesh = MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_2D
+		mm.use_colors = true
+		mm.mesh = mesh
+		mm.instance_count = entries.size()
+		for i in entries.size():
+			mm.set_instance_transform_2d(i, entries[i][0])
+			mm.set_instance_color(i, entries[i][1])
+		var mmi : MultiMeshInstance2D = MultiMeshInstance2D.new()
+		mmi.name = "Grass_%d_%d" % [chunk.x, chunk.y]
+		mmi.multimesh = mm
+		mmi.texture = grass_texture
+		mmi.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		root.add_child(mmi)
+
+# One quad the size of the texture, anchored at its bottom middle (the tuft's base)
+func _grass_mesh() -> ArrayMesh:
+	var sz : Vector2 = grass_texture.get_size()
+	var arrays : Array = []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = PackedVector2Array([
+		Vector2(-sz.x * 0.5, -sz.y), Vector2(sz.x * 0.5, -sz.y),
+		Vector2(sz.x * 0.5, 0), Vector2(-sz.x * 0.5, 0)
+	])
+	arrays[Mesh.ARRAY_TEX_UV] = PackedVector2Array([Vector2(0, 0), Vector2(1, 0), Vector2(1, 1), Vector2(0, 1)])
+	arrays[Mesh.ARRAY_INDEX] = PackedInt32Array([0, 1, 2, 0, 2, 3])
+	var mesh : ArrayMesh = ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
+
+#endregion
+
 #region Cave torches
 
 # Picks torch spots: one in the middle of every big pocket, then wall torches along cave walls.
@@ -1493,6 +1598,7 @@ func genTileMap() -> void:
 				tree_chunks[chunk].append([xform, custom])
 	
 	_build_tree_multimeshes(trees, tree_chunks)
+	_build_grass()
 	_spawn_torches()
 	_spawn_boss_site()
 	_build_navigation()
@@ -1542,7 +1648,9 @@ func _process(_delta: float) -> void:
 		var playerCamera : Camera2D = Global.player.camera
 		if playerCamera and playerCamera.is_inside_tree(): playerCamera.make_current()
 	
-	if Global.sceneIndex == 0 and not preGen:
+	# The menu waits so it doesn't hitch; also wait out scene changes (currentScene is null then)
+	if Global.sceneIndex == 0 and not preGen and not Global.inMenu \
+			and is_instance_valid(Global.currentScene) and Global.currentScene.is_inside_tree():
 		if worldNode:
 			worldNode.queue_free()
 			worldNode = null
@@ -1557,7 +1665,9 @@ func _process(_delta: float) -> void:
 		if not Global.player and freeCam and freeCam.is_inside_tree(): freeCam.make_current()
 		
 		#Create world node
-		if not loaded and Global.scenes[Global.sceneIndex].worldGen:
+		# (is_inside_tree: mid scene-change Global.currentScene can still be the old, removed scene)
+		if not loaded and Global.scenes[Global.sceneIndex].worldGen and Global.currentScene.is_inside_tree() \
+				and Global.currentScene.name == Global.scenes[Global.sceneIndex].rootNode:
 			var worldChk : Node2D = Global.currentScene.get_node_or_null("World")
 			
 			#Create world node

@@ -16,8 +16,10 @@ scaling = {
 elements = {
 "shock": 0.25
 }
+mutationNotes = null
 name = "Purple Sword"
 itemIcon = ExtResource("1_g73x5")
+iconRotOffset = 45.0
 groundScale = 0.5
 itemType = 1
 equippable = true

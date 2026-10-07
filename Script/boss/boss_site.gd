@@ -6,7 +6,7 @@ class_name BossSite
 # them into the eye. The repair is on a timer: on run day `activate_run_day` the eye wakes up and
 # the fight starts, wherever the player is (it hunts them down).
 
-const PIECE_TEX : Texture2D = preload("res://Assets/imgs/enemies/testing/eyeball_spider_leg_piece.png")
+const PIECE_TEX : Texture2D = preload("uid://8dhhxd4p3qkl")
 
 ## The eye wakes when the run's day counter ("Days:" on the HUD) reaches this
 @export var activate_run_day : int = 5
@@ -26,6 +26,9 @@ var _spawnT : float = 0.0
 
 func _ready() -> void:
 	y_sort_enabled = true
+	# Same draw layer as the player (z 3, above the grass at 1), so the eye, roaches and scrap
+	# y-sort with the player instead of always drawing under the player and the grass
+	z_index = 3
 	add_to_group("boss_site")
 	piecesNode = Node2D.new()
 	piecesNode.name = "Pieces"

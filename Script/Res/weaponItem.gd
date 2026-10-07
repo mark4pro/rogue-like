@@ -83,10 +83,7 @@ func rollStats() -> void:
 	var rng : RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.seed = Global.rng
 	
-	var dayBias : float = setDay * 0.015
-	
-	var roll : float = clamp(rng.randf() + dayBias + Global.rarityRollBonus(), 0.0, 0.999)
-	rarity = int(roll * 6)
+	rarity = BaseItem.rollRarity(rng, setDay)
 	
 	var rarityMult : float = 1.0 + rarity * 0.25
 	
@@ -98,6 +95,7 @@ func rollStats() -> void:
 		damage.x = (baseDamage - damVar) * rarityMult * progMult
 		damage.y = (baseDamage + damVar) * rarityMult * progMult
 	
+	if unique: damage *= uniqueMult() # unique weapons: +15% on top of the rolled rarity
 	if critChance == 0: critChance = rng.randf_range(0.05, 0.15) * rarityMult * progMult
 	if critMulti == 0: critMulti = rng.randf_range(1.5, 2.5)
 	
@@ -115,6 +113,15 @@ func rollStats() -> void:
 	
 	Global.rng = randi()
 	rolled = true
+
+# Rolls this copy as a plain Common with no mutation (starter weapons, enemies' own weapons)
+func rollCommon() -> void:
+	var oldBonus : float = Global.lootRarityBonus
+	Global.lootRarityBonus = -10.0 # forces the lowest tier whatever the day / Luck
+	mutation = "_"                 # blocks Mutation.canMutate
+	rollStats()
+	mutation = ""
+	Global.lootRarityBonus = oldBonus
 
 const GRADE_MULT : Dictionary = {"S": 1.2, "A": 1.0, "B": 0.75, "C": 0.5, "D": 0.3, "E": 0.15}
 const GRADE_ORDER : Array[String] = ["S", "A", "B", "C", "D", "E"]
@@ -197,12 +204,24 @@ func scalingText() -> String:
 	for a in keys: parts.append("%s %s" % [stats.ATTRIBUTE_NAMES.get(a, a), str(sc[a]).to_upper()])
 	return ", ".join(parts)
 
+## Melee weapons crit more often and harder than ranged ones (worked out live, so swords already
+## in saves get it too): the payoff for fighting up close
+const MELEE_CRIT_CHANCE : float = 0.08
+const MELEE_CRIT_MULTI : float = 0.25
+
+func baseCritChance() -> float:
+	return critChance + (MELEE_CRIT_CHANCE if animationType == animType.SWING else 0.0)
+
+func baseCritMulti() -> float:
+	return critMulti + (MELEE_CRIT_MULTI if animationType == animType.SWING else 0.0)
+
 func critChanceWith(st: stats) -> float:
-	if not st: return critChance
-	return maxf(critChance, minf(critChance + st.critChanceBonus(), CRIT_CHANCE_CAP))
+	var cc : float = baseCritChance()
+	if not st: return cc
+	return maxf(cc, minf(cc + st.critChanceBonus(), CRIT_CHANCE_CAP))
 
 func critMultiWith(st: stats) -> float:
-	return critMulti + (st.critDamageBonus() if st else 0.0)
+	return baseCritMulti() + (st.critDamageBonus() if st else 0.0)
 
 # st: the wielder's stats (the player), or null for enemies / placed things
 func genDamage(st: stats = null) -> Dictionary:

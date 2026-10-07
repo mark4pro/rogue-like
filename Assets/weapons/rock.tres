@@ -6,14 +6,17 @@
 
 [resource]
 script = ExtResource("1_jypjq")
-scaling = {"strength": "C"}
 weaponScene = ExtResource("2_3tqjh")
-baseDamage = 30.0
+baseDamage = 6.0
 KnBckVar = 0.6
 animationType = 3
 rangeSpawnAmount = 2
 rangeSpreadAngle = 10.0
 rangeFireSpeed = 5.0
+scaling = {
+"strength": "C"
+}
+mutationNotes = null
 name = "Rock"
 itemIcon = ExtResource("1_d4266")
 groundScale = 0.2

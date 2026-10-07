@@ -19,13 +19,13 @@ var _font : FontFile = null
 # Shown when hovering an attribute name or any stat line. "Up to" values are at 100 points
 # (the first 50 points give about two thirds of it, see stats.dim).
 const ATTRIBUTE_TIPS : Dictionary = {
-	"strength": "Strength: weapons with Strength scaling hit harder.\nUp to +100% knockback dealt.",
+	"strength": "Strength: up to +60% melee and thrown damage,\nand weapons with Strength scaling hit harder.\nUp to +100% knockback dealt.",
 	"vitality": "Vitality: +3 max HP per point.\nUp to 150% armor defense, +35% knockback resist,\n+30% status resist and +15% melee resist.",
 	"stamina": "Stamina: +2 max stamina per point.\nUp to +100% stamina regen, and up to -50% roll cooldown,\nroll wind-up, roll cost and melee stamina cost.",
 	"speed": "Speed: up to +40% walk, sprint and roll speed,\nand up to +50% attack speed (swings and fire rate).",
 	"rogue": "Rogue: up to +30% crit chance and +1.5x crit damage.\nWeapons with Rogue scaling hit harder.",
-	"magic": "Magic: +2 max mana per point.\nUp to +100% mana regen, -50% projectile mana cost\nand +50% elemental and status damage.",
-	"focus": "Focus: lasers. Up to +50% range, +50% tick speed\nand -50% beam mana cost.",
+	"magic": "Magic: +2 max mana per point. Up to +60% projectile\nand +50% laser damage, +100% mana regen,\n-50% projectile mana cost and +50% elemental and status damage.",
+	"focus": "Focus: lasers. Up to +100% laser damage, +50% range,\n+50% tick speed and -50% beam mana cost.",
 	"luck": "Luck: better item rarity, up to +50% drop chance,\n+50% status buildup and a little crit chance.",
 	"beeness": "Beeness: makes your venom poison much stronger.",
 }
@@ -66,7 +66,8 @@ const STAT_TIPS : Dictionary = {
 	"Defense": "Reduces physical damage taken (100 defense = half damage).",
 	"Resist": "Less damage of this kind or element (capped at 60%). Negative is a weakness.",
 	"Mutation": "Mutated weapons are recoloured and boosted. The strain decides the effect.",
-	"Proficiency": "Using a weapon type on enemies levels it (max 10).\nEach level: +3% damage, -3% cost, +3% speed.",
+	"Proficiency": "Using a weapon type on enemies levels it (max 5).\nEach level: +6% damage, -6% cost, +6% speed.",
+	"Projectiles": "Multi-shot weapons split their damage: a whole volley\nlanding on one target is worth 1.6 single shots.",
 }
 
 # Wraps a stat name in a hover hint if there's a tip for it (element-coloured names included)
@@ -249,7 +250,8 @@ func refresh() -> void:
 
 func _bodyText() -> String:
 	var t : String = "[b]Body[/b]\n"
-	t += line("Max HP", st.max_health, st.maxHealth(), "+%d Vitality" % (3 * st.attr("vitality")))
+	var hpSrc : String = "+%d level, +%d Vitality" % [roundi(st.max_health * (st.levelHealthMult() - 1.0)), 3 * st.attr("vitality")]
+	t += line("Max HP", st.max_health, st.maxHealth(), hpSrc)
 	t += line("Max Stamina", st.max_stamina, st.maxStamina(), "+%d Stamina" % (2 * st.attr("stamina")))
 	t += line("Stamina Regen", st.stamina_regen, st.staminaRegen(), "Stamina", false, " / sec")
 	t += line("Max Mana", st.max_mana, st.maxMana(), "+%d Magic" % (2 * st.attr("magic")))
@@ -304,16 +306,25 @@ func _weaponText() -> String:
 		t += "\n"
 	var pType : String = stats.profType(w)
 	var profM : float = st.profDamageMult(pType)
-	var m : float = w.scalingMult(st) * profM
+	var classM : float = st.classDamageMult(pType)
+	var lvlM : float = st.levelDamageMult()
+	var m : float = w.scalingMult(st) * profM * classM * lvlM
 	if is_equal_approx(m, 1.0):
 		t += "%s: %s - %s\n" % [tipped("Damage"), fmt(w.damage.x), fmt(w.damage.y)]
 	else:
-		var src : String = "+%s scaling" % pct(w.scalingMult(st) - 1.0)
-		if profM > 1.0: src += ", +%s proficiency" % pct(profM - 1.0)
+		var parts : PackedStringArray = PackedStringArray()
+		if w.scalingMult(st) > 1.0: parts.append("+%s scaling" % pct(w.scalingMult(st) - 1.0))
+		if classM > 1.0: parts.append("+%s %s" % [pct(classM - 1.0), stats.classDamageSource(pType)])
+		if lvlM > 1.0: parts.append("+%s level" % pct(lvlM - 1.0))
+		if profM > 1.0: parts.append("+%s proficiency" % pct(profM - 1.0))
 		t += tipped("Damage") + ": %s - %s -> [color=%s]%s - %s[/color] [color=%s](%s)[/color]\n" % [
-			fmt(w.damage.x), fmt(w.damage.y), UP_COLOR, fmt(w.damage.x * m), fmt(w.damage.y * m), SRC_COLOR, src]
-	t += line("Crit Chance", w.critChance, w.critChanceWith(st), "Rogue, Luck", true)
-	t += line("Crit Multiplier", w.critMulti, w.critMultiWith(st), "Rogue", false, "x")
+			fmt(w.damage.x), fmt(w.damage.y), UP_COLOR, fmt(w.damage.x * m), fmt(w.damage.y * m), SRC_COLOR, ", ".join(parts)]
+	if w.animationType == WeaponItem.animType.RANGE and w.rangeSpawnAmount > 1:
+		var share : float = minf(1.0, WeaponSys.VOLLEY_TOTAL / w.rangeSpawnAmount)
+		t += "%s: %d [color=%s](each deals %s of the damage above)[/color]\n" % [tipped("Projectiles"), w.rangeSpawnAmount, SRC_COLOR, pct(share)]
+	var critSrc : String = "melee bonus, Rogue, Luck" if w.animationType == WeaponItem.animType.SWING else "Rogue, Luck"
+	t += line("Crit Chance", w.critChance, w.critChanceWith(st), critSrc, true)
+	t += line("Crit Multiplier", w.critMulti, w.critMultiWith(st), "melee bonus, Rogue" if w.animationType == WeaponItem.animType.SWING else "Rogue", false, "x")
 	t += line("Knockback", w.knockback, w.knockback * st.knockbackDealtMult(), "Strength")
 	
 	var ws : WeaponSys = WeaponSys.new()
@@ -338,7 +349,7 @@ func _weaponText() -> String:
 func _armorText() -> String:
 	var a : ArmorItem = Global.armor
 	if not a: return "[b]Armor[/b]\nNothing equipped\n"
-	var t : String = "[b]Armor: %s[/b]\n" % a.name
+	var t : String = "[b]Armor: [color=%s]%s[/color][/b]\n" % [a.getRarity().color.to_html(), a.name]
 	t += line("Defense", a.defense, a.defense * st.armorEfficiency(), "Vitality: %s armor efficiency" % pct(st.armorEfficiency()))
 	var total : float = minf(st.knockbackResist() + a.getKnockbackResist(), Knockback.RESIST_CAP)
 	t += line("Knockback Resist", a.getKnockbackResist(), total, "with Vitality, cap 80%", true)

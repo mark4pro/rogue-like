@@ -7,15 +7,17 @@
 [resource]
 script = ExtResource("2_lnocy")
 weaponScene = ExtResource("3_cgh10")
-baseDamage = 2.0
+baseDamage = 4.0
 animationType = 2
 laserRange = 65.0
+laserAttackSpeed = 6.0
 scaling = {
 "focus": "A"
 }
 elements = {
 "acid": 0.2
 }
+mutationNotes = null
 name = "Spider Laser"
 itemIcon = ExtResource("1_mouev")
 iconScale = 1.0

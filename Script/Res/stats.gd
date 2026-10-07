@@ -78,14 +78,14 @@ func addExp(amount: float) -> int:
 	return gained
 
 #region Weapon proficiency
-# Using a weapon type on enemies levels that type (cap 10, levels slowly). Each level:
-# +3% damage, -3% stamina/mana cost, +3% activation speed (swing / fire rate / beam start).
+# Using a weapon type on enemies levels that type (cap 5, levels slowly). Each level:
+# +6% damage, -6% stamina/mana cost, +6% activation speed (swing / fire rate / beam start).
 # Separate from attribute points and never reset by a respec.
 
 const PROFICIENCIES : Array[String] = ["melee", "thrown", "projectile", "laser"]
 const PROFICIENCY_NAMES : Dictionary = {"melee": "Melee", "thrown": "Thrown", "projectile": "Projectile", "laser": "Laser"}
-const PROFICIENCY_CAP : int = 10
-const PROF_PER_LEVEL : float = 0.03
+const PROFICIENCY_CAP : int = 5
+const PROF_PER_LEVEL : float = 0.06
 
 ## proficiency type -> total proficiency EXP
 @export var proficiency : Dictionary = {}
@@ -98,9 +98,10 @@ static func profType(w: WeaponItem) -> String:
 		WeaponItem.animType.RANGE: return "thrown" if w.throwable else "projectile"
 	return ""
 
-# Total proficiency EXP needed to reach a level: 25, 100, 225 ... 2500 for level 10
+# Total proficiency EXP needed to reach a level: 100, 400, 900, 1600, 2500 for level 5
+# (1 EXP per melee hit, less per projectile / beam tick, see WeaponSys.profHitXp)
 static func profXpForLevel(lvl: int) -> float:
-	return 25.0 * lvl * lvl
+	return 100.0 * lvl * lvl
 
 func profXp(t: String) -> float:
 	return float(proficiency.get(t, 0.0))
@@ -191,13 +192,44 @@ func reset_mods() -> void:
 
 #region Derived stats (what gameplay reads)
 
+# Built-in growth per level above 1: the same numbers enemies get (EnemySpawner health_per_level /
+# damage_per_level), so a player and an enemy of the same level start evenly matched before gear
+# and attributes. Without it enemies outscaled the player ~4x by level 15.
+const LEVEL_HEALTH : float = 0.08  # +8% base max health per level
+const LEVEL_DAMAGE : float = 0.05  # +5% damage per level (applied in WeaponSys for the player)
+func levelHealthMult() -> float: return 1.0 + LEVEL_HEALTH * (level - 1)
+func levelDamageMult() -> float: return 1.0 + LEVEL_DAMAGE * (level - 1)
+
 # Vitality
-func maxHealth() -> float: return max_health + 3.0 * attr("vitality")
+func maxHealth() -> float: return max_health * levelHealthMult() + 3.0 * attr("vitality")
 func armorEfficiency() -> float: return 1.0 + 0.5 * dim("vitality")          # up to 150% of armour defence
 func knockbackResist() -> float: return knockback_resist + 0.35 * dim("vitality") # armour adds on top, total capped at 80%
 
-# Strength (weapon damage comes through scaling grades, see WeaponItem)
+# Strength (weapon damage also comes through scaling grades, see WeaponItem)
 func knockbackDealtMult() -> float: return 1.0 + 1.0 * dim("strength")       # up to +100%
+
+# Damage by weapon class, on top of each weapon's own scaling grades (player only, WeaponSys):
+#   melee / thrown  Strength  up to +60%
+#   projectile      Magic     up to +60%
+#   laser           Magic up to +50%, then Focus up to +100%  (x3 at max: beams are the
+#                   lowest damage per second, so they scale the hardest)
+const CLASS_DAMAGE : float = 0.6
+const LASER_MAGIC : float = 0.5
+const LASER_FOCUS : float = 1.0
+func classDamageMult(profT: String) -> float:
+	match profT:
+		"melee", "thrown": return 1.0 + CLASS_DAMAGE * dim("strength")
+		"projectile": return 1.0 + CLASS_DAMAGE * dim("magic")
+		"laser": return (1.0 + LASER_MAGIC * dim("magic")) * (1.0 + LASER_FOCUS * dim("focus"))
+	return 1.0
+
+# Where classDamageMult comes from, for the character screen
+static func classDamageSource(profT: String) -> String:
+	match profT:
+		"melee", "thrown": return "Strength"
+		"projectile": return "Magic"
+		"laser": return "Magic, Focus"
+	return ""
 
 # Stamina
 func maxStamina() -> float: return max_stamina + 2.0 * attr("stamina")
